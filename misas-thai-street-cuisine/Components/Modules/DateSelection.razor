@@ -1,0 +1,13 @@
+﻿<div>
+    <h3>Date Selection</h3>
+    <!-- Your date selection logic here -->
+</div>
+
+@code {
+    [Parameter] public EventCallback OnNext { get; set; }
+
+    private void MoveNext()
+    {
+        OnNext.InvokeAsync();
+    }
+}

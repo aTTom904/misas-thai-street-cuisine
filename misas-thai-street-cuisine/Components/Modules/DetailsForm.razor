@@ -1,0 +1,13 @@
+﻿<div>
+    <h3>Details Form</h3>
+    <!-- Your details form logic here -->
+</div>
+
+@code {
+    [Parameter] public EventCallback OnPrevious { get; set; }
+
+    private void MovePrevious()
+    {
+        OnPrevious.InvokeAsync();
+    }
+}

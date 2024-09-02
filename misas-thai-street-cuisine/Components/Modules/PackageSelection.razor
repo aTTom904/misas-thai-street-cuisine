@@ -1,0 +1,19 @@
+﻿<div>
+    <h3>Package Selection</h3>
+    <!-- Your package selection logic here -->
+</div>
+
+@code {
+    [Parameter] public EventCallback OnPrevious { get; set; }
+    [Parameter] public EventCallback OnNext { get; set; }
+
+    private void MovePrevious()
+    {
+        OnPrevious.InvokeAsync();
+    }
+
+    private void MoveNext()
+    {
+        OnNext.InvokeAsync();
+    }
+}
