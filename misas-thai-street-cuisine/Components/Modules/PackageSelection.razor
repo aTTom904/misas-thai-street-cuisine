@@ -1,19 +1,77 @@
-﻿<div>
-    <h3>Package Selection</h3>
-    <!-- Your package selection logic here -->
+﻿@using misas_thai_street_cuisine.Components.Data
+
+
+<h3>Package Selection</h3>
+<div class="menu-tabs">
+    <button class="tab-button" @onclick="ShowCateringPackages"
+            style="background-color: @(selectedTab == "CateringPackages" ? "goldenrod" : "lightgray");
+                   color: @(selectedTab == "CateringPackages" ? "white" : "black")">
+        Catering Packages
+    </button>
+    <button class="tab-button" @onclick="ShowALaCart"
+            style="background-color: @(selectedTab == "ALaCart" ? "goldenrod" : "lightgray");
+                   color: @(selectedTab == "ALaCart" ? "white" : "black")">
+        A-La-Cart
+    </button>
 </div>
 
-@code {
-    [Parameter] public EventCallback OnPrevious { get; set; }
-    [Parameter] public EventCallback OnNext { get; set; }
 
-    private void MovePrevious()
+<div class="menu-content">
+    @if (selectedTab == "CateringPackages")
     {
-        OnPrevious.InvokeAsync();
+        <div>
+            <h4>Catering Packages</h4>
+            <!-- Display options for Catering Packages -->
+        </div>
+    }
+    else if (selectedTab == "ALaCart")
+    {
+        <div>
+            <h3>A-La-Cart</h3>
+            <br/>
+            @foreach (var item in MenuData.MenuItems)
+            {
+                <div class="menu-item">
+                    <h5>@item.Name</h5>
+                    <img src="@item.PhotoPath" alt="@item.Name" class="menu-item-photo" />
+                    <p>@item.Description</p>
+                    <p><strong>Price:</strong> @item.Price.ToString("C")</p>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+@code {
+    private string selectedTab = "CateringPackages";
+
+    private void ShowCateringPackages()
+    {
+        selectedTab = "CateringPackages";
     }
 
-    private void MoveNext()
+    private void ShowALaCart()
     {
-        OnNext.InvokeAsync();
+        selectedTab = "ALaCart";
     }
 }
+
+<style>
+    .menu-tabs {
+        display: flex;
+        gap: 10px;
+    }
+
+    .tab-button {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background-color: lightgray;
+        color: white;
+    }
+
+    .menu-content {
+        margin-top: 20px;
+    }
+</style>

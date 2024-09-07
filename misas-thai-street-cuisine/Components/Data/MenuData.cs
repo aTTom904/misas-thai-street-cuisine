@@ -9,7 +9,7 @@ namespace misas_thai_street_cuisine.Components.Data
             new MenuItem
             {
                 Name = "Sai Oua Sausage",
-                Description = "The most falvorful and aromatic sausage you've ever had! A Northern Thai staple, this bold, traditional sausage gets its flavor from a blend of minced pork, lemongrass, kaffir lime leaves, galangal, garlic, and shallots, along with chili for a mild kick.",
+                Description = "The most falvorful and aromatic sausage you've ever had, and handmade from start to finish. A Northern Thai staple, this bold, traditional sausage gets its flavor from a blend of minced pork, lemongrass, kaffir lime leaves, galangal, garlic, and shallots, along with chili for a mild kick.",
                 Category = "Appetizer",
                 Price = 0.00m,
                 PhotoPath = "/Resources/Images/Food/placeholder.jpg"
@@ -83,6 +83,15 @@ namespace misas_thai_street_cuisine.Components.Data
                 Name = "Khao Soi",
                 Description = "A rich and aromatic Northern Thai curry noodle soup featuring fried chicken or tofu in a creamy, spicy coconut curry broth. Topped with crispy egg noodles, pickled mustard greens, and fresh cilantro for a satisfying, complex flavor experience.",
                 Category="Entree",
+                Price = 0.00m,
+                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
+            },
+
+            new MenuItem
+            {
+                Name = "M's Rice",
+                Description = "Fluffy, aromatic jasmine rice infused with M's signature flavors. A perfect compliment to just about any item on the menu.",
+                Category="Side",
                 Price = 0.00m,
                 PhotoPath = "/Resources/Images/Food/placeholder.jpg"
             },
