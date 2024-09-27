@@ -9,7 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\cartStorage.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\cartStorage.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\Resources\Images\Other\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\cartStorage.js" />
   </ItemGroup>
 
 </Project>

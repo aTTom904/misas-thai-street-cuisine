@@ -3,6 +3,7 @@
 
 <PageTitle>Menu</PageTitle>
 
+<br/>
 <div class="menu-page">
     <div class="stepper">
         @foreach (var step in Steps)
@@ -24,11 +25,11 @@
     <div class="navigation-container">
         @if (CurrentStepIndex > 0)
         {
-            <button class="navigation-button" @onclick="GoToPreviousStep">Previous</button>
+            <button class="button" @onclick="GoToPreviousStep">Previous</button>
         }
         @if (CurrentStepIndex < Steps.Count - 1)
         {
-            <button class="navigation-button" @onclick="GoToNextStep">Next</button>
+            <button class="button" @onclick="GoToNextStep">Next</button>
         }
     </div>
 </div>
@@ -132,22 +133,24 @@
         display: flex;
         flex-direction:row;
     }
-    .navigation-button {
-        display: flex;
-        align-items: center;
-        padding: 10px;
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
         background-color: goldenrod;
-        border-width: 0px;
         border-radius: 4px;
-        margin-right: 10px;
+        border: 0px;
         color: white;
         text-decoration: none;
         font-size: 16px;
+        margin-bottom: 30px;
         transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-        .navigation-button:hover {
+        .button:hover {
             background-color: darkgoldenrod;
+            color: white;
         }
+
 
 </style>

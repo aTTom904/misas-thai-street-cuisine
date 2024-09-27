@@ -1,14 +1,17 @@
-﻿@using misas_thai_street_cuisine.Components.Data
+﻿@using Data
+@using Models
+@using Services
 
+@inject ShoppingCartService cart
 
-<h3>Package Selection</h3>
+<h1>Package Selection</h1>
 <div class="menu-tabs">
-    <button class="tab-button" @onclick="ShowCateringPackages"
+    <button class="button" @onclick="ShowCateringPackages"
             style="background-color: @(selectedTab == "CateringPackages" ? "goldenrod" : "lightgray");
                    color: @(selectedTab == "CateringPackages" ? "white" : "black")">
         Catering Packages
     </button>
-    <button class="tab-button" @onclick="ShowALaCart"
+    <button class="button" @onclick="ShowALaCart"
             style="background-color: @(selectedTab == "ALaCart" ? "goldenrod" : "lightgray");
                    color: @(selectedTab == "ALaCart" ? "white" : "black")">
         A-La-Cart
@@ -20,22 +23,36 @@
     @if (selectedTab == "CateringPackages")
     {
         <div>
-            <h4>Catering Packages</h4>
-            <!-- Display options for Catering Packages -->
+            <h2>Catering Packages</h2>
+            <br />
+            @foreach (var package in PackageData.Packages)
+            {
+                <div class="package-item">
+                    <h3>@package.Name</h3>
+                    <h4>@package.Description</h4>
+                    <h5>Serves: @package.Servings</h5>
+                    <h5>Includes:</h5>
+                    <p> @package.Appetizers Appetizers</p>
+                    <p> @package.Entrees Entrees</p>
+                    <p><strong>Price:</strong> @package.Price.ToString("C")</p>
+                    <button class="button" @onclick="() => AddItemToCart(package)">Add to cart</button>
+                </div>
+            }
         </div>
     }
     else if (selectedTab == "ALaCart")
     {
         <div>
-            <h3>A-La-Cart</h3>
+            <h2>A-La-Cart</h2>
             <br/>
             @foreach (var item in MenuData.MenuItems)
             {
                 <div class="menu-item">
-                    <h5>@item.Name</h5>
+                    <h4>@item.Name</h4>
                     <img src="@item.PhotoPath" alt="@item.Name" class="menu-item-photo" />
                     <p>@item.Description</p>
                     <p><strong>Price:</strong> @item.Price.ToString("C")</p>
+                    <button class="button" @onclick="() => AddItemToCart(item)">Add to cart</button>
                 </div>
             }
         </div>
@@ -55,6 +72,11 @@
     {
         selectedTab = "ALaCart";
     }
+
+    private void AddItemToCart (ICartItem item)
+    {
+        cart.AddItem(item, 1);
+    }
 }
 
 <style>
@@ -63,15 +85,37 @@
         gap: 10px;
     }
 
-    .tab-button {
-        padding: 10px 20px;
-        cursor: pointer;
-        border: 1px solid #ccc;
-        background-color: lightgray;
-        color: white;
+    .package-item {
+        margin-bottom: 50px;;
     }
+
+    .menu-item {
+        margin-bottom: 50px;
+        ;
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: goldenrod;
+        border-radius: 4px;
+        border: 0px;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+        .button:hover {
+            background-color: darkgoldenrod;
+            color: white;
+        }
 
     .menu-content {
         margin-top: 20px;
     }
+
+    .menu-item-photo {
+        max-width: 600px
+    }
+
 </style>

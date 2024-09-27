@@ -1,4 +1,5 @@
 using misas_thai_street_cuisine.Components;
+using Services;
 
 namespace misas_thai_street_cuisine
 {
@@ -11,6 +12,8 @@ namespace misas_thai_street_cuisine
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddSingleton<ShoppingCartService>();
+
 
             var app = builder.Build();
 

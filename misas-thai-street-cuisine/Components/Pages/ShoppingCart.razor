@@ -1,0 +1,41 @@
+﻿@using Services
+@using Models
+
+
+@page "/cart"
+@inject ShoppingCartService Cart
+
+<PageTitle>Shopping Cart</PageTitle>
+
+<h3>Shopping Cart</h3>
+
+@if (Cart.Items.Count == 0)
+{
+    <p>Your cart is empty.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Cart.Items)
+            {
+                <tr>
+                    <td>@item.Item.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Item.Price</td>
+                    <td>@item.GetTotalPrice()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Total Price: @Cart.GetTotalPrice()</h4>
+}
