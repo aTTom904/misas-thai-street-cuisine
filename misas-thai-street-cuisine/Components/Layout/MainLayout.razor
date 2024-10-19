@@ -2,7 +2,6 @@
 <div class="layout-container">
     <header class="navbar">
         <head>
-            <!-- Other head content -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
         </head>
 
@@ -12,7 +11,7 @@
         </div>
         <div class="logo-container">
             <a href="/">
-                <img src="Resources/Images/Logos/GLD M RED CHLI WHT BG NO TXT.png" alt="Logo" class="logo" />
+                <img src="Resources/Images/Logos/BLK M RED CHILI.png" alt="Logo" class="logo" />
             </a>
         </div>
         <div class="nav-right">
@@ -47,118 +46,3 @@
         </div>
     </footer>
 </div>
-
-<style>
-    .layout-container {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh; /* Ensure the container takes up full height of the viewport */
-    }
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: goldenrod;
-        padding: 0 650px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 60px;
-        z-index: 100;
-    }
-
-    .nav-left, .nav-right {
-        display: flex;
-        gap: 80px;
-    }
-
-        .nav-left a, .nav-right a {
-            color: white;
-            text-decoration: none;
-            font-size: 22px;
-            font-weight: bold;
-            line-height: 60px;
-        }
-
-    .logo-container {
-        position: absolute;
-        left: 50%;
-        transform: translate(-60%, 15%);
-        background-color: goldenrod;
-        border-radius: 50%;
-        height: 120px;
-        width: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        top: -20px;
-    }
-
-    .logo {
-        max-height: 110px;
-        max-width: 110px;
-        border-radius: 50%;
-    }
-
-    .main-content {
-        flex-grow: 1;
-        margin-top: 60px;
-    }
-
-    body {
-        overflow: -moz-scrollbars-none;
-        -ms-overflow-style: none; /* Internet Explorer and Edge */
-    }
-
-        body::-webkit-scrollbar {
-            display: none; /* Safari and Chrome */
-        }
-
-    .footer {
-        background-color: goldenrod;
-        padding: 20px;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        z-index: 100;
-        font-size: 16px;
-        color: white;
-        max-height: 50px;
-        position: relative;
-    }
-
-    .footer-content {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .footer-left {
-        padding-left: 20px;
-    }
-
-    .footer-right {
-        padding-right: 20px;
-        display: flex;
-        gap: 20px;
-    }
-
-        .footer-right a {
-            color: white;
-            font-size: 20px;
-            text-decoration: none;
-        }
-
-            .footer-right a:hover {
-                color: #ddd;
-            }
-
-    .fab {
-        transition: color 0.3s ease;
-    }
-</style>

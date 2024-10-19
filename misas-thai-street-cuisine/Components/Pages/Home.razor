@@ -2,68 +2,27 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="container-fluid p-0">
-    <div class="row no-gutters" display="flex" style="justify-content: center; align-items: center;">
-        <div class="col-md-5 p-5">
-            <h2>Flavor you have to try to believe</h2>
-            <p>Misa's Thai Street Cuisine brings you truly creative Thai dishes crafted with the freshest ingredients. Our menu features a diverse range of flavorful options that are sure to tantalize your taste buds. From spicy noodles and savory curries, to a refreshing papaya salad or sweet and delicious mango with sticky rice, we have something for everyone. Contact us for your next event and experience the vibrant flavors of Thailand for yourself.</p>
-            <a href="/Menu" class="button">See our menu</a>
+<div class="container-fluid">
+    <div class="carousel-container">
+        <div class="carousel-overlay">
+            <div class="carousel-text text-center">
+                <p class="overlay-text">Welcome to Misa's</p>
+                <a href="/Menu" class="button">See our menu</a>
+            </div>
         </div>
-
-        <div class="col-md-7 p-0">
-            <div class="carousel-container">
-                <div class="carousel-overlay">
-                    <div class="carousel-text text-center">
-                        <h1 class="overlay-title">Welcome to Misa's</h1>
-                        <p class="overlay-text">Indulge in creative, hand-crafted Thai fusion.</p>
-                    </div>
+        <div id="foodCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="d-block w-100" src="/Resources/Images/Food/lemongrass-wings.jpg"/>
                 </div>
-                <div id="carouselExampleIndicators" class="carousel carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img class="d-block w-100" src="/Resources/Images/Food/lemongrass-wings.JPG" alt="First slide" />
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" src="/Resources/Images/Food/ho-mok.jpg" alt="Ho Mok" />
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" src="/Resources/Images/Food/sai-oua.jpg" alt="Sai Oua" />
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" src="/Resources/Images/Food/khao-soi.jpg" alt="Khao Soi" />
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" src="/Resources/Images/Food/fried-cow-mun-gai.jpg" alt="Fried Cow Mun Gai" />
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" src="/Resources/Images/Food/esan.jpg" alt="Esan Sasusage" />
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" src="/Resources/Images/Food/grilled-chicken.jpg" alt="Bangkok Grilled Chicken" />
-                        </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" @onclick="PrevSlide">
-                        <span class="carousel-control-prev-icon"></span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" @onclick="NextSlide">
-                        <span class="carousel-control-next-icon"></span>
-                    </a>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/Resources/Images/Food/ho-mok.jpg" alt="Ho Mok" />
+                </div>
+                <div class="carousel-item">
+                    <img class="d-block w-100" src="/Resources/Images/Food/sai-oua.jpg" alt="Sai Oua Sausage" />
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<br />
-<br />
-
-<div class="image-text-container d-flex flex-md-row flex-column mt-5 p-5">
-    <div class="left-image col-md-6 d-flex justify-content-center align-items-center mb-4 mb-md-0">
-        <img src="/Resources/Images/Other/thai-street-food-market.jpg" alt="Thai Street Food Market" class="rounded-image">
-    </div>
-    <div class="right-text col-md-6">
-        <h2>Our philosophy: Live to eat!</h2>
-        <p>Live to Eat is a philosophy that celebrates the joy of life through food. It's about savoring every bite, exploring diverse cuisines, and embracing the cultural stories behind each dish. For those who live to eat, food is not just sustenance but an experience, a passion, and a way to connect with others.</p>
     </div>
 </div>
 
@@ -78,123 +37,3 @@
         // Logic to go to the next slide
     }
 }
-
-<style>
-    .container-fluid {
-        padding: 0;
-    }
-
-    .row.no-gutters {
-        margin-right: 0;
-        margin-left: 0;
-    }
-
-    .carousel-container {
-        position: relative;
-        max-height: 800px;
-        overflow: hidden;
-    }
-
-    .carousel {
-        width: 100%;
-        height: 800px;
-    }
-
-    .carousel-inner {
-        height: 800px;
-    }
-
-    .carousel-item {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-        .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-        }
-
-    .carousel-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        color: white;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        pointer-events: none;
-    }
-
-    .carousel-text {
-        padding: 20px;
-        border-radius: 10px;
-    }
-
-    .overlay-title {
-        font-size: 75px;
-    }
-
-    .overlay-text {
-        font-size: 25px;
-    }
-
-    .carousel-fade .carousel-item {
-        transition: opacity 2s ease-in-out;
-    }
-
-    .button {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: goldenrod;
-        border-radius: 4px;
-        color: white;
-        text-decoration: none;
-        font-size: 16px;
-        transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-        .button:hover {
-            background-color: darkgoldenrod;
-            color: white;
-        }
-
-    .image-text-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px;
-        border-radius: 10px;
-    }
-
-    .left-image {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .rounded-image {
-        width: 500px;
-        height: 500px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-    .right-text {
-        padding-left: 20px;
-    }
-
-        .right-text h2 {
-            margin-bottom: 15px;
-        }
-
-        .right-text p {
-            margin-bottom: 0;
-        }
-</style>
