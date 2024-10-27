@@ -1,7 +1,13 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background: linear-gradient(to right, #ffde59, #ff914d);
+    overflow: scroll; /* Enables scrolling */
+    scrollbar-width: none; /* Firefox */
     margin: 0;
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
 }
 
 a, .btn-link {
@@ -51,3 +57,13 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+.rock-salt-regular {
+    font-family: "Rock Salt", cursive;
+    font-weight: 400;
+    font-style: normal;
+}
+
+  
+  
+  
