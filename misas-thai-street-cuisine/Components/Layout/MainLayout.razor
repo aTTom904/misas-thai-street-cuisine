@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@rendermode InteractiveServer
+@inherits LayoutComponentBase
+
 <div class="layout-container">
     <header class="navbar">
         <div class="nav-left">
@@ -17,16 +19,18 @@
         <div class="hamburger-menu" @onclick="ToggleMobileMenu">
             ☰
         </div>
-        @if (isMobileMenuVisible)
-        {
+    </header>
+    @if (isMobileMenuVisible)
+    {
+        <div id="mobile-nav-wrapper">
             <div class="mobile-nav">
                 <a href="menu">Menu</a>
                 <a href="gallery">Gallery</a>
                 <a href="about">About</a>
                 <a href="contact">Contact</a>
             </div>
-        }
-    </header>
+        </div>
+    }
 
     <div class="main-content">
         @Body
@@ -62,6 +66,7 @@
 
     private void ToggleMobileMenu()
     {
+        Console.WriteLine("Button Clicked!");
         isMobileMenuVisible = !isMobileMenuVisible;
     }
 }
