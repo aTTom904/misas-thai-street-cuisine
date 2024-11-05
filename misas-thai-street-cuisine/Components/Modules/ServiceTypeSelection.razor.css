@@ -1,0 +1,19 @@
+﻿.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 69vh;
+}
+
+.box {
+    width: 200px;
+    height: 200px;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 15px; /* Adds space between the boxes */
+}
