@@ -29,7 +29,6 @@
     align-self: center;
     color: black;
     z-index: 10;
-/*    background-color: rgba(0, 0, 0, 0.4);    */
     border-radius: 10px;
 }
 
@@ -103,7 +102,6 @@
     display: none;
 }
 
-/* Adding a bounce effect for the arrow */
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
         transform: translateY(0);
@@ -125,8 +123,8 @@
         display:none;
         position: fixed;
         transform: translate(0, );
-        width: auto; /* Adjust width to fit the new location */
-        font-size: 2.5vw; /* Increase font size slightly */
+        width: auto;
+        font-size: 2.5vw;
         z-index:100;
     }
 
@@ -140,7 +138,7 @@
     }
 
     .social-text {
-        font-size: 4vw; /* Larger font size */
+        font-size: 4vw;
         z-index: 100;
     }
 
@@ -151,11 +149,11 @@
         width: 80vw;
     }
 
-    /* 2) Make the carousel take up the full screen */
+
     .carousel-container {
         width: 100vw;
         height: 69vh;
-        border-radius: 0; /* Remove rounded corners to fill screen */
+        border-radius: 0; 
     }
 
     #foodCarousel img {
@@ -169,19 +167,18 @@
         height: 100%;
     }
 
-    /* 3) Shrink carousel overlay to fit within the screen */
     .carousel-overlay {
-        width: 90%; /* Reduce width */
+        width: 90%;
         padding: 10px;
-        transform: translate(0, -10vh); /* Adjust position */
+        transform: translate(0, -10vh);
     }
 
     .overlay-text {
-        font-size: 12vw; /* Scale text size to fit smaller screens */
+        font-size: 12vw;
         margin-bottom: 15vh;
     }
 
     .button {
-        font-size: 4vw; /* Adjust button font size */
+        font-size: 4vw;
     }
 }
