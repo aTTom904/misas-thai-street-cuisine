@@ -17,6 +17,24 @@ namespace Data
 
             new MenuItem
             {
+                Name = "Curry Bites",
+                Description = "Crispy, bite-sized morsels filled with a delightful blend of Thai curry, fresh herbs, and savory fish. Deep fried and served with a tangy dipping sauce, these savory snacks are the perfect appetizer to kick off your meal.",
+                Category = "Appetizer",
+                Price = 0.00m,
+                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
+            },
+
+            new MenuItem
+            {
+                Name = "Fried Wontons",
+                Description = "Delicately filled with a savory mixture of seasoned ground meat and vegetables, our Thai fried wontons are expertly wrapped and deep-fried to a golden crisp. Served with a sweet and spicy dipping sauce, these delectable bites offer a perfect balance of flavor and crunch, making them an irresistible appetizer.",
+                Category = "Appetizer",
+                Price = 0.00m,
+                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
+            },
+
+            new MenuItem
+            {
                 Name = "Lemongrass Chicken Wings",
                 Description = "Fried chicken wings that are crispy, golden, and infused infused with the fragrant flavors of lemongrass, garlic, and chili, offering a perfect balance of zest and spice with each bite.",
                 Category="Appetizer",
@@ -28,24 +46,6 @@ namespace Data
             {
                 Name = "Bangkok Grilled Chicken",
                 Description = "Served on skewers, this Bangkok-style grilled chicken boasts smoky, succulent flavors with a marinade of Thai herbs and spices. Paired with zesty jiao dipping sauce, this is a must-have flavor combination.",
-                Category="Appetizer",
-                Price = 0.00m,
-                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
-            },
-
-            new MenuItem
-            {
-                Name = "Larb (Pronounced LAAB)",
-                Description = "A zesty Thai salad with finely minced meat, fresh herbs, lime juice, and savory fish sauce, all mixed with roasted, crushed rice for a bold, vibrant flavor. Served with crisp lettuce leaves for a refreshing crunch.",
-                Category="Appetizer",
-                Price = 0.00m,
-                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
-            },
-
-            new MenuItem
-            {
-                Name = "Som Tum Papaya Salad",
-                Description = "A fiery Thai green papaya salad bursting with tangy lime, spicy chilies, savory fish sauce, and sweet palm sugar, complemented by crunchy peanuts and juicy tomatoes for a crisp, refreshing kick.",
                 Category="Appetizer",
                 Price = 0.00m,
                 PhotoPath = "/Resources/Images/Food/placeholder.jpg"
@@ -80,35 +80,8 @@ namespace Data
 
             new MenuItem
             {
-                Name = "Khao Soi",
-                Description = "A rich and aromatic Northern Thai curry noodle soup featuring fried chicken or tofu in a creamy, spicy coconut curry broth. Topped with crispy egg noodles, pickled mustard greens, and fresh cilantro for a satisfying, complex flavor experience.",
-                Category="Entree",
-                Price = 0.00m,
-                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
-            },
-
-            new MenuItem
-            {
-                Name = "M's Rice",
-                Description = "Fluffy, aromatic jasmine rice infused with M's signature flavors. A perfect compliment to just about any item on the menu.",
-                Category="Side",
-                Price = 0.00m,
-                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
-            },
-
-            new MenuItem
-            {
-                Name = "Pandan Coconut Cake",
+                Name = "Pandan Coconut Cupcakes",
                 Description = "A moist, fragrant cake infused with aromatic pandan leaves, layered with a luscious sweet coconut icing. This tropical treat offers a unique blend of rich, buttery flavors and creamy sweetness for a delightful, exotic dessert.",
-                Category="Dessert",
-                Price = 0.00m,
-                PhotoPath = "/Resources/Images/Food/placeholder.jpg"
-            },
-
-            new MenuItem
-            {
-                Name = "Mango Sticky Rice",
-                Description = "A classic Thai dessert featuring sweet sticky rice topped with ripe, juicy mango slices and drizzled with a creamy coconut sauce. This indulgent treat combines the perfect balance of fresh and sweet for a perfect finish to any meal.",
                 Category="Dessert",
                 Price = 0.00m,
                 PhotoPath = "/Resources/Images/Food/placeholder.jpg"
