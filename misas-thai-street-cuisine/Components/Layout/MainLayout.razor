@@ -1,13 +1,11 @@
-﻿@inherits LayoutComponentBase
+﻿@rendermode InteractiveServer
+@inherits LayoutComponentBase
+
 <div class="layout-container">
     <header class="navbar">
-        <head>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-        </head>
-
         <div class="nav-left">
             <a href="menu">Menu</a>
-            <a href="about">About</a>
+            <a href="gallery">Gallery</a>
         </div>
         <div class="logo-container">
             <a href="/">
@@ -15,10 +13,24 @@
             </a>
         </div>
         <div class="nav-right">
-            <a href="gallery">Gallery</a>
+            <a href="about">About</a>
             <a href="contact">Contact</a>
         </div>
+        <div class="hamburger-menu" @onclick="ToggleMobileMenu">
+            ☰
+        </div>
     </header>
+    @if (isMobileMenuVisible)
+    {
+        <div id="mobile-nav-wrapper">
+            <div class="mobile-nav">
+                <a href="menu">Menu</a>
+                <a href="gallery">Gallery</a>
+                <a href="about">About</a>
+                <a href="contact">Contact</a>
+            </div>
+        </div>
+    }
 
     <div class="main-content">
         @Body
@@ -46,3 +58,15 @@
         </div>
     </footer>
 </div>
+
+
+
+@code {
+    private bool isMobileMenuVisible = false;
+
+    private void ToggleMobileMenu()
+    {
+        Console.WriteLine("Button Clicked!");
+        isMobileMenuVisible = !isMobileMenuVisible;
+    }
+}
