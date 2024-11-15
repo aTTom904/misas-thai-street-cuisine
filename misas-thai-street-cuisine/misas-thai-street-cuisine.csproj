@@ -17,8 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\Resources\Images\Icons\" />
-    <Folder Include="wwwroot\Resources\Images\Other\" />
+    <Folder Include="Components\Modules\" />
   </ItemGroup>
 
   <ItemGroup>
