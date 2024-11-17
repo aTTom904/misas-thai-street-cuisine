@@ -35,6 +35,39 @@
             color : #fff
         }
 
+
+.shopping-cart {
+    position: absolute;
+    top: 5vh;
+    right: 5vw;
+    font-size: 1.75rem;
+    color: darkgoldenrod;
+    text-decoration: none;
+    z-index: 10;
+    transition: color 0.2s ease
+}
+
+    .shopping-cart:hover {
+        color: #8B6508;
+    }
+
+.cart-count {
+    position: absolute;
+    top: 3vh;
+    right: 5vw;
+    background-color: darkgoldenrod;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
 .logo-container {
     position: absolute;
     left: 50%;

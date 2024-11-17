@@ -2,7 +2,7 @@
 @using Models
 
 
-@page "/cart"
+@page "/Cart"
 @inject ShoppingCartService Cart
 
 <PageTitle>Shopping Cart</PageTitle>
@@ -29,6 +29,7 @@ else
             {
                 <tr>
                     <td>@item.Item.Name</td>
+                    <td>@item.Item.Category</td>
                     <td>@item.Quantity</td>
                     <td>@item.Item.Price</td>
                     <td>@item.GetTotalPrice()</td>

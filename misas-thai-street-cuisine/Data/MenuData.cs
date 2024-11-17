@@ -9,21 +9,25 @@ namespace Data
             new SausageType
             {
                 Name =  "Pork",
+                Category = "Sausage",
                 Price = 10.50m,
             },
             new SausageType
             {
                 Name =  "Beef",
+                Category = "Sausage",
                 Price = 10.75m,
             },
             new SausageType
             {
                 Name =  "Turkey",
+                Category = "Sausage",
                 Price = 10.00m,
             },
             new SausageType
             {
                 Name =  "Mushroom",
+                Category = "Sausage",
                 Price = 11.00m,
             },
         };
@@ -33,11 +37,13 @@ namespace Data
             new SideDish
             {
                 Name="Sticky Rice",
+                Category = "Side",
                 Price= 02.95m
             },
             new SideDish
             {
                 Name="Chili Paste (Prik Noom)",
+                Category = "Side",
                 Price= 02.00m
             }
         };
@@ -46,17 +52,26 @@ namespace Data
         {
             new Platter
             {
-               Name = "Pork or Beef",
+               Name = "Pork",
+               Category = "Platter",
                Price = 25.00m
             },
             new Platter
             {
+                Name = "Beef",
+                Category = "Platter",
+                Price = 25.00m
+            },
+            new Platter
+            {
                 Name = "Turkey",
+                Category = "Platter",
                 Price = 24.00m
             },
             new Platter
             {
                 Name = "Mushroom",
+                Category = "Platter",
                 Price = 27.25m
             },
         };

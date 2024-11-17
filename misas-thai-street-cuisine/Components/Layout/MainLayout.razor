@@ -1,6 +1,10 @@
 ﻿@rendermode InteractiveServer
 @inherits LayoutComponentBase
 
+@using Services
+
+@inject ShoppingCartService Cart
+
 <div class="layout-container">
     <header class="navbar">
         <div class="nav-left">
@@ -16,6 +20,13 @@
             <a href="about">About</a>
             <a href="contact">Contact</a>
         </div>
+        @if (CartItemCount > 0)
+        {
+            <a href="/Cart" class="shopping-cart">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+            <span class="cart-count">@CartItemCount</span>
+        }
         <div class="hamburger-menu" @onclick="ToggleMobileMenu">
             ☰
         </div>
@@ -63,10 +74,28 @@
 
 @code {
     private bool isMobileMenuVisible = false;
+    private int CartItemCount = 0;
 
     private void ToggleMobileMenu()
     {
         Console.WriteLine("Button Clicked!");
         isMobileMenuVisible = !isMobileMenuVisible;
+    }
+
+    protected override void OnInitialized()
+    {
+        CartItemCount = GetCartItemCount();
+        Cart.CartChanged += OnCartChanged;
+    }
+
+    private void OnCartChanged()
+    {
+        CartItemCount = GetCartItemCount();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private int GetCartItemCount()
+    {
+        return Cart.Items.Sum(i => i.Quantity);
     }
 }

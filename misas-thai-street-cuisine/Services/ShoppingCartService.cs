@@ -9,7 +9,7 @@ namespace Services
 
         public void AddItem(ICartItem item, int quantity)
         {
-            var existingItem = Items.FirstOrDefault(i => i.Item.Name == item.Name);
+            var existingItem = Items.FirstOrDefault(i => i.Item.Name == item.Name && i.Item.Category == item.Category);
             if (existingItem != null)
             {
                 existingItem.Quantity += quantity;
@@ -18,6 +18,7 @@ namespace Services
             {
                 Items.Add(new CartItem(item, quantity));
             }
+            OnItemAddedOrRemoved();
         }
 
         public void RemoveItem(ICartItem item)
@@ -27,7 +28,16 @@ namespace Services
             {
                 Items.Remove(cartItem);
             }
+            OnItemAddedOrRemoved();
         }
+
+        public event Action CartChanged;
+
+        private void OnItemAddedOrRemoved()
+        {
+            CartChanged?.Invoke();
+        }
+
 
         public decimal GetTotalPrice()
         {

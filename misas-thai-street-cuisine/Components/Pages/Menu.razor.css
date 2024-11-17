@@ -20,7 +20,7 @@ h2 {
     margin-bottom: 40px;
     width: 100%;
     background: linear-gradient(to right, #ffde59, #ff914d);
-    border: 1px solid goldenrod;
+    border: 5px solid goldenrod;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -87,11 +87,11 @@ button {
     width: 150px;
     color: black;
     font-family: "Rock Salt", cursive;
-    font-size: 1.5vw;
+    font-size: 30px;
     text-align: center;
 }
     .vegan-blurb img {
-        height: 5rem;
+        height: 75px;
     }
 
 .gotta-try-blurb {
@@ -103,9 +103,20 @@ button {
     width: 150px;
     color: black;
     font-family: "Rock Salt", cursive;
-    font-size: 1.5vw;
+    font-size: 30px;
     text-align: center;
 }
     .gotta-try-blurb img {
-        height: 5rem;
+        height: 75px;
     }
+
+
+@media (max-width: 600px) {
+    .vegan-blurb {
+        display: none;
+    }
+
+    .gotta-try-blurb {
+        display: none;
+    }
+}
