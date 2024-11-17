@@ -33,10 +33,23 @@ else
                     <td>@item.Quantity</td>
                     <td>@item.Item.Price</td>
                     <td>@item.GetTotalPrice()</td>
+                    <td>
+                        <button @onclick="() => RemoveItemFromCart(item)">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 
     <h4>Total Price: @Cart.GetTotalPrice()</h4>
+
+    @code 
+    {
+    private void RemoveItemFromCart(CartItem item)
+        {
+            Cart.RemoveAll(item.Item);
+        }
+    }
 }

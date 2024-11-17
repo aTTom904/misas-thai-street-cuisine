@@ -26,8 +26,25 @@ namespace Services
             var cartItem = Items.FirstOrDefault(i => i.Item.Name == item.Name);
             if (cartItem != null)
             {
+                cartItem.Quantity -= 1;
+
+                if (cartItem.Quantity == 0)
+                {
+                    Items.Remove(cartItem);
+                }
+            }
+
+            OnItemAddedOrRemoved();
+        }
+
+        public void RemoveAll(ICartItem item)
+        {
+            var cartItem = Items.FirstOrDefault(i => i.Item.Name == item.Name);
+            if (cartItem != null)
+            {
                 Items.Remove(cartItem);
             }
+
             OnItemAddedOrRemoved();
         }
 
@@ -42,6 +59,11 @@ namespace Services
         public decimal GetTotalPrice()
         {
             return Items.Sum(i => i.GetTotalPrice());
+        }
+
+        public int GetItemQuantity(ICartItem item)
+        {
+            return Items.FirstOrDefault(ci => ci.Item == item)?.Quantity ?? 0;
         }
 
     }

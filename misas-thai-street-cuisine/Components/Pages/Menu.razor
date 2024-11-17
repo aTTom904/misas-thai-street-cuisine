@@ -18,7 +18,7 @@
             {
                 <li>
                     <span>@sausage.Name - @sausage.Price.ToString("C")</span>
-                    <button @onclick="() => AddToOrder(sausage.Name, sausage.Category)">+</button>
+                    @RenderCartControls(sausage)
                 </li>
             }
         </ul>
@@ -35,7 +35,7 @@
             {
                 <li>
                     <span>@side.Name - @side.Price.ToString("C")</span>
-                    <button @onclick="() => AddToOrder(side.Name, side.Category)">+</button>
+                    @RenderCartControls(side)
                 </li>
             }
         </ul>
@@ -48,7 +48,7 @@
             {
                 <li>
                     <span>@platter.Name - @platter.Price.ToString("C")</span>
-                    <button @onclick="() => AddToOrder(platter.Name, platter.Category)">+</button>
+                    @RenderCartControls(platter)
                 </li>
             }
         </ul>
@@ -69,4 +69,35 @@
         }
     }
 
+    private void RemoveFromOrder(string itemName, string category)
+    {
+        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
+           MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
+           MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
+
+        if (item != null)
+        {
+            Cart.RemoveItem(item);
+        }
+    }
+
+    private RenderFragment RenderCartControls(ICartItem item)
+    {
+        int quantity = Cart.GetItemQuantity(item);
+
+        if (quantity > 0)
+        {
+            return 
+            @<div class="cart-controls">
+                <button @onclick="() => RemoveFromOrder(item.Name, item.Category)">-</button>
+                <span>@quantity</span>
+                <button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>
+            </div>;
+        }
+        else
+        {
+            return
+            @<button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>;
+        }
+    }
 }

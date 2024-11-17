@@ -110,6 +110,37 @@ button {
         height: 75px;
     }
 
+.cart-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .cart-controls button {
+        background-color: #ffde59;
+        color: black;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border: 2px solid #ff914d;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: background-color 0.3s ease, border 0.3s ease;
+    }
+
+        .cart-controls button:hover {
+            background-color: #ff914d;
+            border: 2px solid #ffde59;
+        }
+
+    .cart-controls span {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: black;
+    }
+
+
 
 @media (max-width: 600px) {
     .vegan-blurb {
