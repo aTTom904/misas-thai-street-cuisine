@@ -10,26 +10,26 @@ namespace Data
             {
                 Name =  "Pork",
                 Category = "Sausage",
-                Price = 10.50m,
+                Price = 11.00m,
             },
-            new SausageType
-            {
-                Name =  "Beef",
-                Category = "Sausage",
-                Price = 10.75m,
-            },
+//            new SausageType
+//            {
+//                Name =  "Beef",
+//                Category = "Sausage",
+//                Price = 10.75m,
+//            },
             new SausageType
             {
                 Name =  "Turkey",
                 Category = "Sausage",
-                Price = 10.00m,
-            },
-            new SausageType
-            {
-                Name =  "Mushroom",
-                Category = "Sausage",
                 Price = 11.00m,
-            },
+           },
+//           new SausageType
+//            {
+//                Name =  "Mushroom",
+//                Category = "Sausage",
+//                Price = 11.00m,
+//            },
         };
 
         public static SideDish[] SideDishes { get; } = new SideDish[]
@@ -44,7 +44,7 @@ namespace Data
             {
                 Name="Chili Paste (Prik Noom)",
                 Category = "Side",
-                Price= 02.00m
+                Price= 04.05m
             }
         };
 
@@ -56,24 +56,24 @@ namespace Data
                Category = "Platter",
                Price = 25.00m
             },
-            new Platter
-            {
-                Name = "Beef",
-                Category = "Platter",
-                Price = 25.00m
-            },
+//            new Platter
+//            {
+//                Name = "Beef",
+//                Category = "Platter",
+//                Price = 25.00m
+//            },
             new Platter
             {
                 Name = "Turkey",
                 Category = "Platter",
                 Price = 24.00m
             },
-            new Platter
-            {
-                Name = "Mushroom",
-                Category = "Platter",
-                Price = 27.25m
-            },
+//            new Platter
+//           {
+//                Name = "Mushroom",
+//                Category = "Platter",
+//                Price = 27.25m
+//            },
         };
     }
 }

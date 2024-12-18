@@ -1,5 +1,10 @@
 using misas_thai_street_cuisine.Components;
 using Services;
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
+using Blazorise.Bootstrap;
+
 
 namespace misas_thai_street_cuisine
 {
@@ -13,6 +18,16 @@ namespace misas_thai_street_cuisine
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddSingleton<ShoppingCartService>();
+
+            builder.Services
+                .AddBlazorise( options =>
+                {
+                    options.Immediate = true;
+                } )
+                .AddBootstrap5Providers()
+                .AddFontAwesomeIcons();
+
+            builder.Services.AddBlazorBootstrap();
 
 
             var app = builder.Build();

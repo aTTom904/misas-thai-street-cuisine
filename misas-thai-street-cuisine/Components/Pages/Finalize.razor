@@ -1,0 +1,40 @@
+﻿@page "/Finalize"
+
+@using System.Text.Json
+@using Services
+@using Components
+
+@inject ShoppingCartService Cart
+
+<PageTitle>Finalize Order</PageTitle>
+
+<div class="order-process">
+    <h2>Let's Finish Up</h2>
+     <OrderDetails />
+</div>
+
+@code {
+    private int currentStep = 0;
+    private readonly List<string> steps = new() { "Order Details", "Payment Confirmation" };
+
+    // State Variables
+    private Dictionary<string, object> orderData = new();
+    private DateTime? date = null;
+    private Dictionary<string, string> additionalInfo = new();
+
+    // State Update Handlers
+    private void UpdateOrderData(Dictionary<string, object> updatedOrderData)
+    {
+        orderData = updatedOrderData;
+    }
+
+    private void OnSelectedDateChanged(DateTime? selectedDate)
+    {
+        date = selectedDate;
+    }
+
+    private void UpdateAdditionalInfo(Dictionary<string, string> updatedInfo)
+    {
+        additionalInfo = updatedInfo;
+    }
+}

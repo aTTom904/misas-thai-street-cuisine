@@ -7,6 +7,9 @@
 
 <div class="layout-container">
     <header class="navbar">
+        <div class="countdown">
+            <span>@CountdownText</span>
+        </div>
         <div class="nav-left">
             <a href="menu">Menu</a>
             <a href="gallery">Gallery</a>
@@ -75,6 +78,7 @@
 @code {
     private bool isMobileMenuVisible = false;
     private int CartItemCount = 0;
+    private string CountdownText = "Calculating...";
 
     private void ToggleMobileMenu()
     {
@@ -86,6 +90,7 @@
     {
         CartItemCount = GetCartItemCount();
         Cart.CartChanged += OnCartChanged;
+        UpdateCountdown();
     }
 
     private void OnCartChanged()
@@ -98,4 +103,34 @@
     {
         return Cart.Items.Sum(i => i.Quantity);
     }
+
+    private void UpdateCountdown()
+    {
+        var now = DateTime.Now;
+
+        // Always calculate the next Saturday at 12:00am
+        var daysUntilNextSaturday = ((int)DayOfWeek.Saturday - (int)now.DayOfWeek + 7) % 7;
+        var nextSaturdayMidnight = now
+            .Date
+            .AddDays(daysUntilNextSaturday == 0 ? 7 : daysUntilNextSaturday);
+
+        var remainingTime = nextSaturdayMidnight - now;
+
+        CountdownText = $"{remainingTime.Days}d {remainingTime.Hours}h {remainingTime.Minutes}m {remainingTime.Seconds}s";
+
+        InvokeAsync(async () =>
+        {
+            while (remainingTime.TotalSeconds > 0)
+            {
+                await Task.Delay(1000);
+                remainingTime = nextSaturdayMidnight - DateTime.Now;
+                CountdownText = $"{remainingTime.Days}d {remainingTime.Hours}h {remainingTime.Minutes}m {remainingTime.Seconds}s";
+                StateHasChanged();
+            }
+
+            CountdownText = "It's Saturday!";
+        });
+    }
+
+
 }

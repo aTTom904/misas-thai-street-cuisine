@@ -7,12 +7,25 @@
 
 <div class="menu-container">
     <h2 class='page-header-text'>Pick Your Flavor Fix</h2>
-    <div class="vegan-blurb">
-        <p class="vegan-text">It's Vegan!</p>
+    <div class="gotta-try-blurb">
+        <p class="gotta-try-text">You gotta try this stuff!</p>
         <img src="/Resources/Images/Icons/curved-arrow-right-short.png"/>
     </div>
     <div class="menu-section">
-        <h3 class="section-header-text">Thai Herb Sausage (Sai Oua)</h3>
+        <h3 class="section-header-text">The Platter</h3>
+        <ul>
+            @foreach (var platter in MenuData.Platters)
+            {
+                <li>
+                    <span>@platter.Name - @platter.Price.ToString("C")</span>
+                    @RenderCartControls(platter)
+                </li>
+            }
+        </ul>
+    </div>
+
+    <div class="menu-section">
+        <h3 class="section-header-text">Sai Ui (Thai Herb Sausage)</h3>
         <ul>
             @foreach (var sausage in MenuData.SausageTypes)
             {
@@ -24,10 +37,6 @@
         </ul>
     </div>
 
-    <div class="gotta-try-blurb">
-        <p class="gotta-try-text">You gotta try this stuff!</p>
-        <img src="/Resources/Images/Icons/curved-arrow-left-short.png" />
-    </div>
     <div class="menu-section">
         <h3 class="section-header-text">Sides</h3>
         <ul>
@@ -36,19 +45,6 @@
                 <li>
                     <span>@side.Name - @side.Price.ToString("C")</span>
                     @RenderCartControls(side)
-                </li>
-            }
-        </ul>
-    </div>
-
-    <div class="menu-section">
-        <h3 class="section-header-text">Platters</h3>
-        <ul>
-            @foreach (var platter in MenuData.Platters)
-            {
-                <li>
-                    <span>@platter.Name - @platter.Price.ToString("C")</span>
-                    @RenderCartControls(platter)
                 </li>
             }
         </ul>
