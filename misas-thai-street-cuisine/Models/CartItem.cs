@@ -2,7 +2,9 @@
 {
     public interface ICartItem
     {
+
         string Name { get; }
+        string Category { get; }
         decimal Price { get; }
     }
 

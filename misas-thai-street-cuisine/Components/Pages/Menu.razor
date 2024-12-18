@@ -1,90 +1,99 @@
-﻿@page "/menu"
+﻿@using Data
+@using Services
+@using Models
+@page "/Menu"
 @rendermode InteractiveServer
+@inject ShoppingCartService Cart
 
-<PageTitle>Menu</PageTitle>
-
-<br/>
-<div class="menu-page">
-    <div class="stepper">
-        @foreach (var step in Steps)
-        {
-            <div class="step @(step.IsActive ? "active" : "")">
-                <span>@step.Name</span>
-                @if (step != Steps.Last())
-                {
-                    <div class="chevron"></div>
-                }
-            </div>
-        }
+<div class="menu-container">
+    <h2 class='page-header-text'>Pick Your Flavor Fix</h2>
+    <div class="gotta-try-blurb">
+        <p class="gotta-try-text">You gotta try this stuff!</p>
+        <img src="/Resources/Images/Icons/curved-arrow-right-short.png"/>
+    </div>
+    <div class="menu-section">
+        <h3 class="section-header-text">The Platter</h3>
+        <ul>
+            @foreach (var platter in MenuData.Platters)
+            {
+                <li>
+                    <span>@platter.Name - @platter.Price.ToString("C")</span>
+                    @RenderCartControls(platter)
+                </li>
+            }
+        </ul>
     </div>
 
-    <!-- Render Child Component Based on Current Step -->
-    <div class="step-content">
-        @RenderStepComponent()
+    <div class="menu-section">
+        <h3 class="section-header-text">Sai Ui (Thai Herb Sausage)</h3>
+        <ul>
+            @foreach (var sausage in MenuData.SausageTypes)
+            {
+                <li>
+                    <span>@sausage.Name - @sausage.Price.ToString("C")</span>
+                    @RenderCartControls(sausage)
+                </li>
+            }
+        </ul>
     </div>
-    <div class="navigation-container">
-        @if (CurrentStepIndex > 0)
-        {
-            <button class="button" @onclick="GoToPreviousStep">Previous</button>
-        }
-        @if (CurrentStepIndex < Steps.Count - 1)
-        {
-            <button class="button" @onclick="GoToNextStep">Next</button>
-        }
+
+    <div class="menu-section">
+        <h3 class="section-header-text">Sides</h3>
+        <ul>
+            @foreach (var side in MenuData.SideDishes)
+            {
+                <li>
+                    <span>@side.Name - @side.Price.ToString("C")</span>
+                    @RenderCartControls(side)
+                </li>
+            }
+        </ul>
     </div>
 </div>
 
 @code {
-    private int CurrentStepIndex { get; set; } = 0;
 
-    private List<Step> Steps = new List<Step>
+    private void AddToOrder(string itemName, string category)
     {
-        //new Step { Name = "Package Selection", ComponentType = typeof(PackageSelection) },
-       // new Step { Name = "Date Selection", ComponentType = typeof(DateSelection) },
-        //new Step { Name = "Details Form", ComponentType = typeof(DetailsForm) }
-    };
+        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
+                   MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
+                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
 
-    private void GoToNextStep()
-    {
-        if (CurrentStepIndex < Steps.Count - 1)
+        if (item != null)
         {
-            Steps[CurrentStepIndex].IsActive = false;
-            CurrentStepIndex++;
-            Steps[CurrentStepIndex].IsActive = true;
-            StateHasChanged();
+            Cart.AddItem(item, 1);
         }
     }
 
-    private void GoToPreviousStep()
+    private void RemoveFromOrder(string itemName, string category)
     {
-        if (CurrentStepIndex > 0)
+        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
+           MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
+           MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
+
+        if (item != null)
         {
-            Steps[CurrentStepIndex].IsActive = false;
-            CurrentStepIndex--;
-            Steps[CurrentStepIndex].IsActive = true;
-            StateHasChanged();
+            Cart.RemoveItem(item);
         }
     }
 
-    private RenderFragment RenderStepComponent()
+    private RenderFragment RenderCartControls(ICartItem item)
     {
-        var step = Steps[CurrentStepIndex];
-        return builder =>
+        int quantity = Cart.GetItemQuantity(item);
+
+        if (quantity > 0)
         {
-            builder.OpenComponent(0, step.ComponentType);
-            builder.CloseComponent();
-        };
-    }
-
-    protected override void OnInitialized()
-    {
-        Steps[CurrentStepIndex].IsActive = true;
-    }
-
-    private class Step
-    {
-        public string? Name { get; set; }
-        public Type? ComponentType { get; set; }
-        public bool IsActive { get; set; }
+            return 
+            @<div class="cart-controls">
+                <button @onclick="() => RemoveFromOrder(item.Name, item.Category)">-</button>
+                <span>@quantity</span>
+                <button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>
+            </div>;
+        }
+        else
+        {
+            return
+            @<button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>;
+        }
     }
 }

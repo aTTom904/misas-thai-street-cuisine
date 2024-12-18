@@ -35,6 +35,39 @@
             color : #fff
         }
 
+
+.shopping-cart {
+    position: absolute;
+    top: 5vh;
+    right: 5vw;
+    font-size: 1.75rem;
+    color: darkgoldenrod;
+    text-decoration: none;
+    z-index: 10;
+    transition: color 0.2s ease
+}
+
+    .shopping-cart:hover {
+        color: #8B6508;
+    }
+
+.cart-count {
+    position: absolute;
+    top: 3vh;
+    right: 5vw;
+    background-color: darkgoldenrod;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
 .logo-container {
     position: absolute;
     left: 50%;
@@ -69,7 +102,7 @@
     justify-content: space-between;
     font-size: 16px;
     color: black;
-    position: relative;
+
     z-index: 1;
 }
 
@@ -130,6 +163,18 @@
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.countdown {
+    position: absolute;
+    top: 3vh;
+    left: 3vw;
+    font-size: 2.5rem;
+    font-family: 'Shangri La';
+    color: black;
+    z-index: 10;
+    padding: 10px;
+    border-radius: 5px;
+}
 
 
 
@@ -213,9 +258,13 @@
 
     .footer-right {
         display: flex;
-        gap: 10px;
+        gap: 10px; 
     }
         .footer-right a {
             font-size: 20px;
         }
+
+    .countdown {
+        font-size: 1.5rem;
+    }
 }

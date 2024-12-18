@@ -64,6 +64,14 @@ h1:focus {
     font-style: normal;
 }
 
+.flatpickr-day.disabled {
+    background-color: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+
+
   
   
   

@@ -1,0 +1,47 @@
+﻿.form-container {
+    justify-content: center;
+}
+
+.order-details-form {
+    width: 100%;
+}
+
+    .order-details-form .form-group {
+        margin-bottom: 15px;
+    }
+
+    .order-details-form label {
+        display: block;
+        font-family: "Shangri La";
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .order-details-form .btn {
+        display: flex;
+        justify-self: center;
+        margin-top: 30px;
+        padding: 8px 50px;
+        background-image: url('/Resources/Images/Icons/thai-label.png');
+        background-size: cover;
+        background-position: center;
+        color: black;
+        border: none;
+        text-decoration: none;
+        font-size: 1vw;
+        font-family: "Rock Salt", cursive;
+        transition: color 0.2s ease;
+    }
+
+    .order-details-form .form-control {
+        width: 500px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+@media (max-width: 600px) {
+    .order-details-form .btn {
+        font-size: 4vw;
+    }
+}
