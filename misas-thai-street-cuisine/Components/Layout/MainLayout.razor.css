@@ -23,7 +23,7 @@
 }
 
     .nav-left a, .nav-right a {
-        color: black;
+        color: #ee6900;
         font-family: 'Shangri La';
         text-decoration: none;
         font-size: 2.5vw;
@@ -32,7 +32,7 @@
         transition: color 0.2s ease
     }
         .nav-left a:hover, .nav-right a:hover {
-            color : #fff
+            color : orange
         }
 
 
@@ -94,7 +94,7 @@
 
 
 .footer {
-    background: linear-gradient(to right, #ffde59, #ff914d);
+    background: black;
     bottom: 0;
     left: 0;
     right: 0;
@@ -118,6 +118,7 @@
 }
     .footer-left p {
         margin-bottom: 0px;
+        color: #ee6900;
     }
 
 .footer-right {
@@ -127,13 +128,13 @@
 }
 
     .footer-right a {
-        color: black;
+        color: #ee6900;
         font-size: 30px;
         text-decoration: none;
     }
 
         .footer-right a:hover {
-            color: #fff;
+            color: orange;
         }
 
 .fab {
@@ -142,6 +143,7 @@
 
 .hamburger-menu {
     display: none;
+    color: #ee6900;
 }
 
 
@@ -196,6 +198,7 @@
         cursor: pointer;
         margin-top: 10px;
         justify-content: center;
+        margin-right: -15px;
     }
 
     .logo-container {
@@ -215,29 +218,26 @@
         max-width: 100%;
     }
 
-    .mobile-nav-wrapper {
-
-    }
-
     .mobile-nav {
         position: absolute;
         top: 225px;
-        left: 0;
-        width: 100%;
+        left: 25%;
+        width: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 10px;
         margin-top: 10px;
-        background-color: goldenrod;
-        border-radius: 5px;
+        background: black;
+        border: 1px solid #ee6900;
+        border-radius: 10px;
         padding: 10px;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         z-index: 100;
     }
 
         .mobile-nav a {
-            color: black;
+            color: #ee6900;
             font-family: 'Shangri La';
             font-size: 1.5em;
             text-decoration: none;

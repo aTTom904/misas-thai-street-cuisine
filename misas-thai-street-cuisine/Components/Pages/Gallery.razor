@@ -1,0 +1,38 @@
+﻿@page "/Gallery"
+@using Microsoft.AspNetCore.Components.Web
+@using System.IO
+@inject IWebHostEnvironment Environment
+
+<div class="container">
+    <h2 class='page-header-text'>See for Yourself</h2>
+
+    <div class="gallery">
+        @foreach (var image in Images)
+        {
+            <img src="@image" class="gallery-item" />
+        }
+    </div>
+</div>
+
+@code {
+    private List<string> Images = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        LoadImages();
+    }
+
+    private void LoadImages()
+    {
+        var imagesPath = Path.Combine(Environment.WebRootPath, "Resources", "Images", "Gallery");
+        if (Directory.Exists(imagesPath))
+        {
+            var imageFiles = Directory.GetFiles(imagesPath);
+            foreach (var imageFile in imageFiles)
+            {
+                var relativePath = Path.Combine("Resources", "Images", "Gallery", Path.GetFileName(imageFile));
+                Images.Add(relativePath.Replace("\\", "/"));
+            }
+        }
+    }
+}
