@@ -1,6 +1,6 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: linear-gradient(to right, #ffde59, #ff914d);
+    background: #000000 !important;
     overflow: scroll; /* Enables scrolling */
     scrollbar-width: none; /* Firefox */
     margin: 0;
@@ -63,6 +63,7 @@ h1:focus {
     font-weight: 400;
     font-style: normal;
 }
+
 
 .flatpickr-day.disabled {
     background-color: #e9ecef;

@@ -1,0 +1,40 @@
+﻿.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.page-header-text {
+    font-size: 4rem;
+    font-family: "Rock Salt", cursive;
+    margin-bottom: 25px;
+    color: #ee6900;
+    padding-bottom: 50px;
+    text-align: center;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(75vw, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.gallery-item {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+    .page-header-text {
+        font-size: 3rem;
+        padding-bottom: 10px;
+    }
+}

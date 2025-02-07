@@ -1,99 +1,92 @@
-﻿@using Data
-@using Services
-@using Models
-@page "/Menu"
+﻿@page "/Menu"
 @rendermode InteractiveServer
-@inject ShoppingCartService Cart
 
 <div class="menu-container">
-    <h2 class='page-header-text'>Pick Your Flavor Fix</h2>
-    <div class="gotta-try-blurb">
-        <p class="gotta-try-text">You gotta try this stuff!</p>
-        <img src="/Resources/Images/Icons/curved-arrow-right-short.png"/>
-    </div>
+    <h2 class='page-header-text'>Choose Your Flavor Fix</h2>
+
     <div class="menu-section">
         <h3 class="section-header-text">The Platter</h3>
         <ul>
-            @foreach (var platter in MenuData.Platters)
-            {
-                <li>
-                    <span>@platter.Name - @platter.Price.ToString("C")</span>
-                    @RenderCartControls(platter)
-                </li>
-            }
+            <li>
+                <img src="/Resources/Images/Food/The Platter.jpg" alt="Thai Sausage Platter" />
+                <span class="item-price">$25.00</span>
+                <div class="details-text">
+                    <p>8 oz Sai Ua Sausage</p>
+                    <p>6 oz Sticky rice</p>
+                    <p>2 oz Prik Noom Chili Paste OR Curry Sauce</p>
+                </div>
+                <div style="padding: 20px;">
+                    <a target="_blank" href="https://square.link/u/JKHWoMxu?src=embed" style="
+                        display: inline-block;
+                        font-size: 1.25rem;
+                        font-family:  Rock Salt, cursive;
+                        line-height: 48px;
+                        height: 48px;
+                        color: #000000;
+                        min-width: 212px;
+                        background-color: #ee6900;
+                        text-align: center;
+                        box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset;
+                        border-radius: 5px;
+                        text-decoration: none;
+                        "
+                    >Order now</a>
+                </div>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source Serif Pro">
+            </li>
         </ul>
     </div>
 
     <div class="menu-section">
-        <h3 class="section-header-text">Sai Ui (Thai Herb Sausage)</h3>
+        <h3 class="section-header-text">The Party Platter</h3>
         <ul>
-            @foreach (var sausage in MenuData.SausageTypes)
-            {
-                <li>
-                    <span>@sausage.Name - @sausage.Price.ToString("C")</span>
-                    @RenderCartControls(sausage)
-                </li>
-            }
+            <li>
+                <img src="/Resources/Images/Food/The Platter.jpg" alt="Family Party Platter" />
+                <span class="item-price">$62.50</span>
+                <div class="details-text">
+                    <p>20 oz Sai Ua Sausage</p>
+                    <p>15 oz Sticky Rice</p>
+                    <p>5 oz Jao Dip</p>
+                    <p>5 oz Prik Noom Chili Paste OR Curry Sauce</p>
+                </div>
+                <div style="padding: 20px;">
+                    <a target="_blank" href="https://square.link/u/q7fHfB4H?src=embed" style="
+                        display: inline-block;
+                        font-size: 18px;
+                        font-family:  Rock Salt, cursive;
+                        line-height: 48px;
+                        height: 48px;
+                        color: #000000;
+                        min-width: 212px;
+                        background-color: #ee6900;
+                        text-align: center;
+                        box-shadow: 0 0 0 1px rgba(0,0,0,.1) inset;
+                        border-radius: 6px;
+                        text-decoration: none;
+                    ">Order now</a>
+                </div>
+            </li>
         </ul>
     </div>
 
     <div class="menu-section">
-        <h3 class="section-header-text">Sides</h3>
+        <h3 class="section-header-text">Add-Ons</h3>
         <ul>
-            @foreach (var side in MenuData.SideDishes)
-            {
-                <li>
-                    <span>@side.Name - @side.Price.ToString("C")</span>
-                    @RenderCartControls(side)
-                </li>
-            }
+            <li>
+                <span>Extra Sai Ua (4oz) - $8.25</span>
+            </li>
+            <li>
+                <span>Extra Sticky Rice (2oz) - $2.00</span>
+            </li>
+            <li>
+                <span>Extra Prik Noom (2oz) - $3.55</span>
+            </li>
+            <li>
+                <span>Extra Curry Sauce (2oz) - $2.25</span>
+            </li>
+            <li>
+                <span>Extra Jao Dip (2oz) - $2.25</span>
+            </li>
         </ul>
     </div>
 </div>
-
-@code {
-
-    private void AddToOrder(string itemName, string category)
-    {
-        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
-                   MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
-                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
-
-        if (item != null)
-        {
-            Cart.AddItem(item, 1);
-        }
-    }
-
-    private void RemoveFromOrder(string itemName, string category)
-    {
-        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
-           MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
-           MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
-
-        if (item != null)
-        {
-            Cart.RemoveItem(item);
-        }
-    }
-
-    private RenderFragment RenderCartControls(ICartItem item)
-    {
-        int quantity = Cart.GetItemQuantity(item);
-
-        if (quantity > 0)
-        {
-            return 
-            @<div class="cart-controls">
-                <button @onclick="() => RemoveFromOrder(item.Name, item.Category)">-</button>
-                <span>@quantity</span>
-                <button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>
-            </div>;
-        }
-        else
-        {
-            return
-            @<button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>;
-        }
-    }
-}

@@ -18,12 +18,12 @@ namespace Data
 //                Category = "Sausage",
 //                Price = 10.75m,
 //            },
-            new SausageType
-            {
-                Name =  "Turkey",
-                Category = "Sausage",
-                Price = 11.00m,
-           },
+           // new SausageType
+           // {
+           //     Name =  "Turkey",
+           //     Category = "Sausage",
+           //     Price = 11.00m,
+           //},
 //           new SausageType
 //            {
 //                Name =  "Mushroom",
@@ -36,15 +36,27 @@ namespace Data
         {
             new SideDish
             {
-                Name="Sticky Rice",
+                Name="Extra Sausage",
                 Category = "Side",
-                Price= 02.95m
+                Price= 08.25m
             },
             new SideDish
             {
-                Name="Chili Paste (Prik Noom)",
+                Name="Sticky Rice",
                 Category = "Side",
-                Price= 04.05m
+                Price= 02.00m
+            },
+            new SideDish
+            {
+                Name="Prik Noom Chili Paste",
+                Category = "Side",
+                Price= 03.55m
+            },
+            new SideDish
+            {
+                Name="Curry Sauce",
+                Category = "Side",
+                Price = 02.25m
             }
         };
 
@@ -62,12 +74,12 @@ namespace Data
 //                Category = "Platter",
 //                Price = 25.00m
 //            },
-            new Platter
-            {
-                Name = "Turkey",
-                Category = "Platter",
-                Price = 24.00m
-            },
+            //new Platter
+            //{
+            //    Name = "Turkey",
+            //    Category = "Platter",
+            //    Price = 24.00m
+            //},
 //            new Platter
 //           {
 //                Name = "Mushroom",

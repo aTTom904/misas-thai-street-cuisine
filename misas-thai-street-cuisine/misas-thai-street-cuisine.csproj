@@ -27,6 +27,9 @@
     <PackageReference Include="Blazorise.Bootstrap" Version="1.7.0" />
     <PackageReference Include="Blazorise.Bootstrap5" Version="1.7.0" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
+    <PackageReference Include="Square" Version="39.1.0" />
   </ItemGroup>
 
 </Project>
