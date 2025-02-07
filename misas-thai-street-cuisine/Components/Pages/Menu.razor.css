@@ -2,18 +2,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 600px;
+    max-width: 75vw;
     margin: 0 auto;
     padding: 20px;
-    text-align: center;
+    text-align: left;
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 4rem;
     font-family: "Rock Salt", cursive;
     margin-bottom: 25px;
     color: #ee6900;
-    padding-bottom: 10px;
+    padding-bottom: 50px;
+    text-align: center;
 }
 
 .menu-section {
@@ -28,15 +29,19 @@ h2 {
 }
 
     .menu-section h3 {
-        font-size: 1.5em;
-        font-weight: bold;
         margin-bottom: 15px;
+        /*        background: url('/Resources/Images/Icons/label-background.png');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;*/
+        padding: 2px 15px;
         color: #ee6900;
+        background-color: black;
+        border: solid 2px #ee6900;
+        border-radius: 5px;
         letter-spacing: 0.5px;
         font-family: 'Shangri La';
-        font-size: 3rem;
-        border-bottom: 1px solid #ee6900;
-        padding-bottom: 10px;
+        font-size: 3.5rem;
     }
 
 ul {
@@ -50,13 +55,17 @@ li {
     flex-direction: column;
     align-items: center;
     margin-bottom: 15px;
-    font-size: 1.5rem;
     color: #ee6900;
 }
 
     li span {
-        font-family: 'Shangri La';
-        font-size: 2rem;
+        font-family: Papyrus;
+        font-weight: bold;
+        font-size: 2.5rem;
+    }
+
+    .item-price {
+        font-size: 3rem;
     }
 
 img {
@@ -66,9 +75,10 @@ img {
 }
 
 .details-text {
-    font-family: 'Shangri La';
-    font-size: 1.75rem;
-    text-align: left;
+    font-family: Papyrus;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
     width: 100%;
 }
 
@@ -76,9 +86,33 @@ img {
         margin: 0;
         padding-left: 20px;
         text-indent: -20px;
+        text-align: left;
     }
 
         .details-text p::before {
             content: "• ";
             padding-right: 5px;
         }
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+    .menu-container {
+        max-width: 100vw;
+    }
+    .page-header-text {
+        font-size: 3rem;
+        padding-bottom: 10px;
+    }
+    .details-text {
+        font-size: 1.5rem;
+    }
+    li span {
+        font-size: 1.5rem;
+    }
+    .menu-section h3 {
+        font-size: 3rem;
+    }
+    .item-price {
+        font-size: 2rem;
+    }
+}

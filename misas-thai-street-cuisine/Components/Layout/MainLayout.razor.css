@@ -2,6 +2,11 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-image: url('/Resources/Images/Other/background-image.png');
+    background-size: cover;
+    background-position: left;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keep the background image fixed */
 }
 
 .navbar {
@@ -26,7 +31,7 @@
         color: #ee6900;
         font-family: 'Shangri La';
         text-decoration: none;
-        font-size: 2.5vw;
+        font-size: 3.5rem;
         font-weight: bold;
         line-height: 60px;
         transition: color 0.2s ease
@@ -94,15 +99,12 @@
 
 
 .footer {
-    background: black;
     bottom: 0;
     left: 0;
     right: 0;
     display: flex;
     justify-content: space-between;
     font-size: 16px;
-    color: black;
-
     z-index: 1;
 }
 
@@ -229,7 +231,7 @@
         gap: 10px;
         margin-top: 10px;
         background: black;
-        border: 1px solid #ee6900;
+        border: 2px solid #ee6900;
         border-radius: 10px;
         padding: 10px;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -239,15 +241,10 @@
         .mobile-nav a {
             color: #ee6900;
             font-family: 'Shangri La';
-            font-size: 1.5em;
+            font-size: 2em;
             text-decoration: none;
             font-weight: bold;
-            transition: color 0.2s ease;
         }
-
-            .mobile-nav a:hover {
-                color: #fff;
-            }
 
     .footer-left {
         max-width: 50%;

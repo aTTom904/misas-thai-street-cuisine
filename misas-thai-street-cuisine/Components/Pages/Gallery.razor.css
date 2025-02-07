@@ -7,11 +7,12 @@
 }
 
 .page-header-text {
-    margin-bottom: 20px;
-    font-size: 2.75rem;
+    font-size: 4rem;
     font-family: "Rock Salt", cursive;
-    padding-bottom: 20px;
+    margin-bottom: 25px;
     color: #ee6900;
+    padding-bottom: 50px;
+    text-align: center;
 }
 
 .gallery {
@@ -33,6 +34,7 @@
 /* Media query for mobile devices */
 @media (max-width: 600px) {
     .page-header-text {
-        font-size: 2rem;
+        font-size: 3rem;
+        padding-bottom: 10px;
     }
 }
