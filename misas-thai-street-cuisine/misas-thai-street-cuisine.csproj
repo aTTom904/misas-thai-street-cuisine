@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -21,15 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
     <PackageReference Include="Blazor.Bootstrap" Version="3.2.0" />
     <PackageReference Include="Blazorise" Version="1.7.0" />
     <PackageReference Include="Blazorise.Bootstrap" Version="1.7.0" />
     <PackageReference Include="Blazorise.Bootstrap5" Version="1.7.0" />
     <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0" />
-    <PackageReference Include="Square" Version="39.1.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
   </ItemGroup>
 
 </Project>
