@@ -15,6 +15,10 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 // Add services
 builder.Services.AddScoped<ShoppingCartService>();
 builder.Services.AddScoped<SquarePaymentService>();
+builder.Services.AddScoped<OrderApiService>();
+
+// Add HTTP client for API calls
+builder.Services.AddHttpClient<OrderApiService>();
 
 builder.Services
     .AddBlazorise(options =>
