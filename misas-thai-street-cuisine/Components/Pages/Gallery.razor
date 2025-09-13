@@ -1,7 +1,5 @@
 ﻿@page "/Gallery"
 @using Microsoft.AspNetCore.Components.Web
-@using System.IO
-@inject IWebHostEnvironment Environment
 
 <div class="container">
     <h2 class='page-header-text'>See for Yourself</h2>
@@ -15,24 +13,19 @@
 </div>
 
 @code {
-    private List<string> Images = new List<string>();
+    private List<string> Images = new List<string>
+    {
+        "Resources/Images/Gallery/misa-sausage-2.jpg",
+        "Resources/Images/Gallery/frozen-link.jpg", 
+        "Resources/Images/Gallery/frozen-platter.jpg",
+        "Resources/Images/Gallery/herbs.png",
+        "Resources/Images/Gallery/spices.png"
+        // Add more images as needed
+    };
 
     protected override void OnInitialized()
     {
-        LoadImages();
-    }
-
-    private void LoadImages()
-    {
-        var imagesPath = Path.Combine(Environment.WebRootPath, "Resources", "Images", "Gallery");
-        if (Directory.Exists(imagesPath))
-        {
-            var imageFiles = Directory.GetFiles(imagesPath);
-            foreach (var imageFile in imageFiles)
-            {
-                var relativePath = Path.Combine("Resources", "Images", "Gallery", Path.GetFileName(imageFile));
-                Images.Add(relativePath.Replace("\\", "/"));
-            }
-        }
+        // Images are now hardcoded above
+        // In the future, you could load these from a JSON file using HttpClient
     }
 }
