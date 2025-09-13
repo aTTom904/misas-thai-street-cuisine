@@ -53,7 +53,7 @@ namespace misas_thai_street_cuisine.Services
             OnItemAddedOrRemoved();
         }
 
-        public event Action CartChanged;
+        public event Action CartChanged = delegate { };
 
         private void OnItemAddedOrRemoved()
         {
