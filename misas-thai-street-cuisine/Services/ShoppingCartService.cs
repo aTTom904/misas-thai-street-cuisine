@@ -1,7 +1,7 @@
-﻿using Models;
+﻿using misas_thai_street_cuisine.Models;
 using Microsoft.JSInterop;
 
-namespace Services
+namespace misas_thai_street_cuisine.Services
 {
     public class ShoppingCartService
     {
@@ -19,6 +19,11 @@ namespace Services
                 Items.Add(new CartItem(item, quantity));
             }
             OnItemAddedOrRemoved();
+        }
+
+        public void AddItem(ICartItem item)
+        {
+            AddItem(item, 1);
         }
 
         public void RemoveItem(ICartItem item)
@@ -48,7 +53,7 @@ namespace Services
             OnItemAddedOrRemoved();
         }
 
-        public event Action CartChanged;
+        public event Action CartChanged = delegate { };
 
         private void OnItemAddedOrRemoved()
         {
@@ -64,6 +69,17 @@ namespace Services
         public int GetItemQuantity(ICartItem item)
         {
             return Items.FirstOrDefault(ci => ci.Item == item)?.Quantity ?? 0;
+        }
+
+        public int GetQuantity(ICartItem item)
+        {
+            return GetItemQuantity(item);
+        }
+
+        public void ClearCart()
+        {
+            Items.Clear();
+            OnItemAddedOrRemoved();
         }
 
     }

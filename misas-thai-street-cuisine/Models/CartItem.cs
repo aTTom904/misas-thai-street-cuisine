@@ -1,4 +1,4 @@
-﻿namespace Models
+﻿namespace misas_thai_street_cuisine.Models
 {
     public interface ICartItem
     {
