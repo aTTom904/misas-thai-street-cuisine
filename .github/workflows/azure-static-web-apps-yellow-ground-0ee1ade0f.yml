@@ -11,25 +11,15 @@ on:
 
 jobs:
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and Deploy Job
-    permissions:
-      id-token: write
-      contents: read
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
-          lfs: false
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-
-      - name: Restore dependencies
-        run: dotnet restore ./misas-thai-street-cuisine/misas-thai-street-cuisine.csproj
 
       - name: Publish Blazor WASM
         run: dotnet publish ./misas-thai-street-cuisine/misas-thai-street-cuisine.csproj -c Release -o build
@@ -38,9 +28,9 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_YELLOW_GROUND_0EE1ADE0F }}
-          app_location: "./build/wwwroot"
+          app_location: "build/wwwroot"
+          api_location: "MisasThaiApi"
           output_location: "" # Not needed when using prebuilt output
-          api_location: ""    # Set if you have an API project
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
