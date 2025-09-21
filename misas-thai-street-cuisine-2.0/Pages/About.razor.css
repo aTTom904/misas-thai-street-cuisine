@@ -1,0 +1,75 @@
+﻿.about-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.page-header-text {
+    font-size: 4rem;
+    font-family: "Rock Salt", cursive;
+    margin-bottom: 25px;
+    color: #ee6900;
+    padding-bottom: 50px;
+    text-align: center;
+}
+
+.about-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    color: #ee6900;
+    font-size: 2rem;
+    font-family: Papyrus;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    width: 100%;
+    max-width: 50vw;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .about-section h4 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        padding: 2px 15px;
+        color: #ee6900;
+        background-color: black;
+        border: solid 2px #ee6900;
+        border-radius: 5px;
+        letter-spacing: 0.5px;
+        font-family: 'Shangri La';
+        font-size: 3rem;
+    }
+
+    .about-section p {
+        text-align: left;
+        width: 100%;
+    }
+
+    .about-section img {
+        max-width: 50vw;
+        border-radius: 10px;
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 25px;
+    }
+
+/* Media query for mobile devices */
+@media (max-width: 600px) {
+    .about-section {
+        max-width: 100vw;
+        font-size: 1.5rem;
+    }
+        .about-section img {
+            max-width: 75vw;
+        }
+
+    .page-header-text {
+        font-size: 3rem;
+        padding-bottom: 10px;
+    }
+}

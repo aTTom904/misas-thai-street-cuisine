@@ -1,0 +1,90 @@
+﻿@using misas_thai_street_cuisine_2._0.Models
+@using Data
+
+@page "/Cart"
+@inject ShoppingCartService Cart
+
+<PageTitle>Shopping Cart</PageTitle>
+
+<div class="cart-container">
+    <h3>Your Goodies</h3>
+
+    @if (Cart.Items.Count == 0)
+    {
+        <p>Your cart is empty.</p>
+    }
+    else
+    {
+        @foreach (var item in Cart.Items)
+        {
+            <div class="cart-item">
+                <div class="cart-item-details">
+                    <h4 class="cart-item-name">@item.Item.Name</h4>
+                    <p class="cart-item-category">@item.Item.Category</p>
+                    <p class="cart-item-quantity">@RenderCartControls(@item.Item)</p>
+                    <p class="cart-item-price">Price: @item.Item.Price</p>
+                    <p class="cart-item-total">Total: @item.GetTotalPrice()</p>
+                </div>
+
+                <button @onclick="() => RemoveItemFromCart(item)" class="trash-btn">
+                    <i class="fa fa-trash"></i> Remove
+                </button>
+            </div>
+        }
+
+        <h4 class="total-price">Total Price: @Cart.GetTotalPrice()</h4>
+        <a href="/Finalize" class="button image-button">Finish Up</a>
+    }
+</div>
+
+@code
+{
+    private void RemoveItemFromCart(CartItem item)
+    {
+        Cart.RemoveAll(item.Item);
+    }
+
+    private void AddToOrder(string itemName, string category)
+    {
+        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
+                   MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
+                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
+
+        if (item != null)
+        {
+            Cart.AddItem(item, 1);
+        }
+    }
+
+    private void RemoveFromOrder(string itemName, string category)
+    {
+        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
+                   MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
+                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
+
+        if (item != null)
+        {
+            Cart.RemoveItem(item);
+        }
+    }
+
+    private RenderFragment RenderCartControls(ICartItem item)
+    {
+        int quantity = Cart.GetItemQuantity(item);
+
+        if (quantity > 0)
+        {
+            return
+            @<div class="cart-controls">
+                <button @onclick="() => RemoveFromOrder(item.Name, item.Category)">-</button>
+                <span>@quantity</span>
+                <button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>
+            </div>;
+        }
+        else
+        {
+            return
+           @<button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>;
+        }
+    }
+}

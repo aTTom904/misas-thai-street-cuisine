@@ -1,0 +1,52 @@
+﻿@using Data
+@page "/TestPage"
+
+<h2 class='page-header-text'>Place Your Order</h2>
+
+<div class="menu-section">
+    <h3 class="section-header-text">Thai Herb Sausage (Sai Oua)</h3>
+    <ul>
+        @foreach (var sausage in MenuData.SausageTypes)
+        {
+            <li>
+                <span>@sausage.Name - @sausage.Price.ToString("C")</span>
+                <button @onclick="() => AddToOrder(sausage.Name)">+</button>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="menu-section">
+    <h3 class="section-header-text">Sides</h3>
+    <ul>
+        @foreach (var side in MenuData.SideDishes)
+        {
+            <li>
+                <span>@side.Name - @side.Price.ToString("C")</span>
+                <button @onclick="() => AddToOrder(side.Name)">+</button>
+            </li>
+        }
+    </ul>
+</div>
+
+<div class="menu-section">
+    <h3 class="section-header-text">Packages</h3>
+    <ul>
+        @foreach (var platter in MenuData.Platters)
+        {
+            <li>
+                <span>@platter.Name - @platter.Price.ToString("C")</span>
+                <button @onclick="() => AddToOrder(platter.Name)">+</button>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    // Example method that could be used to add items to an order
+    private void AddToOrder(string itemName)
+    {
+        Console.WriteLine($"Added {itemName} to order.");
+        // Here, you can add code to add the item to an order list or cart
+    }
+}

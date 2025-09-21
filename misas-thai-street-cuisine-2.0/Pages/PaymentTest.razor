@@ -1,0 +1,177 @@
+@page "/payment-test"
+@using misas_thai_street_cuisine_2._0.Services
+@using Microsoft.AspNetCore.Components.Web
+@inject SquarePaymentService PaymentService
+@implements IAsyncDisposable
+
+<div class="payment-container">
+    <h3>Square Payment Test</h3>
+    
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">
+            @errorMessage
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success">
+            @successMessage
+        </div>
+    }
+
+    <div class="payment-form">
+        <div class="form-group">
+            <label>Card Information</label>
+            <div id="card-container" style="min-height: 60px; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background-color: #f8f9fa;"></div>
+        </div>
+        
+        <div class="form-group mt-3">
+            <label>Test Amount: $@amount.ToString("F2")</label>
+        </div>
+
+        <button class="btn btn-primary mt-3" @onclick="ProcessPayment" disabled="@isProcessing">
+            @if (isProcessing)
+            {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            Test Payment $@amount.ToString("F2")
+        </button>
+    </div>
+
+    <div class="mt-4">
+        <h5>Test Card Numbers (Sandbox):</h5>
+        <ul>
+            <li><strong>Visa:</strong> 4111 1111 1111 1111</li>
+            <li><strong>Mastercard:</strong> 5555 5555 5555 4444</li>
+            <li><strong>CVV:</strong> Any 3 digits</li>
+            <li><strong>Expiry:</strong> Any future date</li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    private decimal amount = 25.00m;
+    private string errorMessage = string.Empty;
+    private string successMessage = string.Empty;
+    private bool isProcessing = false;
+    private bool isInitialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !isInitialized)
+        {
+            await InitializePayments();
+        }
+    }
+
+    private async Task InitializePayments()
+    {
+        try
+        {
+            // Initialize Square Payments
+            var initResult = await PaymentService.InitializeAsync();
+            if (!initResult.Success)
+            {
+                errorMessage = $"Failed to initialize payments: {initResult.Error}";
+                StateHasChanged();
+                return;
+            }
+
+            // Initialize the card form
+            var cardResult = await PaymentService.InitializeCardAsync("card-container");
+            if (!cardResult.Success)
+            {
+                errorMessage = $"Failed to initialize card form: {cardResult.Error}";
+                StateHasChanged();
+                return;
+            }
+
+            isInitialized = true;
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error initializing payments: {ex.Message}";
+            StateHasChanged();
+        }
+    }
+
+    private async Task ProcessPayment()
+    {
+        if (!isInitialized)
+        {
+            errorMessage = "Payment system not initialized";
+            return;
+        }
+
+        isProcessing = true;
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            // Tokenize the card
+            var tokenResult = await PaymentService.TokenizeCardAsync();
+            
+            if (tokenResult.Success && !string.IsNullOrEmpty(tokenResult.Token))
+            {
+                successMessage = $"✅ Payment tokenized successfully! Token: {tokenResult.Token[..20]}...";
+                
+                // In a real application, you would send this token to your server
+                // to process the payment with Square's Payments API
+            }
+            else
+            {
+                var errors = tokenResult.Errors != null ? 
+                    string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : 
+                    tokenResult.Error ?? "Unknown error occurred";
+                errorMessage = $"Payment failed: {errors}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error processing payment: {ex.Message}";
+        }
+        finally
+        {
+            isProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (isInitialized)
+        {
+            await PaymentService.DestroyAsync();
+        }
+    }
+}
+
+<style>
+    .payment-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 2rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #fff;
+    }
+
+    .payment-form {
+        margin-top: 1rem;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    #card-container {
+        background-color: #f8f9fa;
+    }
+</style>

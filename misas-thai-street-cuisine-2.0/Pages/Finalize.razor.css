@@ -1,0 +1,14 @@
+﻿.order-process {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    font-family: "Rock Salt", cursive;
+    margin-bottom: 25px;
+    color: black;
+    padding-bottom: 10px;
+}

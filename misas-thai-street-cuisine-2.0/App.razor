@@ -1,0 +1,14 @@
+﻿@namespace misas_thai_street_cuisine_2._0
+@using misas_thai_street_cuisine_2._0.Layout
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+    <RouteView RouteData="@routeData" DefaultLayout="@typeof(misas_thai_street_cuisine_2._0.Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+    <LayoutView Layout="@typeof(misas_thai_street_cuisine_2._0.Layout.MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>

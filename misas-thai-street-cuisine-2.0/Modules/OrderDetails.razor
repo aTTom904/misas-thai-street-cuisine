@@ -1,0 +1,70 @@
+﻿@using Blazorise
+@using Blazorise.Bootstrap
+@using Blazorise.Icons.FontAwesome
+@using System.ComponentModel.DataAnnotations;
+@using System.Diagnostics
+
+<div class="form-container">
+    <EditForm Model=@formModel OnValidSubmit=@HandleValidSubmit class="order-details-form">
+        <label for="date">Pickup Date</label>
+        <DatePicker @bind-Date="formModel.SelectedDate"
+        @ref="datePicker"
+        StaticPicker="false"
+        DisabledDays="@disabledDays"
+        Class="mb-3"/>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText id="name" @bind-Value="formModel.Name" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <InputText id="email" @bind-Value="formModel.Email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <InputText id="phone" @bind-Value="formModel.PhoneNumber" class="form-control" />
+        </div>
+        <input type="submit" class="btn" value="Checkout" />
+    </EditForm>
+</div>
+
+@code {
+    private DatePicker<DateTime?>? datePicker;
+    private FormModel formModel = new FormModel();
+    public DateTime? SelectedDate { get; set; } = null;
+
+    DayOfWeek[] disabledDays = new DayOfWeek[]
+    {
+        DayOfWeek.Tuesday,
+        DayOfWeek.Wednesday,
+        DayOfWeek.Thursday,
+        DayOfWeek.Friday,
+        DayOfWeek.Saturday,
+        DayOfWeek.Sunday
+    };
+
+    private void HandleValidSubmit()
+    {
+        Debug.WriteLine($"Selected Date: {formModel.SelectedDate}");
+        Debug.WriteLine($"Name: {formModel.Name}");
+        Debug.WriteLine($"Email: {formModel.Email}");
+        Debug.WriteLine($"Phone Number: {formModel.PhoneNumber}");
+    }
+
+    private class FormModel
+    {
+        [Required]
+        public DateTime? SelectedDate { get; set; } = null;
+
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        [Required, EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required, Phone]
+        public string PhoneNumber { get; set; } = string.Empty;
+    }
+}
