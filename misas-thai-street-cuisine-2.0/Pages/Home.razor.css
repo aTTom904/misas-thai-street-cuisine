@@ -1,13 +1,11 @@
-﻿
-
-/* Home Page Hero Section */
+﻿/* Home Page Hero Section */
 .homepage-hero {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     min-height: 80vh;
-    padding: 0 5vw;
+    padding: 0 7vw;
     gap: 4vw;
 }
 
@@ -28,16 +26,17 @@
 }
 
 .hero-title {
-    font-size: 4rem;
-    font-family: 'Rock Salt', cursive;
-    color: #ee6900;
-    line-height: 1.1;
+    font-size: 7rem;
+    /* font-family: 'Rock Salt', cursive; */
+    font-weight: bold;
+    color: #333;
+    line-height: 1;
     margin: 0 0 1rem 0;
     text-shadow: 2px 2px 8px #00000022;
 }
 
 .hero-subtitle {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     color: #333;
     font-family: 'Montserrat', sans-serif;
     margin-bottom: 1.5rem;
@@ -46,7 +45,6 @@
 
 .order-now-btn {
     font-size: 1.5rem;
-    font-family: 'Rock Salt', cursive;
     color: #fff;
     background-color: #ee6900;
     padding: 0.75rem 2.5rem;
@@ -72,9 +70,32 @@
     min-width: 320px;
 }
 
+/* Carousel overlay navigation */
+.carousel-nav-overlay {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    z-index: 2;
+    cursor: pointer;
+    transition: background 0.18s;
+}
+.carousel-nav-left {
+    left: 0;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+}
+.carousel-nav-right {
+    right: 0;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+}
+
 .carousel-circle {
-    width: 420px;
-    height: 420px;
+    width: 35vw;
+    height: 35vw;
+    min-width: 180px;
+    min-height: 180px;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: 0 4px 32px #ee690044;
@@ -82,33 +103,14 @@
     align-items: center;
     justify-content: center;
     background: #fff;
-    position: relative;
 }
 
 .carousel-img {
     width: 100%;
-    height: 100%;
+    height: auto;
     object-fit: cover;
     object-position: center;
     display: block;
-}
-
-.carousel-timer {
-    position: absolute;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.85);
-    color: #ee6900;
-    padding: 0.4rem 1.2rem;
-    border-radius: 20px;
-    font-size: 1.1rem;
-    font-family: 'Montserrat', sans-serif;
-    box-shadow: 0 2px 8px #ee690022;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    z-index: 2;
 }
 
 .carousel-nav {
@@ -160,19 +162,6 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Responsive Styles */
-@media (max-width: 900px) {
-    .homepage-hero {
-        flex-direction: column;
-        padding: 2vw 2vw;
-        gap: 2vw;
-    }
-    .carousel-circle {
-        width: 320px;
-        height: 320px;
-    }
-}
-
 @media (max-width: 600px) {
     .homepage-hero {
         flex-direction: column;
@@ -184,21 +173,24 @@
         min-width: 0;
         width: 100%;
         align-items: center;
-        text-align: center;
+        text-align: left;
     }
     .hero-title {
-        font-size: 2.2rem;
+        font-size: 3rem;
+    }
+    .hero-subtitle {
+        font-size: 1.5rem;
     }
     .hero-logo {
         width: 80px;
     }
     .carousel-circle {
         width: 90vw;
-        height: 45vw;
-        min-width: 180px;
-        min-height: 90px;
+        height: 90vw;
         max-width: 98vw;
-        max-height: 60vw;
+        max-height: 98vw;
+        min-width: 90px;
+        min-height: 90px;
     }
     .carousel-timer {
         font-size: 0.95rem;

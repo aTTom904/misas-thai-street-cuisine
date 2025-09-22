@@ -16,9 +16,9 @@
     <div class="hero-right">
         <div class="carousel-circle">
             <img src="@CurrentImage" alt="Featured Thai Food" class="carousel-img" />
+            <div class="carousel-nav-overlay carousel-nav-left" @onclick="PrevSlide"></div>
+            <div class="carousel-nav-overlay carousel-nav-right" @onclick="NextSlide"></div>
         </div>
-        <button class="carousel-nav prev" @onclick="PrevSlide">&#10094;</button>
-        <button class="carousel-nav next" @onclick="NextSlide">&#10095;</button>
     </div>
 </div>
 

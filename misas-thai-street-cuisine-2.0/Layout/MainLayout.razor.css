@@ -5,14 +5,12 @@
     background-color: white;
 }
 
-
 .navbar {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    background-color: transparent;
-    padding: 1vh 3vw;
+    padding: 1vh 7vw;
     z-index: 100;
 }
 
@@ -21,6 +19,7 @@
     flex-direction: row;
     align-items: center;
     gap: 1.5rem;
+    color:#ee6900;
 }
 
 .logo-link {
@@ -36,51 +35,46 @@
 }
 
 .hamburger-menu {
+    font-size: 1.5rem;
+}
+
+.countdown-text {
     display: flex;
-    color: #ee6900;
-    font-size: 1.75rem;
-    cursor: pointer;
-    margin-left: 0.5rem;
     align-items: center;
-    background: none;
-    border: none;
-    box-shadow: none;
+    gap: 0.5em;
+    position: relative;
 }
-
-.nav-left, .nav-right {
-    display: flex;
-    gap: 10vw;
-    flex-wrap: wrap;
+.countdown-clock {
+    font-size: 1.3em;
+    margin-right: 0.2em;
+    color: #ee6900;
 }
-
-    .nav-left a, .nav-right a {
-        color: #ee6900;
-        font-family: 'Shangri La';
-        text-decoration: none;
-        font-size: 3.5rem;
-        font-weight: bold;
-        line-height: 60px;
-        transition: color 0.2s ease
-    }
-        .nav-left a:hover, .nav-right a:hover {
-            color : orange
-        }
-
-
-.shopping-cart {
+.countdown-single {
+    font-size: 1.3em;
+    font-family: 'Shangri La', cursive;
+    font-weight: bold;
+    color: #ee6900;
+    letter-spacing: 1px;
+}
+.countdown-tooltip {
     position: absolute;
-    top: 5vh;
-    right: 5vw;
-    font-size: 1.75rem;
-    color: darkgoldenrod;
-    text-decoration: none;
-    z-index: 10;
-    transition: color 0.2s ease
+    font-family: Arial, Helvetica, sans-serif;
+    top: 120%;
+    right: 0;
+    background: #fff7f0;
+    color: #ee6900;
+    border: 1px solid #ee6900;
+    border-radius: 8px;
+    padding: 0.7em 1em;
+    font-size: 1rem;
+    box-shadow: 0 2px 12px #ee690044;
+    white-space: nowrap;
+    z-index: 100;
+    min-width: 220px;
+    text-align: right;
+    pointer-events: none;
+    opacity: 0.97;
 }
-
-    .shopping-cart:hover {
-        color: #8B6508;
-    }
 
 .cart-count {
     position: absolute;
@@ -153,27 +147,6 @@
     transition: color 0.2s ease;
 }
 
-
-
-#blazor-error-ui {
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-}
-
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
-
 .countdown {
     margin-left: auto;
     font-size: 2rem;
@@ -185,17 +158,6 @@
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.countdown-info-icon {
-    font-size: 1.2rem;
-    color: #ee6900;
-    cursor: pointer;
-    transition: color 0.2s ease;
-}
-
-.countdown-info-icon:hover {
-    color: orange;
 }
 
 .tooltip-popup {
@@ -247,9 +209,6 @@
 }
 
 .mobile-nav {
-    position: absolute;
-    top: 90px;
-    left: 1vw;
     width: 220px;
     display: flex;
     flex-direction: column;
@@ -317,16 +276,31 @@
     }
 
     .countdown {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         padding: 5px;
         gap: 5px;
     }
 
     .countdown-info-icon {
-        font-size: 1rem;
-    }
-
-    .countdown-line-1, .countdown-line-2 {
-        display: block;
+        font-size: 0.5rem;
     }
 }
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }

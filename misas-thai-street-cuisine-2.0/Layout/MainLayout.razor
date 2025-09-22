@@ -10,21 +10,25 @@
             <a href="/" class="logo-link">
                 <img src="/Resources/Images/Logos/ORNG M RED CHILI.png" alt="Logo" class="logo" />
             </a>
-            <div class="hamburger-menu" @onclick="ToggleMobileMenu">
+            <div class="hamburger-menu" @onclick="OnHamburgerClick">
                 <i class="fas fa-bars"></i>
             </div>
         </div>
         <div class="countdown right-countdown">
-            <span class="countdown-text">
-                <span class="countdown-line-1">Order Deadline:</span>
-                <span class="countdown-line-2">@CountdownText</span>
+            <span class="countdown-text" @onmouseover="() => showTooltip = true" @onmouseout="() => showTooltip = false">
+                <i class="far fa-clock countdown-clock"></i>
+                <span class="countdown-single">@CountdownText</span>
+                @if (showTooltip)
+                {
+                    <span class="countdown-tooltip">Order deadline is every Monday at 5:00 PM. Orders placed after the deadline will be for the following week.</span>
+                }
             </span>
         </div>
     </header>
     @if (isMobileMenuVisible)
     {
         <div id="mobile-nav-wrapper" @onclick="() => isMobileMenuVisible = false">
-            <div class="mobile-nav slide-down">
+            <div class="mobile-nav slide-down" style="position: absolute; left:@(mobileMenuX)px; top:@(mobileMenuY)px;">
                 <a href="/menu">Menu</a>
                 <a href="/gallery">Gallery</a>
                 <a href="/about">About</a>
@@ -54,14 +58,24 @@
 
 
 @code {
+
     private bool isMobileMenuVisible = false;
+    private bool showTooltip = false;
     private int CartItemCount = 0;
     private string CountdownText = "Calculating...";
     private Timer? countdownTimer;
+    private double mobileMenuX = 0;
+    private double mobileMenuY = 0;
 
-    private void ToggleMobileMenu()
+    private async Task OnHamburgerClick(MouseEventArgs e)
     {
         isMobileMenuVisible = !isMobileMenuVisible;
+        if (isMobileMenuVisible)
+        {
+            // Offset a bit for better alignment below the button
+            mobileMenuX = e.ClientX;
+            mobileMenuY = e.ClientY + 8;
+        }
     }
 
     protected override void OnInitialized()
@@ -91,40 +105,33 @@
     private void UpdateCountdown(object? state)
     {
         var now = DateTime.Now;
-        var nextMonday12PM = GetNextMonday12PM(now);
-        var remainingTime = nextMonday12PM - now;
+        var nextMonday5PM = GetNextMonday5PM(now);
+        var remainingTime = nextMonday5PM - now;
 
         if (remainingTime.TotalSeconds <= 0)
         {
             CountdownText = "Orders Open!";
-            nextMonday12PM = GetNextMonday12PM(now.AddDays(7));
-            remainingTime = nextMonday12PM - now;
+            nextMonday5PM = GetNextMonday5PM(now.AddDays(7));
+            remainingTime = nextMonday5PM - now;
         }
 
-        if (remainingTime.TotalDays >= 1)
-        {
-            CountdownText = $"{remainingTime.Days}d {remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
-        }
-        else
-        {
-            CountdownText = $"{remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
-        }
+        CountdownText = $"{remainingTime.Days}d {remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
 
         InvokeAsync(StateHasChanged);
     }
 
-    private DateTime GetNextMonday12PM(DateTime from)
+    private DateTime GetNextMonday5PM(DateTime from)
     {
         int daysUntilMonday = ((int)DayOfWeek.Monday - (int)from.DayOfWeek + 7) % 7;
-        if (from.DayOfWeek == DayOfWeek.Monday && from.TimeOfDay < TimeSpan.FromHours(12))
+        if (from.DayOfWeek == DayOfWeek.Monday && from.TimeOfDay < TimeSpan.FromHours(17))
         {
-            return from.Date.AddHours(12);
+            return from.Date.AddHours(17);
         }
         if (daysUntilMonday == 0)
         {
             daysUntilMonday = 7;
         }
-        return from.Date.AddDays(daysUntilMonday).AddHours(12);
+        return from.Date.AddDays(daysUntilMonday).AddHours(17);
     }
 
     public void Dispose()
