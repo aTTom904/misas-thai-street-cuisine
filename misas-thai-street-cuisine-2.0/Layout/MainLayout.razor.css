@@ -325,4 +325,8 @@
     .countdown-info-icon {
         font-size: 1rem;
     }
+
+    .countdown-line-1, .countdown-line-2 {
+        display: block;
+    }
 }
