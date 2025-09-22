@@ -1,8 +1,6 @@
 ﻿@page "/"
 @using Blazorise
-@using Blazorise.Bootstrap
 @using Blazorise.Icons.FontAwesome
-
 
 <div class="homepage-hero">
     <div class="hero-left">
@@ -15,13 +13,12 @@
     </div>
     <div class="hero-right">
         <div class="carousel-circle">
-            <img src="@CurrentImage" alt="Featured Thai Food" class="carousel-img" />
+            <img src="@CurrentImage" alt="Featured Thai Food" class="carousel-img @(isFading ? "fade" : "")" />
             <div class="carousel-nav-overlay carousel-nav-left" @onclick="PrevSlide"></div>
             <div class="carousel-nav-overlay carousel-nav-right" @onclick="NextSlide"></div>
         </div>
     </div>
 </div>
-
 
 <div id="menu-info" class="menu-info-section">
     <h2>Menu Highlights</h2>
@@ -30,13 +27,10 @@
 
 @code {
     [Inject] private IJSRuntime JS { get; set; } = default!;
-
     private List<string> CarouselImages = new();
     private int currentIndex = 0;
     private string CurrentImage => CarouselImages.Count > 0 ? CarouselImages[currentIndex] : "";
-
-    // Placeholder for countdown text, replace with your actual timer logic if needed
-    private string CountdownText => "0 day, 01 h 31 m 16 s";
+    private bool isFading = false;
 
     protected override void OnInitialized()
     {
@@ -49,16 +43,28 @@
         };
     }
 
-    private void PrevSlide()
+    private async Task PrevSlide()
     {
         if (CarouselImages.Count == 0) return;
-        currentIndex = (currentIndex - 1 + CarouselImages.Count) % CarouselImages.Count;
+        await FadeToSlide((currentIndex - 1 + CarouselImages.Count) % CarouselImages.Count);
     }
 
-    private void NextSlide()
+    private async Task NextSlide()
     {
         if (CarouselImages.Count == 0) return;
-        currentIndex = (currentIndex + 1) % CarouselImages.Count;
+        await FadeToSlide((currentIndex + 1) % CarouselImages.Count);
+    }
+
+    private async Task FadeToSlide(int newIndex)
+    {
+        isFading = true;
+        StateHasChanged();
+        await Task.Delay(250); // duration matches CSS
+        currentIndex = newIndex;
+        StateHasChanged();
+        await Task.Delay(10); // allow DOM update
+        isFading = false;
+        StateHasChanged();
     }
 
     private async Task ScrollToMenuInfo()
@@ -66,3 +72,4 @@
         await JS.InvokeVoidAsync("document.getElementById('menu-info').scrollIntoView", true);
     }
 }
+
