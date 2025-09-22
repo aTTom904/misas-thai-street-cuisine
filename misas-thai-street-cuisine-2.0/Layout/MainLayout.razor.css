@@ -261,6 +261,27 @@
         font-size: 1.25rem;
     }
 
+    .mobile-nav {
+        width: 160px;
+        padding: 0.7rem 0.5rem;
+        font-size: 1rem;
+        gap: 0.3rem;
+    }
+    .mobile-nav a {
+        padding: 0.5rem 0.3rem;
+    }
+
+    .countdown-tooltip {
+        max-width: 80vw;      /* Prevents overflow */
+        width: max-content;
+        font-size: 0.85rem;
+        padding: 0.5em 0.7em;
+        border-radius: 6px;
+        margin: auto;
+        white-space: normal;
+        text-align: center;
+    }
+
     .shopping-cart {
         font-size: 1.5rem;
         top: 4vh;

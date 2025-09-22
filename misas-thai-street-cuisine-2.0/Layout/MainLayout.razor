@@ -15,7 +15,12 @@
             </div>
         </div>
         <div class="countdown right-countdown">
-            <span class="countdown-text" @onmouseover="() => showTooltip = true" @onmouseout="() => showTooltip = false">
+            <span class="countdown-text" 
+                    tabindex="0"
+                    @onfocusout="() => showTooltip = false"
+                    @onmouseover="() => showTooltip = true" 
+                    @onmouseout="() => showTooltip = false"
+                    @onclick="() => showTooltip = !showTooltip">
                 <i class="far fa-clock countdown-clock"></i>
                 <span class="countdown-single">@CountdownText</span>
                 @if (showTooltip)

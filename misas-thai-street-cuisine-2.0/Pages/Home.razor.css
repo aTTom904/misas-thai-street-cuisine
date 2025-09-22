@@ -71,11 +71,9 @@
 }
 
 /* Carousel container for Blazorise */
-.carousel-circle {
+.carousel-container {
     width: 35vw;
     height: 35vw;
-    min-width: 180px;
-    min-height: 180px;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: 0 4px 32px #ee690044;
@@ -83,14 +81,12 @@
     align-items: center;
     justify-content: center;
     background: #fff;
-    position: relative;
 }
 .carousel-img {
-    width: 100%;
-    height: auto;
+    width: 35vw;
+    height: 35vw;
     object-fit: cover;
     object-position: center;
-    display: block;
     border-radius: 50%;
 }
 
@@ -126,11 +122,13 @@
     .hero-left, .hero-right {
         min-width: 0;
         width: 100%;
-        align-items: center;
+        align-items: left;
         text-align: left;
+        padding: 0 5vw 5vw 5vw;
+        gap: 0rem;
     }
     .hero-title {
-        font-size: 3rem;
+        font-size: 4rem;
     }
     .hero-subtitle {
         font-size: 1.5rem;
@@ -138,24 +136,18 @@
     .hero-logo {
         width: 80px;
     }
-    .carousel-circle {
-        width: 90vw;
-        height: 90vw;
-        max-width: 98vw;
-        max-height: 98vw;
-        min-width: 90px;
-        min-height: 90px;
+    .order-now-btn {
+        font-size: 1.2rem;
+        padding: 0.6rem 1.8rem;
+        margin-top: 0.5rem;
     }
-    .carousel-timer {
-        font-size: 0.95rem;
-        padding: 0.3rem 0.7rem;
+    .carousel-container {
+        width: 80vw;
+        height: 80vw;
     }
-    .carousel-nav {
-        font-size: 1.5rem;
-        width: 36px;
-        height: 36px;
-        left: -12px;
-        right: -12px;
+    .carousel-img {
+        width: 80vw;
+        height: 80vw;
     }
     .menu-info-section {
         padding: 1.2rem 0.5rem;
