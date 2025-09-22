@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using Blazorise
+@using Blazorise.Components
 @using Blazorise.Icons.FontAwesome
 
 <div class="homepage-hero">
@@ -12,10 +13,15 @@
         <button class="order-now-btn" @onclick="ScrollToMenuInfo">ORDER NOW</button>
     </div>
     <div class="hero-right">
-        <div class="carousel-circle">
-            <img src="@CurrentImage" alt="Featured Thai Food" class="carousel-img @(isFading ? "fade" : "")" />
-            <div class="carousel-nav-overlay carousel-nav-left" @onclick="PrevSlide"></div>
-            <div class="carousel-nav-overlay carousel-nav-right" @onclick="NextSlide"></div>
+        <div class="carousel-container">
+            <Carousel Crossfade="true" class="carousel" Interval="5000" ShowIndicators="false" ShowControls="true">
+                @foreach (var image in CarouselImages)
+                {
+                    <CarouselSlide Name="@image" key="@image">
+                        <img src="@image" alt="Featured Thai Food" class="carousel-img" Display="Display.Block"/>
+                    </CarouselSlide>
+                }
+            </Carousel>
         </div>
     </div>
 </div>
@@ -27,44 +33,21 @@
 
 @code {
     [Inject] private IJSRuntime JS { get; set; } = default!;
-    private List<string> CarouselImages = new();
-    private int currentIndex = 0;
-    private string CurrentImage => CarouselImages.Count > 0 ? CarouselImages[currentIndex] : "";
-    private bool isFading = false;
 
-    protected override void OnInitialized()
+    private List<string> CarouselImages = new()
     {
-        CarouselImages = new List<string>
+        "/Resources/Images/HomepageCarousel/ms-platter.png",
+        "/Resources/Images/HomepageCarousel/ms-platter-2.png",
+        "/Resources/Images/HomepageCarousel/chicken-platter.png",
+        "/Resources/Images/HomepageCarousel/sausage-combo.png"
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        foreach (var image in CarouselImages)
         {
-            "/Resources/Images/HomepageCarousel/chicken-platter.png",
-            "/Resources/Images/HomepageCarousel/ms-platter.png",
-            "/Resources/Images/HomepageCarousel/ms-platter-2.png",
-            "/Resources/Images/HomepageCarousel/sausage-combo.png"
-        };
-    }
-
-    private async Task PrevSlide()
-    {
-        if (CarouselImages.Count == 0) return;
-        await FadeToSlide((currentIndex - 1 + CarouselImages.Count) % CarouselImages.Count);
-    }
-
-    private async Task NextSlide()
-    {
-        if (CarouselImages.Count == 0) return;
-        await FadeToSlide((currentIndex + 1) % CarouselImages.Count);
-    }
-
-    private async Task FadeToSlide(int newIndex)
-    {
-        isFading = true;
-        StateHasChanged();
-        await Task.Delay(250); // duration matches CSS
-        currentIndex = newIndex;
-        StateHasChanged();
-        await Task.Delay(10); // allow DOM update
-        isFading = false;
-        StateHasChanged();
+            await JS.InvokeVoidAsync("preloadImage", image);
+        }
     }
 
     private async Task ScrollToMenuInfo()
