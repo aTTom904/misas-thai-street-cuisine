@@ -1,0 +1,32 @@
+@using Microsoft.JSInterop
+
+<div class="google-map-container">
+    <div id="@MapId" style="width:100%;height:300px;"></div>
+</div>
+
+@code {
+    [Parameter] public double Latitude { get; set; } = 30.3322;
+    [Parameter] public double Longitude { get; set; } = -81.6557;
+    [Parameter] public int Zoom { get; set; } = 50;
+    [Parameter] public string MapId { get; set; } = $"google-map-{Guid.NewGuid()}";
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    private double _prevLat;
+    private double _prevLng;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("initGoogleMap", MapId, Latitude, Longitude, Zoom);
+            _prevLat = Latitude;
+            _prevLng = Longitude;
+        }
+        else if (_prevLat != Latitude || _prevLng != Longitude)
+        {
+            await JS.InvokeVoidAsync("updateGoogleMap", MapId, Latitude, Longitude);
+            _prevLat = Latitude;
+            _prevLng = Longitude;
+        }
+    }
+}
