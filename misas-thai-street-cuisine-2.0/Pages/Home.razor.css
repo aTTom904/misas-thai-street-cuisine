@@ -71,13 +71,10 @@
 }
 
 
-
-/* Carousel container for Blazorise */
 .carousel-container {
-    width: 35vw;
-    height: 35vw;
+    width: 40vw;
+    height: 40vw;
     border-radius: 50%;
-    overflow: hidden;
     box-shadow: 0 4px 32px #ee690044;
     display: flex;
     align-items: center;
@@ -85,8 +82,8 @@
     background: #fff;
 }
 .carousel-img {
-    width: 35vw;
-    height: 35vw;
+    width: 40vw;
+    height: 40vw;
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
