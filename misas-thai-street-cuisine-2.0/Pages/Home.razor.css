@@ -5,7 +5,7 @@
     align-items: center;
     justify-content: center;
     min-height: 80vh;
-    padding: 0 7vw;
+    padding: 0 7vw 5vw 7vw;
     gap: 4vw;
 }
 
@@ -16,6 +16,16 @@
     align-items: flex-start;
     justify-content: center;
     gap: 2rem;
+    min-width: 320px;
+}
+
+.hero-right {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
     min-width: 320px;
 }
 
@@ -60,15 +70,7 @@
     box-shadow: 0 4px 16px #ee690088;
 }
 
-.hero-right {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    min-width: 320px;
-}
+
 
 /* Carousel container for Blazorise */
 .carousel-container {
