@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using misas_thai_street_cuisine_2._0;
 using Blazorise;
-using Blazorise.Bootstrap;
+using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -14,11 +14,11 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 // Register Blazorise services
 builder.Services
-    .AddBlazorise(options =>
+    .AddBlazorise( options =>
     {
         options.Immediate = true;
-    })
-    .AddBootstrapProviders()
+    } )
+    .AddBootstrap5Providers()
     .AddFontAwesomeIcons();
 
 await builder.Build().RunAsync();
