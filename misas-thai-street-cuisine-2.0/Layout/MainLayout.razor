@@ -2,6 +2,7 @@
 @inherits LayoutComponentBase
 
 @inject ShoppingCartService Cart
+@inject DeadlineService DeadlineService
 
 
 <div class="layout-container">
@@ -25,7 +26,7 @@
                 <span class="countdown-single">@CountdownText</span>
                 @if (showTooltip)
                 {
-                    <span class="countdown-tooltip">Order deadline is every Monday at 5:00 PM. Orders placed after the deadline will be for the following week.</span>
+                    <span class="countdown-tooltip">Order deadline is every second and fourth Monday of the month at 5:00 PM. Orders placed after the deadline will be delivered the following delivery day. Delivery days are the second and fourth Wednesdays of the month.</span>
                 }
             </span>
         </div>
@@ -110,33 +111,23 @@
     private void UpdateCountdown(object? state)
     {
         var now = DateTime.Now;
-        var nextMonday5PM = GetNextMonday5PM(now);
-        var remainingTime = nextMonday5PM - now;
+        // Get next available delivery and deadline
+        var (nextDeliveryWednesday, nextDeadlineMonday) = DeadlineService.GetNextAvailableDelivery(now);
+        var remainingTime = nextDeadlineMonday - now;
 
         if (remainingTime.TotalSeconds <= 0)
         {
             CountdownText = "Orders Open!";
-            nextMonday5PM = GetNextMonday5PM(now.AddDays(7));
-            remainingTime = nextMonday5PM - now;
+            // Get the next available deadline after this one
+            var nextMonth = now.AddMonths(1);
+            var deadlines = DeadlineService.GetSecondAndFourthMondayDeadline(nextMonth);
+            nextDeadlineMonday = deadlines[0];
+            remainingTime = nextDeadlineMonday - now;
         }
 
         CountdownText = $"{remainingTime.Days}d {remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
 
         InvokeAsync(StateHasChanged);
-    }
-
-    private DateTime GetNextMonday5PM(DateTime from)
-    {
-        int daysUntilMonday = ((int)DayOfWeek.Monday - (int)from.DayOfWeek + 7) % 7;
-        if (from.DayOfWeek == DayOfWeek.Monday && from.TimeOfDay < TimeSpan.FromHours(17))
-        {
-            return from.Date.AddHours(17);
-        }
-        if (daysUntilMonday == 0)
-        {
-            daysUntilMonday = 7;
-        }
-        return from.Date.AddDays(daysUntilMonday).AddHours(17);
     }
 
     public void Dispose()

@@ -4,19 +4,6 @@
 <h2 class='page-header-text'>Place Your Order</h2>
 
 <div class="menu-section">
-    <h3 class="section-header-text">Thai Herb Sausage (Sai Oua)</h3>
-    <ul>
-        @foreach (var sausage in MenuData.SausageTypes)
-        {
-            <li>
-                <span>@sausage.Name - @sausage.Price.ToString("C")</span>
-                <button @onclick="() => AddToOrder(sausage.Name)">+</button>
-            </li>
-        }
-    </ul>
-</div>
-
-<div class="menu-section">
     <h3 class="section-header-text">Sides</h3>
     <ul>
         @foreach (var side in MenuData.SideDishes)

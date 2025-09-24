@@ -46,8 +46,7 @@
 
     private void AddToOrder(string itemName, string category)
     {
-        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
-                   MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
+        var item = MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
                    MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
 
         if (item != null)
@@ -58,8 +57,7 @@
 
     private void RemoveFromOrder(string itemName, string category)
     {
-        var item = MenuData.SausageTypes.FirstOrDefault(s => s.Name == itemName && s.Category == category) as ICartItem ??
-                   MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
+        var item = MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
                    MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
 
         if (item != null)
