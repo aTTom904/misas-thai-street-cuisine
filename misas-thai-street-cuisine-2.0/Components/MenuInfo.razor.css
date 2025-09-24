@@ -92,12 +92,22 @@
 }
 .menu-divider {
     grid-column: 1 / -1;
+}
+.menu-divider-title {
     text-align: left;
     font-size: 1.5rem;
+    color: #ee6900;
     font-weight: 600;
     margin: 1.5rem 0 0 0;
     color: #333;
     text-shadow: 2px 2px 8px #00000022;
+}
+.menu-divider-subtext {
+    text-align: left;
+    font-size: 1rem;
+    color: #666;
+    margin: 0.2rem 0 0 0;
+    font-family: 'Montserrat', sans-serif;
 }
 .menu-card {
     background: #ee6900;
@@ -183,9 +193,10 @@
     .menu-grid {
         gap: 1rem;
     }
-    .menu-divider {
-        font-size: 1.1rem;
-        margin: 1rem 0 0 0;
+    .menu-divider-title {
+        text-align: center;
+    }
+    .menu-divider-subtext {
         text-align: center;
     }
 }
