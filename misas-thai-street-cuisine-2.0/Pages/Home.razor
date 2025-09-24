@@ -16,11 +16,11 @@
     </div>
     <div class="hero-right">
         <div class="carousel-container">
-            <Carousel Crossfade="true" class="carousel" Interval="5000" ShowIndicators="false" ShowControls="true">
+            <Carousel Crossfade="true">
                 @foreach (var image in CarouselImages)
                 {
                     <CarouselSlide Name="@image" key="@image">
-                        <img src="@image" alt="Featured Thai Food" class="carousel-img"/>
+                        <Image Source="@image" Text="Featured Thai Food"/>
                     </CarouselSlide>
                 }
             </Carousel>
