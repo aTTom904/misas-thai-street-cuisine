@@ -69,11 +69,19 @@
     margin: 1rem 0 0.5rem 0;
     padding: 0.7rem 1rem;
     background: #f6f6f6;
-    border-left: 5px solid #26b050;
     border-radius: 7px;
     color: #333;
     font-size: 1rem;
     text-align: center;
+}
+.delivery-result.success {
+    border-left: 5px solid #26b050;
+}
+.delivery-result.warning {
+    border-left: 5px solid #ee6900;
+}
+.delivery-result.error {
+    border-left: 5px solid #d32f2f;
 }
 
 .delivery-note {
@@ -87,11 +95,11 @@
 .delivery-area-columns {
     display: flex;
     flex-direction: row;
-    gap: 10rem;
+    gap: 5rem;
     align-items: flex-start;
     justify-content: center;
     width: 100%;
-    max-width: 1000px;
+    max-width: 65vw;
     box-sizing: border-box;
 }
 

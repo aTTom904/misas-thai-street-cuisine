@@ -29,7 +29,7 @@
             </EditForm>
             @if (!string.IsNullOrEmpty(ResultMessage))
             {
-                <div class="delivery-result">@ResultMessage</div>
+                <div class="delivery-result @ResultType">@ResultMessage</div>
             }
         </div>
     </div>
@@ -44,6 +44,7 @@
     public string State { get; set; } = "Florida";
     public string ZipCode { get; set; } = string.Empty;
     public string? ResultMessage { get; set; }
+    public string? ResultType { get; set; } = "success";
     public double MapLat { get; set; } = 30.3322;
     public double MapLng { get; set; } = -81.6557;
     private async Task OnInputChanged(ChangeEventArgs e)
@@ -76,6 +77,7 @@
         var userLocation = await JS.InvokeAsync<LatLngResult>("geocodeAddress", userAddress);
         if (userLocation == null)
         {
+            ResultType = "error";
             ResultMessage = "Could not find your address. Please check your input.";
             return;
         }
@@ -83,10 +85,12 @@
         var isNearRoute = await JS.InvokeAsync<bool>("isPointNearRoute", RouteStartAddress, RouteEndAddress, userLocation.lat, userLocation.lng, BufferMiles);
         if (isNearRoute)
         {
+            ResultType = "success";
             ResultMessage = $"Great news! You're within our free delivery corridor.";
         }
         else
         {
+            ResultType = "warning";
             ResultMessage = $"You're outside our free delivery corridor. An extra charge may apply.";
         }
     }
