@@ -1,0 +1,91 @@
+@using misas_thai_street_cuisine_2._0.Models
+@using misas_thai_street_cuisine_2._0.Data
+
+@inject MenuData MenuData
+@inject DeadlineService DeadlineService
+
+<div class="menu-info-section">
+    <div class="menu-header-row">
+        <div class="date-selector">
+            <div class="date-label">Select a Date</div>
+            <div class="date-list">
+                @foreach (var date in UpcomingWednesdays)
+                {
+                    var selectedClass = date == SelectedDate ? "date-card selected" : "date-card";
+                    <div class="@selectedClass" @onclick="() => SelectDate(date)">
+                        <div class="date-month">@date.ToString("MMMM")</div>
+                        <div class="date-day">@date.ToString("ddd")</div>
+                        <div class="date-date">@date.Day</div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="menu-title-block">
+            <h2 class="menu-title">Pick Your Platter</h2>
+            <p class="menu-subtitle">Fresh, vibrant, and made for sharing. Each platter comes with sticky rice, fresh greens, and our signature dips.</p>
+        </div>
+    </div>
+    <div class="menu-grid">
+        @foreach (var platter in MenuData.Platters)
+        {
+            <div class="menu-card" @onclick="() => ShowModal(platter)">
+                <img src="@platter.ImageUrl" alt="@platter.Name" class="menu-card-img" />
+                <div class="menu-card-title">@platter.Name</div>
+                <div class="menu-card-price">Starting at $@(platter.Prices != null ? platter.Prices.Values.Min() : 0)</div>
+            </div>
+        }
+        <div class="menu-divider">
+            <div class="menu-divider-title">
+                A-la-Carte options:
+            </div>
+            <div class="menu-divider-subtext">
+                Add to an existing platter, or build your own!
+            </div>
+        </div>
+        @foreach (var side in MenuData.SideDishes)
+        {
+            <div class="menu-card" @onclick="() => ShowModal(side)">
+                <img src="@side.ImageUrl" alt="@side.Name" class="menu-card-img" />
+                <div class="menu-card-title">@side.Name</div>
+                <div class="menu-card-price">Starting at $@side.Price</div>
+            </div>
+        }
+    </div>
+    @if (IsModalOpen && SelectedMenuItem != null)
+    {
+        <MenuModal MenuItem="SelectedMenuItem" OnClose="CloseModal" />
+    }
+</div>
+@code {
+    // Get the next two upcoming Wednesdays
+    public List<DateTime> UpcomingWednesdays { get; set; } = new();
+    public DateTime? SelectedDate { get; set; }
+
+
+    public bool IsModalOpen { get; set; } = false;
+    public MenuItem? SelectedMenuItem { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var now = DateTime.Now;
+        UpcomingWednesdays = DeadlineService.GetUpcomingDeliveryWednesdays(now);
+        SelectedDate = UpcomingWednesdays.FirstOrDefault();
+    }
+
+    private void ShowModal(MenuItem item)
+    {
+        SelectedMenuItem = item;
+        IsModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        IsModalOpen = false;
+        SelectedMenuItem = null;
+    }
+
+    private void SelectDate(DateTime date)
+    {
+        SelectedDate = date;
+    }
+}

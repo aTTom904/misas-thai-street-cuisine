@@ -21,19 +21,19 @@
                         <div class="cart-item">
                             <div class="item-info">
                                 <span class="item-name">@item.Item.Name</span>
-                                <span class="item-price">$@item.Item.Price.ToString("F2")</span>
+                                <span class="item-price">$@item.GetUnitPrice().ToString("F2")</span>
                             </div>
                             <div class="item-quantity">
                                 Qty: @item.Quantity
                             </div>
                             <div class="item-total">
-                                $@((item.Item.Price * item.Quantity).ToString("F2"))
+                                $@(item.GetTotalPrice().ToString("F2"))
                             </div>
                         </div>
                     }
                 </div>
                 <div class="total-section">
-                    <strong>Total: $@GetTotal().ToString("F2")</strong>
+                    <strong>Total: $@(Cart.Items.Sum(i => i.GetTotalPrice()).ToString("F2"))</strong>
                 </div>
             </div>
 
@@ -120,7 +120,7 @@
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            Complete Order - $@GetTotal().ToString("F2")
+                            Complete Order - $@(Cart.Items.Sum(i => i.GetTotalPrice()).ToString("F2"))
                         </button>
                     </div>
                 </div>
@@ -184,10 +184,7 @@
                customerEmail.Contains("@");
     }
 
-    private decimal GetTotal()
-    {
-        return Cart.Items.Sum(item => item.Item.Price * item.Quantity);
-    }
+    // GetTotal() replaced by direct sum in markup
 
     private async Task ProceedToPayment()
     {
@@ -282,13 +279,13 @@
                     CustomerEmail = customerEmail,
                     CustomerPhone = customerPhone ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
-                    Total = GetTotal(),
+                    Total = Cart.Items.Sum(i => i.GetTotalPrice()),
                     PaymentToken = tokenResult.Token,
                     Items = Cart.Items.Select(item => new OrderItemRequest
                     {
                         ItemName = item.Item.Name,
                         Category = item.Item.Category,
-                        Price = item.Item.Price,
+                        Price = item.GetUnitPrice(),
                         Quantity = item.Quantity
                     }).ToList()
                 };
@@ -312,12 +309,12 @@
                         // Note: In production, you'd want to log this for manual order entry
                     }
                 }
-                catch (Exception apiEx)
+                catch (Exception)
                 {
                     // API call failed but payment succeeded - generate fallback order number
                     orderConfirmation = $"ORDER-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}";
                     successMessage = "Payment processed successfully!";
-                    // In production, log this: Console.WriteLine($"API Error: {apiEx.Message}");
+                    // In production, log this error for manual order entry
                 }
                 
                 // Clear the cart and move to confirmation

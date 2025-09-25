@@ -1,0 +1,100 @@
+
+@using misas_thai_street_cuisine_2._0.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="delivery-area-section">
+    <div class="delivery-area-columns">
+        <div class="delivery-area-map-col">
+            <GoogleMap Latitude="@MapLat" Longitude="@MapLng" Zoom="12" MapId="@MapId" />
+        </div>
+        <div class="delivery-area-form-col">
+            <h2 class="delivery-title">Delivery Areas</h2>
+            <p class="delivery-desc">
+                Enter your address to see if you qualify for free delivery—or just a small fee if you're a little farther out.
+            </p>
+            <EditForm Model="this" OnValidSubmit="OnSubmit">
+                <div class="delivery-form-row">
+                    <InputText id="street" name="street" class="delivery-input" @bind-Value="Street" placeholder="Street Address" @oninput="OnInputChanged" />
+                    <InputText id="city" name="city" class="delivery-input" @bind-Value="City" placeholder="City" @oninput="OnInputChanged" />
+                    <div class="delivery-state-zip-row">
+                        <InputSelect id="state" name="state" class="delivery-input" @bind-Value="State" @onchange="OnInputChanged">
+                            <option value="Florida">Florida</option>
+                        </InputSelect>
+                        <InputText id="zipcode" name="zipcode" class="delivery-input" @bind-Value="ZipCode" placeholder="Zip Code" @oninput="OnInputChanged" />
+                    </div>
+                </div>
+                <div class="delivery-submit-row">
+                    <button type="submit" class="delivery-submit">Submit</button>
+                </div>
+            </EditForm>
+            @if (!string.IsNullOrEmpty(ResultMessage))
+            {
+                <div class="delivery-result @ResultType">@ResultMessage</div>
+            }
+        </div>
+    </div>
+    <p class="delivery-note">
+        We love sharing our food far and wide, but for now we're keeping deliveries local to ensure everything arrives piping hot.
+    </p>
+</div>
+
+@code {
+    public string Street { get; set; } = string.Empty;
+    public string City { get; set; } = string.Empty;
+    public string State { get; set; } = "Florida";
+    public string ZipCode { get; set; } = string.Empty;
+    public string? ResultMessage { get; set; }
+    public string? ResultType { get; set; } = "success";
+    public double MapLat { get; set; } = 30.3322;
+    public double MapLng { get; set; } = -81.6557;
+    
+    private readonly string MapId = "google-map-main";
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        var userAddress = $"{Street}, {City}, {State} {ZipCode}";
+        var userLocation = await JS.InvokeAsync<LatLngResult>("geocodeAddress", userAddress);
+        if (userLocation != null)
+        {
+            MapLat = userLocation.lat;
+            MapLng = userLocation.lng;
+        }
+    }
+
+    public class LatLngResult
+    {
+        public double lat { get; set; }
+        public double lng { get; set; }
+    }
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
+
+    // Set your static route addresses here
+    private const string RouteStartAddress = "1301 N Orange Ave Suite 102, Green Cove Springs, FL 32043";
+    private const string RouteEndAddress = "850 Beacon Lake Pkwy, St. Augustine, FL 32095";
+    private const double BufferMiles = 5.0;
+
+    private async Task OnSubmit()
+    {
+        var userAddress = $"{Street}, {City}, {State} {ZipCode}";
+        var userLocation = await JS.InvokeAsync<LatLngResult>("geocodeAddress", userAddress);
+        if (userLocation == null)
+        {
+            ResultType = "error";
+            ResultMessage = "Could not find your address. Please check your input.";
+            return;
+        }
+        // Check if user is within buffer of the static route
+        var isNearRoute = await JS.InvokeAsync<bool>("isPointNearRoute", RouteStartAddress, RouteEndAddress, userLocation.lat, userLocation.lng, BufferMiles);
+        if (isNearRoute)
+        {
+            ResultType = "success";
+            ResultMessage = $"Great news! You're within our free delivery corridor.";
+        }
+        else
+        {
+            ResultType = "warning";
+            ResultMessage = $"You're outside our free delivery corridor. An extra charge may apply.";
+        }
+    }
+}

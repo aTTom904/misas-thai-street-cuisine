@@ -1,5 +1,24 @@
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+.delivery-input#zipcode {
+    min-width: 90px !important;
+    width: 110px !important;
+}
+/* ...existing code... */
+
+.delivery-input {
+    font-size: 1rem ;
+    padding: 0.5em 1rem ;
+    border-radius: 8px ;
+    border: 1.5px solid #e0e0e0 ;
+    min-width: 100px ;
+    background: #f8f9fa ;
+    box-shadow: 0 1px 6px #0001 ;
+    transition: border 0.2s, box-shadow 0.2s, background 0.2s ;
+    outline: none ;
+}
+.delivery-input:focus {
+    border: 1.5px solid #ee6900 ;
+    background: #fff ;
+    box-shadow: 0 2px 12px #ee690033 ;
 }
 
 .invalid {

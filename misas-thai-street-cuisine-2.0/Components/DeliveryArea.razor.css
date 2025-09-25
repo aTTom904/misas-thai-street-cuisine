@@ -1,0 +1,198 @@
+.delivery-state-zip-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.7rem;
+    width: 100%;
+    justify-content: center;
+}
+.delivery-area-section {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 32px #ee690044;
+    padding: 2.5rem 1.5rem 2rem 1.5rem;
+    margin: 2rem auto 2.5rem auto;
+    max-width: 85vw;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.delivery-title {
+    font-family: 'Rock Salt', cursive;
+    color: #ee6900;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.delivery-desc {
+    color: #444;
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+    text-align: center;
+}
+
+.delivery-form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+    justify-content: center;
+}
+
+.delivery-submit {
+    font-size: 1rem;
+    color: #fff;
+    background-color: #ee6900;
+    padding: 0.5rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #ee690055;
+    transition: background 0.2s, box-shadow 0.2s;
+    margin-top: 1rem;
+}
+.delivery-submit-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.delivery-submit:hover {
+    background: #ff9800;
+    box-shadow: 0 4px 16px #ee690088;
+}
+
+.delivery-result {
+    margin: 1rem 0 0.5rem 0;
+    padding: 0.7rem 1rem;
+    background: #f6f6f6;
+    border-radius: 7px;
+    color: #333;
+    font-size: 1rem;
+    text-align: center;
+}
+.delivery-result.success {
+    border-left: 5px solid #26b050;
+}
+.delivery-result.warning {
+    border-left: 5px solid #ee6900;
+}
+.delivery-result.error {
+    border-left: 5px solid #d32f2f;
+}
+
+.delivery-note {
+    color: #888;
+    font-size: 0.98rem;
+    margin-top: 1.2rem;
+    text-align: center;
+}
+
+/* Two-column layout for delivery area */
+.delivery-area-columns {
+    display: flex;
+    flex-direction: row;
+    gap: 5rem;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    max-width: 65vw;
+    box-sizing: border-box;
+}
+
+.delivery-area-map-col {
+    flex: 2 1 0%;
+    min-width: 260px;
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+}
+
+.delivery-area-form-col {
+    flex: 1 1 0%;
+    min-width: 220px;
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    box-sizing: border-box;
+}
+
+/* Ensure the map container fills its column and is visible */
+.delivery-map-container {
+    width: 100%;
+    min-height: 220px;
+    max-width: 100vw;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    background: #e9ecef;
+    margin-bottom: 1.2rem;
+    box-sizing: border-box;
+}
+
+@media (max-width: 950px) {
+    .delivery-area-section {
+            padding: 1.2rem 2vw 1.2rem 2vw;
+        max-width: 90vw;
+    }
+    .delivery-area-columns {
+        flex-direction: column;
+        gap: 1.2rem;
+        margin: 1.2rem 0 0 0;
+        max-width: 100vw;
+    }
+    .delivery-area-map-col,
+    .delivery-area-form-col {
+        min-width: 0;
+        max-width: 100vw;
+        width: 100%;
+    }
+    .delivery-map-container {
+        min-height: 180px;
+        height: 180px;
+        max-width: 100vw;
+    }
+}
+
+@media (max-width: 600px) {
+    .delivery-area-section {
+            padding: 0.7rem 3vw 0.7rem 3vw;
+        max-width: 90vw;
+    }
+    .delivery-title {
+        font-size: 1.5rem;
+    }
+    .delivery-form-row input,
+    .delivery-form-row select {
+        min-width: 70px;
+        font-size: 0.92rem;
+    }
+    .delivery-result {
+        font-size: 0.92rem;
+    }
+    .delivery-area-columns {
+        flex-direction: column;
+        gap: 0.7rem;
+        margin: 0.7rem 0 0 0;
+        max-width: 100vw;
+    }
+    .delivery-area-map-col,
+    .delivery-area-form-col {
+        min-width: 0;
+        max-width: 100vw;
+        width: 100%;
+    }
+    .delivery-map-container {
+        min-height: 120px;
+        height: 120px;
+        max-width: 100vw;
+    }
+}

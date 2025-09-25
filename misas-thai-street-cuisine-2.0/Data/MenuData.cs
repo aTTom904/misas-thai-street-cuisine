@@ -1,91 +1,58 @@
 ﻿using misas_thai_street_cuisine_2._0.Models;
 
-namespace Data
+namespace misas_thai_street_cuisine_2._0.Data
 {
-    public static class MenuData
+    public class MenuData
     {
-        public static SausageType[] SausageTypes { get; } = new SausageType[]
+        public static Platter[] Platters { get; } = new Platter[]
         {
-            new SausageType
+            new Platter
             {
-                Name =  "Pork",
-                Category = "Sausage",
-                Price = 11.00m,
+                Name = "M's Combo",
+                Category = "Platter",
+                Serves = new int[] { 2, 4 },
+                Prices = new Dictionary<int, decimal> { { 2, 42.00m }, { 4, 84.00m } },
+                Description = "Dinner for two, four, or more.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/ms-platter.png"
             },
-//            new SausageType
-//            {
-//                Name =  "Beef",
-//                Category = "Sausage",
-//                Price = 10.75m,
-//            },
-           // new SausageType
-           // {
-           //     Name =  "Turkey",
-           //     Category = "Sausage",
-           //     Price = 11.00m,
-           //},
-//           new SausageType
-//            {
-//                Name =  "Mushroom",
-//                Category = "Sausage",
-//                Price = 11.00m,
-//            },
+            new Platter
+            {
+                Name = "Sausage Combo",
+                Category = "Platter",
+                Serves = new int[] { 2, 4 },
+                Prices = new Dictionary<int, decimal> { { 2, 35.00m }, { 4, 70.00m } },
+                Description = "Savory sausage platter.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/sausage-combo.png"
+            },
+            new Platter
+            {
+                Name = "Chicken Combo",
+                Category = "Platter",
+                Serves = new int[] { 2, 4 },
+                Prices = new Dictionary<int, decimal> { { 2, 39.00m }, { 4, 78.00m } },
+                Description = "Grilled chicken platter.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/chicken-platter.png"
+            }
         };
 
         public static SideDish[] SideDishes { get; } = new SideDish[]
         {
             new SideDish
             {
-                Name="Extra Sausage",
+                Name = "Phad Thai",
                 Category = "Side",
-                Price= 08.25m
+                Price = 14.00m,
+                Description = "Classic Thai noodles.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/phad-thai.png"
             },
             new SideDish
             {
-                Name="Sticky Rice",
+                Name = "Papaya Salad",
                 Category = "Side",
-                Price= 02.00m
-            },
-            new SideDish
-            {
-                Name="Prik Noom Chili Paste",
-                Category = "Side",
-                Price= 03.55m
-            },
-            new SideDish
-            {
-                Name="Curry Sauce",
-                Category = "Side",
-                Price = 02.25m
+                Price = 4.00m,
+                Description = "Fresh and spicy salad.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/papaya-salad.png"
             }
-        };
-
-        public static Platter[] Platters { get; } = new Platter[]
-        {
-            new Platter
-            {
-               Name = "Pork",
-               Category = "Platter",
-               Price = 25.00m
-            },
-//            new Platter
-//            {
-//                Name = "Beef",
-//                Category = "Platter",
-//                Price = 25.00m
-//            },
-            //new Platter
-            //{
-            //    Name = "Turkey",
-            //    Category = "Platter",
-            //    Price = 24.00m
-            //},
-//            new Platter
-//           {
-//                Name = "Mushroom",
-//                Category = "Platter",
-//                Price = 27.25m
-//            },
         };
     }
 }

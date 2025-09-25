@@ -2,60 +2,43 @@
 @inherits LayoutComponentBase
 
 @inject ShoppingCartService Cart
+@inject DeadlineService DeadlineService
+
 
 <div class="layout-container">
-    <header class="navbar">
-        <div class="countdown" @onclick="() => isMobileMenuVisible = false">
-            <span class="countdown-text">
-                <span class="countdown-line-1">Order Deadline:</span>
-                <span class="countdown-line-2">@CountdownText</span>
+    <header class="navbar minimal-navbar">
+        <div class="logo-hamburger">
+            <a href="/" class="logo-link">
+                <img src="/Resources/Images/Logos/ORNG M RED CHILI.png" alt="Logo" class="logo" />
+            </a>
+            <div class="hamburger-menu" @onclick="OnHamburgerClick">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+        <div class="countdown right-countdown">
+            <span class="countdown-text" 
+                    tabindex="0"
+                    @onfocusout="() => showTooltip = false"
+                    @onmouseover="() => showTooltip = true" 
+                    @onmouseout="() => showTooltip = false"
+                    @onclick="() => showTooltip = !showTooltip">
+                <i class="far fa-clock countdown-clock"></i>
+                <span class="countdown-single">@CountdownText</span>
+                @if (showTooltip)
+                {
+                    <span class="countdown-tooltip">Order deadline is every second and fourth Monday of the month at 5:00 PM. Orders placed after the deadline will be delivered the following delivery day. Delivery days are the second and fourth Wednesdays of the month.</span>
+                }
             </span>
-            <i class="fas fa-info-circle countdown-info-icon" @onclick="ToggleTooltip" @onclick:stopPropagation="true"></i>
-            @if (showTooltip)
-            {
-                <div class="tooltip-popup" @onclick:stopPropagation="true">
-                    <div class="tooltip-content">
-                        <button class="tooltip-close" @onclick="CloseTooltip">&times;</button>
-                        <h2>Our Order Process</h2>
-                        <p>Order deadlines are every <strong>Monday at 12:00 PM</strong>.</p>
-                        <p>Orders placed before the deadline will be processed for the current week.</p>
-                        <p>If ordering after the deadline, your order will be processed for the following week.</p>
-                    </div>
-                </div>
-            }
-        </div>
-        <div class="nav-left" @onclick="() => isMobileMenuVisible = false">
-            <a href="menu">Menu</a>
-            <a href="gallery">Gallery</a>
-        </div>
-        <div class="logo-container" @onclick="() => isMobileMenuVisible = false">
-            <a href="/">
-                <img src="Resources/Images/Logos/ORNG M RED CHILI.png" alt="Logo" class="logo" />
-            </a>
-        </div>
-        <div class="nav-right" @onclick="() => isMobileMenuVisible = false">
-            <a href="about">About</a>
-            <a href="contact">Contact</a>
-        </div>
-        @if (CartItemCount > 0)
-        {
-            <a href="/Cart" class="shopping-cart animate-bounce">
-                <i class="fas fa-shopping-cart"></i>
-            </a>
-            <span class="cart-count animate-pulse">@CartItemCount</span>
-        }
-        <div class="hamburger-menu" @onclick="ToggleMobileMenu">
-            ☰
         </div>
     </header>
     @if (isMobileMenuVisible)
     {
         <div id="mobile-nav-wrapper" @onclick="() => isMobileMenuVisible = false">
-            <div class="mobile-nav slide-down">
-                <a href="menu">Menu</a>
-                <a href="gallery">Gallery</a>
-                <a href="about">About</a>
-                <a href="contact">Contact</a>
+            <div class="mobile-nav slide-down" style="position: absolute; left:@(mobileMenuX)px; top:@(mobileMenuY)px;">
+                <a href="/menu">Menu</a>
+                <a href="/gallery">Gallery</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
             </div>
         </div>
     }
@@ -63,51 +46,49 @@
     <div class="main-content" @onclick="() => isMobileMenuVisible = false">
         @Body
     </div>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-left">
-                <p>&copy; @DateTime.Now.Year Misa's Thai Street Cuisine. All Rights Reserved.</p>
-            </div>
-            <div class="footer-right">
-                <a href="https://www.facebook.com/MisasThaiStreetCuisine" target="_blank" aria-label="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </div>
-        </div>
-    </footer>
 </div>
 
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-left">
+            <p>&copy; @DateTime.Now.Year Misa's Thai Street Cuisine</p>
+        </div>
+        <div class="footer-right">
+            <a href="https://www.facebook.com/misasthaistreetcuisine" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="mailto:info@misasthaistreetcuisine.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </div>
+</footer>
+
+
+
 @code {
+
     private bool isMobileMenuVisible = false;
     private bool showTooltip = false;
     private int CartItemCount = 0;
     private string CountdownText = "Calculating...";
     private Timer? countdownTimer;
+    private double mobileMenuX = 0;
+    private double mobileMenuY = 0;
 
-    private void ToggleMobileMenu()
+    private async Task OnHamburgerClick(MouseEventArgs e)
     {
-        Console.WriteLine("Button Clicked!");
         isMobileMenuVisible = !isMobileMenuVisible;
-    }
-
-    private void ToggleTooltip()
-    {
-        showTooltip = !showTooltip;
-    }
-
-    private void CloseTooltip()
-    {
-        showTooltip = false;
+        if (isMobileMenuVisible)
+        {
+            // Offset a bit for better alignment below the button
+            mobileMenuX = e.ClientX;
+            mobileMenuY = e.ClientY + 8;
+        }
     }
 
     protected override void OnInitialized()
     {
         CartItemCount = GetCartItemCount();
-        Cart.CartChanged += OnCartChanged;
+        if (Cart != null)
+            Cart.CartChanged += OnCartChanged;
         StartCountdownTimer();
     }
 
@@ -119,7 +100,7 @@
 
     private int GetCartItemCount()
     {
-        return Cart.Items.Sum(i => i.Quantity);
+        return Cart?.Items.Sum(i => i.Quantity) ?? 0;
     }
 
     private void StartCountdownTimer()
@@ -130,52 +111,29 @@
     private void UpdateCountdown(object? state)
     {
         var now = DateTime.Now;
-        var nextMonday12PM = GetNextMonday12PM(now);
-        var remainingTime = nextMonday12PM - now;
+        // Get next available delivery and deadline
+        var (nextDeliveryWednesday, nextDeadlineMonday) = DeadlineService.GetNextAvailableDelivery(now);
+        var remainingTime = nextDeadlineMonday - now;
 
         if (remainingTime.TotalSeconds <= 0)
         {
             CountdownText = "Orders Open!";
-            // Reset to next Monday 12 PM
-            nextMonday12PM = GetNextMonday12PM(now.AddDays(7));
-            remainingTime = nextMonday12PM - now;
+            // Get the next available deadline after this one
+            var nextMonth = now.AddMonths(1);
+            var deadlines = DeadlineService.GetSecondAndFourthMondayDeadline(nextMonth);
+            nextDeadlineMonday = deadlines[0];
+            remainingTime = nextDeadlineMonday - now;
         }
 
-        if (remainingTime.TotalDays >= 1)
-        {
-            CountdownText = $"{remainingTime.Days}d {remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
-        }
-        else
-        {
-            CountdownText = $"{remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
-        }
+        CountdownText = $"{remainingTime.Days}d {remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
 
         InvokeAsync(StateHasChanged);
-    }
-
-    private DateTime GetNextMonday12PM(DateTime from)
-    {
-        // Calculate days until next Monday
-        int daysUntilMonday = ((int)DayOfWeek.Monday - (int)from.DayOfWeek + 7) % 7;
-        
-        // If today is Monday and it's before 12 PM, target today at 12 PM
-        if (from.DayOfWeek == DayOfWeek.Monday && from.TimeOfDay < TimeSpan.FromHours(12))
-        {
-            return from.Date.AddHours(12);
-        }
-        
-        // If daysUntilMonday is 0 (today is Monday but after 12 PM), target next Monday
-        if (daysUntilMonday == 0)
-        {
-            daysUntilMonday = 7;
-        }
-        
-        return from.Date.AddDays(daysUntilMonday).AddHours(12);
     }
 
     public void Dispose()
     {
         countdownTimer?.Dispose();
-        Cart.CartChanged -= OnCartChanged;
+        if (Cart != null)
+            Cart.CartChanged -= OnCartChanged;
     }
 }
