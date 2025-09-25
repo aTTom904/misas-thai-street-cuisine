@@ -5,7 +5,7 @@
 <div class="delivery-area-section">
     <div class="delivery-area-columns">
         <div class="delivery-area-map-col">
-            <GoogleMap Latitude="@MapLat" Longitude="@MapLng" Zoom="10" />
+            <GoogleMap Latitude="@MapLat" Longitude="@MapLng" Zoom="12" MapId="@MapId" />
         </div>
         <div class="delivery-area-form-col">
             <h2 class="delivery-title">Delivery Areas</h2>
@@ -47,6 +47,9 @@
     public string? ResultType { get; set; } = "success";
     public double MapLat { get; set; } = 30.3322;
     public double MapLng { get; set; } = -81.6557;
+    
+    private readonly string MapId = "google-map-main";
+
     private async Task OnInputChanged(ChangeEventArgs e)
     {
         var userAddress = $"{Street}, {City}, {State} {ZipCode}";

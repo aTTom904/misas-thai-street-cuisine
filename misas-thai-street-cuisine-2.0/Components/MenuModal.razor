@@ -1,0 +1,127 @@
+@using misas_thai_street_cuisine_2._0.Models
+
+<div class="menu-modal-overlay" @onclick="OnOverlayClick">
+    <div class="menu-modal" @onclick:stopPropagation>
+        <button class="menu-modal-close" @onclick="OnClose">&times;</button>
+        @if (MenuItem != null)
+        {
+            <div class="menu-modal-img-block">
+                <img src="@MenuItem.ImageUrl" alt="@MenuItem.Name" class="menu-modal-img" />
+            </div>
+            <div class="menu-modal-content">
+
+                <h2 class="menu-modal-title">@MenuItem.Name</h2>
+                <div class="menu-modal-desc">@MenuItem.Description</div>
+                @if (MenuItem is Platter platter)
+                {
+                    <div class="menu-modal-price">
+                        @foreach (var serve in platter.Serves)
+                        {
+                            <div>
+                                <b>Serves @serve:</b> $@platter.Prices[serve]
+                            </div>
+                        }
+                    </div>
+                }
+                else if (MenuItem is SideDish side)
+                {
+                    <div class="menu-modal-price">$@side.Price</div>
+                    <div class="modal-cart-section">
+                        <div class="cart-row">
+                            <span class="cart-label">@side.Name</span>
+                            <span class="cart-price">$@side.Price</span>
+                            <button class="cart-btn" @onclick="() => ChangeSideQty(-1)">−</button>
+                            <span class="cart-qty">@SideQty</span>
+                            <button class="cart-btn" @onclick="() => ChangeSideQty(1)">+</button>
+                        </div>
+                    </div>
+                }
+
+                @if (MenuItem is Platter platter2)
+                {
+                    <div class="modal-cart-section">
+                        @foreach (var serve in platter2.Serves)
+                        {
+                            <div class="cart-row">
+                                <span class="cart-label">@MenuItem.Name (serves @serve)</span>
+                                <span class="cart-price">$@platter2.Prices[serve]</span>
+                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, -1)">−</button>
+                                <span class="cart-qty">@GetPlatterQty(serve)</span>
+                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
+                            </div>
+                        }
+                        <!-- Example: Only show upgrade if you add upgrade info to MenuItem or hardcode for now -->
+                        <div class="cart-upgrade-row @((GetPlatterQty(2) > 0 || GetPlatterQty(4) > 0 ? "slide-in" : "slide-out"))">
+                            @if (GetPlatterQty(2) > 0)
+                            {
+                                <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for a full 24 oz Phad Thai – add $9</span>
+                                <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
+                                <span class="cart-qty">@PhadThai24Qty</span>
+                                <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
+                            }
+                            @if (GetPlatterQty(4) > 0)
+                            {
+                                <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for a full 48 oz Phad Thai – add $18</span>
+                                <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
+                                <span class="cart-qty">@PhadThai48Qty</span>
+                                <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @ChildContent
+            </div>
+@code {
+    // Cart state
+    private Dictionary<int, int> PlatterQty = new Dictionary<int, int> { { 2, 0 }, { 4, 0 } };
+    private int PhadThai24Qty = 0;
+    private int PhadThai48Qty = 0;
+
+    private int SideQty = 0;
+    // Prices now come from MenuItem
+
+    private void ChangeSideQty(int delta)
+    {
+        SideQty = Math.Max(0, SideQty + delta);
+    }
+
+    private void ChangePlatterQty(int serves, int delta)
+    {
+        if (!PlatterQty.ContainsKey(serves))
+            PlatterQty[serves] = 0;
+        PlatterQty[serves] = Math.Max(0, PlatterQty[serves] + delta);
+        if (serves == 2 && PlatterQty[2] == 0) PhadThai24Qty = 0;
+        if (serves == 4 && PlatterQty[4] == 0) PhadThai48Qty = 0;
+    }
+
+    private int GetPlatterQty(int serves)
+    {
+        return PlatterQty.ContainsKey(serves) ? PlatterQty[serves] : 0;
+    }
+
+    private void ChangePhadThai24(int delta)
+    {
+        if (GetPlatterQty(2) > 0)
+            PhadThai24Qty = Math.Max(0, PhadThai24Qty + delta);
+    }
+    private void ChangePhadThai48(int delta)
+    {
+        if (GetPlatterQty(4) > 0)
+            PhadThai48Qty = Math.Max(0, PhadThai48Qty + delta);
+    }
+}
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public MenuItem? MenuItem { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private void OnOverlayClick()
+    {
+        OnClose.InvokeAsync();
+    }
+}

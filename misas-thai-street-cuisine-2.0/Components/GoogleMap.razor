@@ -5,15 +5,21 @@
 </div>
 
 @code {
-    [Parameter] public double Latitude { get; set; } = 30.3322;
-    [Parameter] public double Longitude { get; set; } = -81.6557;
-    [Parameter] public int Zoom { get; set; } = 50;
-    [Parameter] public string MapId { get; set; } = $"google-map-{Guid.NewGuid()}";
+    [Parameter] public double Latitude { get; set; } = 30.006538;
+    [Parameter] public double Longitude { get; set; } = -81.6951407;
+    [Parameter] public int Zoom { get; set; } = 10;
+    [Parameter] public string? MapId { get; set; }
     [Inject] private IJSRuntime JS { get; set; } = default!;
-
     private double _prevLat;
     private double _prevLng;
-
+    private string _mapId = "google-map-main";
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(MapId))
+        {
+            MapId = _mapId;
+        }
+    }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
