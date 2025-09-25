@@ -22,7 +22,7 @@
                     <h4 class="cart-item-name">@item.Item.Name</h4>
                     <p class="cart-item-category">@item.Item.Category</p>
                     <p class="cart-item-quantity">@RenderCartControls(@item.Item)</p>
-                    <p class="cart-item-price">Price: @item.Item.Price</p>
+                    <p class="cart-item-price">Price: @item.GetUnitPrice()</p>
                     <p class="cart-item-total">Total: @item.GetTotalPrice()</p>
                 </div>
 
@@ -32,7 +32,7 @@
             </div>
         }
 
-        <h4 class="total-price">Total Price: @Cart.GetTotalPrice()</h4>
+    <h4 class="total-price">Total Price: @Cart.Items.Sum(i => i.GetTotalPrice())</h4>
         <a href="/Finalize" class="button image-button">Finish Up</a>
     }
 </div>

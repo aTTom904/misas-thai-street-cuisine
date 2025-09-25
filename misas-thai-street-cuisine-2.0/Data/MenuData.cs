@@ -10,8 +10,8 @@ namespace misas_thai_street_cuisine_2._0.Data
             {
                 Name = "M's Combo",
                 Category = "Platter",
-                Price = 42.00m,
-                Serves = 2,
+                Serves = new int[] { 2, 4 },
+                Prices = new Dictionary<int, decimal> { { 2, 42.00m }, { 4, 84.00m } },
                 Description = "Dinner for two, four, or more.",
                 ImageUrl = "/Resources/Images/HomepageCarousel/ms-platter.png"
             },
@@ -19,8 +19,8 @@ namespace misas_thai_street_cuisine_2._0.Data
             {
                 Name = "Sausage Combo",
                 Category = "Platter",
-                Price = 35.00m,
-                Serves = 2,
+                Serves = new int[] { 2, 4 },
+                Prices = new Dictionary<int, decimal> { { 2, 35.00m }, { 4, 70.00m } },
                 Description = "Savory sausage platter.",
                 ImageUrl = "/Resources/Images/HomepageCarousel/sausage-combo.png"
             },
@@ -28,8 +28,8 @@ namespace misas_thai_street_cuisine_2._0.Data
             {
                 Name = "Chicken Combo",
                 Category = "Platter",
-                Price = 39.00m,
-                Serves = 2,
+                Serves = new int[] { 2, 4 },
+                Prices = new Dictionary<int, decimal> { { 2, 39.00m }, { 4, 78.00m } },
                 Description = "Grilled chicken platter.",
                 ImageUrl = "/Resources/Images/HomepageCarousel/chicken-platter.png"
             }
@@ -49,7 +49,7 @@ namespace misas_thai_street_cuisine_2._0.Data
             {
                 Name = "Papaya Salad",
                 Category = "Side",
-                Price = 3.50m,
+                Price = 4.00m,
                 Description = "Fresh and spicy salad.",
                 ImageUrl = "/Resources/Images/HomepageCarousel/papaya-salad.png"
             }

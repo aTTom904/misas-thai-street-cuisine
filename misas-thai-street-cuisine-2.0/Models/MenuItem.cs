@@ -4,18 +4,18 @@
     {
         public string Name { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
-        public decimal Price { get; set; }
         public string? Description { get; set; }
         public string? ImageUrl { get; set; }
     }
 
     public class Platter : MenuItem
     {
-        public int Serves { get; set; }
+        public int[] Serves { get; set; }
+        public Dictionary<int, decimal> Prices { get; set; }
     }
 
     public class SideDish : MenuItem
     {
-        
+        public decimal Price { get; set; }
     }
 }
