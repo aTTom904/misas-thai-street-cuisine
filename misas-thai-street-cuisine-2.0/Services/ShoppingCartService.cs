@@ -10,22 +10,11 @@ namespace misas_thai_street_cuisine_2._0.Services
 
         public void AddItem(CartItem cartItem)
         {
-            // Uniqueness: match on item, selected serves, and upgrades
-            var existingItem = Items.FirstOrDefault(i =>
+            Items.RemoveAll(i =>
                 i.Item.Name == cartItem.Item.Name &&
                 i.Item.Category == cartItem.Item.Category &&
-                i.SelectedServes == cartItem.SelectedServes &&
-                i.UpgradePhadThai24Qty == cartItem.UpgradePhadThai24Qty &&
-                i.UpgradePhadThai48Qty == cartItem.UpgradePhadThai48Qty
-            );
-            if (existingItem != null)
-            {
-                existingItem.Quantity += cartItem.Quantity;
-            }
-            else
-            {
-                Items.Add(cartItem);
-            }
+                i.SelectedServes == cartItem.SelectedServes);
+            Items.Add(cartItem);
             OnItemAddedOrRemoved();
         }
 
@@ -36,9 +25,7 @@ namespace misas_thai_street_cuisine_2._0.Services
             var existingItem = Items.FirstOrDefault(i =>
                 i.Item.Name == cartItem.Item.Name &&
                 i.Item.Category == cartItem.Item.Category &&
-                i.SelectedServes == cartItem.SelectedServes &&
-                i.UpgradePhadThai24Qty == cartItem.UpgradePhadThai24Qty &&
-                i.UpgradePhadThai48Qty == cartItem.UpgradePhadThai48Qty
+                i.SelectedServes == cartItem.SelectedServes
             );
             if (existingItem != null)
             {

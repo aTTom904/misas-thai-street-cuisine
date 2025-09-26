@@ -28,7 +28,7 @@
                         @foreach (var serve in platter.Serves)
                         {
                             <div class="cart-row">
-                                <span class="cart-label">@MenuItem.Name (serves @serve)</span>
+                                <span class="cart-label">Serves @serve</span>
                                 <span class="cart-price">$@platter.Prices[serve]</span>
                                 <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, -1)">−</button>
                                 <span class="cart-qty">@GetPlatterQty(serve)</span>
@@ -57,7 +57,7 @@
                                 </div>
                             }
                         }
-                        <button class="add-to-cart-btn" @onclick="AddToCart">Add to Cart</button>
+                        <!-- Cart is updated automatically on every change -->
                     </div>
                 }
                 else if (MenuItem is SideDish side)
@@ -131,6 +131,7 @@
     private void ChangeSideQty(int delta)
     {
         SideQty = Math.Max(0, SideQty + delta);
+        UpdateSideInCart();
     }
 
     private void ChangePlatterQty(int serves, int delta)
@@ -138,8 +139,13 @@
         if (!PlatterQty.ContainsKey(serves))
             PlatterQty[serves] = 0;
         PlatterQty[serves] = Math.Max(0, PlatterQty[serves] + delta);
+        // Clamp upgrades to parent qty
+        if (serves == 2) PhadThai24Qty = Math.Min(PhadThai24Qty, PlatterQty[2]);
+        if (serves == 4) PhadThai48Qty = Math.Min(PhadThai48Qty, PlatterQty[4]);
+        // If parent qty is zero, reset upgrades
         if (serves == 2 && PlatterQty[2] == 0) PhadThai24Qty = 0;
         if (serves == 4 && PlatterQty[4] == 0) PhadThai48Qty = 0;
+        UpdatePlatterInCart(serves);
     }
 
     private int GetPlatterQty(int serves)
@@ -149,33 +155,61 @@
 
     private void ChangePhadThai24(int delta)
     {
-        if (GetPlatterQty(2) > 0)
-            PhadThai24Qty = Math.Max(0, PhadThai24Qty + delta);
+        int parentQty = GetPlatterQty(2);
+        if (parentQty > 0)
+        {
+            PhadThai24Qty = Math.Max(0, Math.Min(parentQty, PhadThai24Qty + delta));
+            UpdatePlatterInCart(2);
+        }
     }
     private void ChangePhadThai48(int delta)
     {
-        if (GetPlatterQty(4) > 0)
-            PhadThai48Qty = Math.Max(0, PhadThai48Qty + delta);
+        int parentQty = GetPlatterQty(4);
+        if (parentQty > 0)
+        {
+            PhadThai48Qty = Math.Max(0, Math.Min(parentQty, PhadThai48Qty + delta));
+            UpdatePlatterInCart(4);
+        }
     }
-    private void AddToCart()
+    // Update or remove platter in cart for a given serve size
+    private void UpdatePlatterInCart(int serves)
     {
         if (MenuItem is Platter platter)
         {
-            foreach (var serve in platter.Serves)
+            var qty = GetPlatterQty(serves);
+            int upgrade24 = (serves == 2) ? PhadThai24Qty : 0;
+            int upgrade48 = (serves == 4) ? PhadThai48Qty : 0;
+            // Always remove all CartItems for this platter/serve
+            var matches = Cart.Items.Where(i =>
+                i.Item.Name == platter.Name &&
+                i.SelectedServes == serves).ToList();
+            foreach (var match in matches)
             {
-                var qty = GetPlatterQty(serve);
-                if (qty > 0)
-                {
-                    int upgrade24 = (serve == 2) ? PhadThai24Qty : 0;
-                    int upgrade48 = (serve == 4) ? PhadThai48Qty : 0;
-                    Cart.AddItem(new CartItem(platter, qty, serve, upgrade24, upgrade48));
-                }
+                Cart.RemoveItem(match);
+            }
+            // Add a single CartItem with current qty and upgrades if qty > 0
+            if (qty > 0)
+            {
+                var cartItem = new CartItem(platter, qty, serves, upgrade24, upgrade48);
+                Cart.AddItem(cartItem);
             }
         }
-        else if (MenuItem is SideDish side && SideQty > 0)
+    }
+
+    // Update or remove side dish in cart
+    private void UpdateSideInCart()
+    {
+        if (MenuItem is SideDish side)
         {
-            Cart.AddItem(new CartItem(side, SideQty));
+            var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
+            if (SideQty > 0)
+            {
+                Cart.AddItem(new CartItem(side, SideQty));
+            }
+            else if (match != null)
+            {
+                Cart.RemoveItem(match);
+            }
         }
-        OnClose.InvokeAsync();
     }
 }
