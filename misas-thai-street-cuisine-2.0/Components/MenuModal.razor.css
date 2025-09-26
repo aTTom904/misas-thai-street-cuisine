@@ -8,12 +8,13 @@
 .cart-row {
     display: flex;
     align-items: center;
-    gap: 1.1rem;
-    font-size: 1.15rem;
+    gap: 2rem;
+    font-size: 1.25rem;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
 }
 .cart-label {
+    font-size: 1.5rem;
     min-width: 120px;
     color: #222;
 }
@@ -191,7 +192,7 @@
         gap: 0.7rem;
     }
     .cart-row, .cart-upgrade-row {
-        font-size: 0.8rem;
+        font-size: 1rem;
         font-family: 'Montserrat', sans-serif;
         color: #444;
         gap: 0.7rem;
@@ -199,5 +200,9 @@
     .cart-upgrade-row {
         margin-left: 0.7rem;
         padding: 0.5rem 0.7rem;
+    }
+    .cart-label {
+        font-size: 1.1rem;
+        min-width: 100px;
     }
 }
