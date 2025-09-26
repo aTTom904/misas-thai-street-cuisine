@@ -34,27 +34,29 @@
                                 <span class="cart-qty">@GetPlatterQty(serve)</span>
                                 <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
                             </div>
+                            @if (serve == 2 && GetPlatterQty(2) > 0)
+                            {
+                                <div class="cart-upgrade-row slide-in">
+                                    <div class="cart-upgrade-option">
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 24 oz Phad Thai – <b>add $9</b></span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
+                                        <span class="cart-qty">@PhadThai24Qty</span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
+                                    </div>
+                                </div>
+                            }
+                            @if (serve == 4 && GetPlatterQty(4) > 0)
+                            {
+                                <div class="cart-upgrade-row slide-in">
+                                    <div class="cart-upgrade-option">
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 48 oz Phad Thai – <b>add $18</b></span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
+                                        <span class="cart-qty">@PhadThai48Qty</span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
+                                    </div>
+                                </div>
+                            }
                         }
-                        <div class="cart-upgrade-row @((GetPlatterQty(2) > 0 || GetPlatterQty(4) > 0 ? "slide-in" : "slide-out"))">
-                            @if (GetPlatterQty(2) > 0)
-                            {
-                                <div class="cart-upgrade-option">
-                                    <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 24 oz Phad Thai – <b>add $9</b></span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
-                                    <span class="cart-qty">@PhadThai24Qty</span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
-                                </div>
-                            }
-                            @if (GetPlatterQty(4) > 0)
-                            {
-                                <div class="cart-upgrade-option">
-                                    <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 48 oz Phad Thai – <b>add $18</b></span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
-                                    <span class="cart-qty">@PhadThai48Qty</span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
-                                </div>
-                            }
-                        </div>
                         <button class="add-to-cart-btn" @onclick="AddToCart">Add to Cart</button>
                     </div>
                 }
