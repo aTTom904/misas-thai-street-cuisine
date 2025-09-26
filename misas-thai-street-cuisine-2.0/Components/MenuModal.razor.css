@@ -88,6 +88,17 @@
     align-items: center;
     justify-content: center;
 }
+@keyframes modal-pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 .menu-modal {
     background: #fff;
     border-radius: 24px;
@@ -100,7 +111,9 @@
     gap: 2rem;
     align-items: flex-start;
     border: 2px solid #ee6900;
-    animation: slide-in 0.3s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.92) translateY(40px);
+    animation: modal-pop-in 0.33s cubic-bezier(.4,1.4,.6,1) forwards;
 }
 .menu-modal-img-block {
     flex: 0 0 240px;
