@@ -157,7 +157,7 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
     .menu-info-section {
         max-width: 90vw;
         padding: 2rem 0;
