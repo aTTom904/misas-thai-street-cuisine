@@ -26,25 +26,21 @@
     display: block;
     transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
 }
-
 .logo-link {
     height: 150px;
     display: flex;
     align-items: center;
     transition: height 0.3s cubic-bezier(0.4,0,0.2,1);
 }
-.navbar-shrunk .logo-link {
-    height: 60px;
+.navbar-shrunk{
+    box-shadow: 0 2px 12px #ee690044;
+    opacity: 0.95;
 }
-.logo {
-    height: 100%;
-    max-height: 150px;
-    width: auto;
-    display: block;
-    transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+.navbar-shrunk .logo-link {
+    height: 75px;
 }
 .navbar-shrunk .logo {
-    max-height: 60px;
+    max-height: 75px;
 }
 .countdown {
     margin-left: auto;
