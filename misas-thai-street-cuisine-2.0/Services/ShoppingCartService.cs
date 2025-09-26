@@ -7,49 +7,63 @@ namespace misas_thai_street_cuisine_2._0.Services
     {
         public List<CartItem> Items { get; set; } = new List<CartItem>();
 
-        public void AddItem(ICartItem item, int quantity)
+
+        public void AddItem(CartItem cartItem)
         {
-            var existingItem = Items.FirstOrDefault(i => i.Item.Name == item.Name && i.Item.Category == item.Category);
+            // Uniqueness: match on item, selected serves, and upgrades
+            var existingItem = Items.FirstOrDefault(i =>
+                i.Item.Name == cartItem.Item.Name &&
+                i.Item.Category == cartItem.Item.Category &&
+                i.SelectedServes == cartItem.SelectedServes &&
+                i.UpgradePhadThai24Qty == cartItem.UpgradePhadThai24Qty &&
+                i.UpgradePhadThai48Qty == cartItem.UpgradePhadThai48Qty
+            );
             if (existingItem != null)
             {
-                existingItem.Quantity += quantity;
+                existingItem.Quantity += cartItem.Quantity;
             }
             else
             {
-                Items.Add(new CartItem(item, quantity));
+                Items.Add(cartItem);
             }
             OnItemAddedOrRemoved();
         }
 
-        public void AddItem(ICartItem item)
-        {
-            AddItem(item, 1);
-        }
 
-        public void RemoveItem(ICartItem item)
+
+        public void RemoveItem(CartItem cartItem)
         {
-            var cartItem = Items.FirstOrDefault(i => i.Item.Name == item.Name);
-            if (cartItem != null)
+            var existingItem = Items.FirstOrDefault(i =>
+                i.Item.Name == cartItem.Item.Name &&
+                i.Item.Category == cartItem.Item.Category &&
+                i.SelectedServes == cartItem.SelectedServes &&
+                i.UpgradePhadThai24Qty == cartItem.UpgradePhadThai24Qty &&
+                i.UpgradePhadThai48Qty == cartItem.UpgradePhadThai48Qty
+            );
+            if (existingItem != null)
             {
-                cartItem.Quantity -= 1;
-
-                if (cartItem.Quantity == 0)
+                existingItem.Quantity -= 1;
+                if (existingItem.Quantity <= 0)
                 {
-                    Items.Remove(cartItem);
+                    Items.Remove(existingItem);
                 }
             }
-
             OnItemAddedOrRemoved();
         }
 
-        public void RemoveAll(ICartItem item)
+        public void RemoveAll(CartItem cartItem)
         {
-            var cartItem = Items.FirstOrDefault(i => i.Item.Name == item.Name);
-            if (cartItem != null)
+            var existingItem = Items.FirstOrDefault(i =>
+                i.Item.Name == cartItem.Item.Name &&
+                i.Item.Category == cartItem.Item.Category &&
+                i.SelectedServes == cartItem.SelectedServes &&
+                i.UpgradePhadThai24Qty == cartItem.UpgradePhadThai24Qty &&
+                i.UpgradePhadThai48Qty == cartItem.UpgradePhadThai48Qty
+            );
+            if (existingItem != null)
             {
-                Items.Remove(cartItem);
+                Items.Remove(existingItem);
             }
-
             OnItemAddedOrRemoved();
         }
 
@@ -66,14 +80,21 @@ namespace misas_thai_street_cuisine_2._0.Services
             return Items.Sum(i => i.GetTotalPrice());
         }
 
-        public int GetItemQuantity(ICartItem item)
+        public int GetItemQuantity(CartItem cartItem)
         {
-            return Items.FirstOrDefault(ci => ci.Item == item)?.Quantity ?? 0;
+            var existingItem = Items.FirstOrDefault(i =>
+                i.Item.Name == cartItem.Item.Name &&
+                i.Item.Category == cartItem.Item.Category &&
+                i.SelectedServes == cartItem.SelectedServes &&
+                i.UpgradePhadThai24Qty == cartItem.UpgradePhadThai24Qty &&
+                i.UpgradePhadThai48Qty == cartItem.UpgradePhadThai48Qty
+            );
+            return existingItem?.Quantity ?? 0;
         }
 
-        public int GetQuantity(ICartItem item)
+        public int GetQuantity(CartItem cartItem)
         {
-            return GetItemQuantity(item);
+            return GetItemQuantity(cartItem);
         }
 
         public void ClearCart()

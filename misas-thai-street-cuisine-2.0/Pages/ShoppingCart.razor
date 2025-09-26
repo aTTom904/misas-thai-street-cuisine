@@ -21,68 +21,56 @@
                 <div class="cart-item-details">
                     <h4 class="cart-item-name">@item.Item.Name</h4>
                     <p class="cart-item-category">@item.Item.Category</p>
-                    <p class="cart-item-quantity">@RenderCartControls(@item.Item)</p>
-                    <p class="cart-item-price">Price: @item.GetUnitPrice()</p>
-                    <p class="cart-item-total">Total: @item.GetTotalPrice()</p>
+                    <p class="cart-item-quantity">Quantity: @item.Quantity</p>
+                    @if (item.SelectedServes > 0)
+                    {
+                        <p class="cart-item-serves">Serves: @item.SelectedServes</p>
+                    }
+                    @if (item.UpgradePhadThai24Qty > 0)
+                    {
+                        <p class="cart-item-upgrade">Phad Thai 24oz Upgrades: @item.UpgradePhadThai24Qty × $9</p>
+                    }
+                    @if (item.UpgradePhadThai48Qty > 0)
+                    {
+                        <p class="cart-item-upgrade">Phad Thai 48oz Upgrades: @item.UpgradePhadThai48Qty × $18</p>
+                    }
+                    <p class="cart-item-price">Unit Price: $@item.GetUnitPrice()</p>
+                    <p class="cart-item-total">Total: $@item.GetTotalPrice()</p>
                 </div>
-
-                <button @onclick="() => RemoveItemFromCart(item)" class="trash-btn">
+                <div class="cart-controls">
+                    <button @onclick="() => ChangeCartItemQty(item, -1)">-</button>
+                    <span>@item.Quantity</span>
+                    <button @onclick="() => ChangeCartItemQty(item, 1)">+</button>
+                </div>
+                <button @onclick="() => RemoveCartItem(item)" class="trash-btn">
                     <i class="fa fa-trash"></i> Remove
                 </button>
             </div>
         }
 
-    <h4 class="total-price">Total Price: @Cart.Items.Sum(i => i.GetTotalPrice())</h4>
+    <h4 class="total-price">Total Price: $@Cart.Items.Sum(i => i.GetTotalPrice())</h4>
         <a href="/Finalize" class="button image-button">Finish Up</a>
     }
 </div>
 
-@code
-{
-    private void RemoveItemFromCart(CartItem item)
+@code {
+    private void ChangeCartItemQty(CartItem item, int delta)
     {
-        Cart.RemoveAll(item.Item);
-    }
-
-    private void AddToOrder(string itemName, string category)
-    {
-        var item = MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
-                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
-
-        if (item != null)
+        if (delta == 0) return;
+        if (delta > 0)
         {
-            Cart.AddItem(item, 1);
+            // Add one more of the same item (with upgrades)
+            Cart.AddItem(new CartItem(item.Item, 1, item.SelectedServes, item.UpgradePhadThai24Qty, item.UpgradePhadThai48Qty));
         }
-    }
-
-    private void RemoveFromOrder(string itemName, string category)
-    {
-        var item = MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
-                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
-
-        if (item != null)
+        else if (delta < 0)
         {
+            // Remove one of this item (with upgrades)
             Cart.RemoveItem(item);
         }
     }
 
-    private RenderFragment RenderCartControls(ICartItem item)
+    private void RemoveCartItem(CartItem item)
     {
-        int quantity = Cart.GetItemQuantity(item);
-
-        if (quantity > 0)
-        {
-            return
-            @<div class="cart-controls">
-                <button @onclick="() => RemoveFromOrder(item.Name, item.Category)">-</button>
-                <span>@quantity</span>
-                <button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>
-            </div>;
-        }
-        else
-        {
-            return
-           @<button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>;
-        }
+        Cart.RemoveAll(item);
     }
 }
