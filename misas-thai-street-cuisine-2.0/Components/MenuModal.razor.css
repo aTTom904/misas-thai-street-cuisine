@@ -8,6 +8,7 @@
 .cart-row {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 2rem;
     font-size: 1.25rem;
     font-family: 'Montserrat', sans-serif;
@@ -58,7 +59,7 @@
     box-shadow: 0 2px 8px #ee690022;
     opacity: 1;
     max-height: 200px;
-    transition: max-height 0.3s cubic-bezier(.4,2,.6,1), opacity 0.2s;
+    transition: max-height 0.4s cubic-bezier(.4,2,.6,1), opacity 0.3s;
 }
 
 .cart-upgrade-option {
@@ -140,7 +141,7 @@
     font-size: 2.2rem;
     font-family: 'Rock Salt', cursive;
     font-weight: bold;
-    color: #222;
+    color: #ee6900;
     margin-bottom: 0.2rem;
 }
 .menu-modal-price {
@@ -152,6 +153,18 @@
 .menu-modal-desc {
     font-size: 1.05rem;
     font-family: 'Montserrat', sans-serif;
+    color: #444;
+    margin-bottom: 0.7rem;
+}
+.menu-modal-includes {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 0.7rem;
+}
+.menu-modal-addons {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05rem;
     color: #444;
     margin-bottom: 0.7rem;
 }
@@ -188,8 +201,15 @@
     .menu-modal-title {
         font-size: 1.5rem;
     }
-        .modal-cart-section {
-        margin: 1.2rem 0 1rem 0;
+    .menu-modal-includes {
+        font-size: 0.9rem;
+    }
+    .menu-modal-addons {
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    .modal-cart-section {
+        margin: 0 0 1rem 0;
         gap: 0.7rem;
     }
     .cart-row, .cart-upgrade-row {

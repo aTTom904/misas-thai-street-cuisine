@@ -16,14 +16,24 @@
                 <div class="menu-modal-desc">@MenuItem.Description</div>
                 @if (MenuItem is Platter platter)
                 {
-                    <div class="menu-modal-price">
-                        @foreach (var serve in platter.Serves)
+                    <div class="menu-modal-includes" style="margin-bottom:0.7rem;">
+                        <span style="font-weight:bold;">Starting from </span>
+                        @if (platter.Includes != null && platter.Includes.Count > 0)
                         {
-                            <div>
-                                <b>Serves @serve:</b> $@platter.Prices[serve]
-                            </div>
+                            <span> @string.Join(" \u2022 ", platter.Includes)</span>
                         }
                     </div>
+                    @if (platter.AddOns != null && platter.AddOns.Count > 0)
+                    {
+                        <ul class="menu-modal-addons">
+                            <div><strong>Served with:</strong></div>
+                            @foreach (var addon in platter.AddOns)
+                            {
+                                <li>@addon</li>
+                                <br/>
+                            }
+                        </ul>
+                    }
                     <div class="modal-cart-section">
                         @foreach (var serve in platter.Serves)
                         {

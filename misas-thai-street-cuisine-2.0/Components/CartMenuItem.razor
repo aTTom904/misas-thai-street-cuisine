@@ -13,14 +13,23 @@
             <div class="cart-menu-desc">@MenuItem.Description</div>
             @if (MenuItem is Platter platter)
             {
-                <div class="cart-menu-price">
-                    @foreach (var serve in platter.Serves)
+                <div class="menu-item-includes">
+                    <span style="font-weight:bold;">Starting from </span>
+                    @if (platter.Includes != null && platter.Includes.Count > 0)
                     {
-                        <div>
-                            <b>Serves @serve:</b> $@platter.Prices[serve]
-                        </div>
+                        <span> @string.Join(" \u2022 ", platter.Includes)</span>
                     }
                 </div>
+                @if (platter.AddOns != null && platter.AddOns.Count > 0)
+                {
+                    <ul class="menu-item-addons">
+                        <div><strong>Served with:</strong></div>
+                        @foreach (var addon in platter.AddOns)
+                        {
+                            <li>@addon</li>
+                        }
+                    </ul>
+                }
                 <div class="cart-menu-cart-section">
                     @foreach (var serve in platter.Serves)
                     {

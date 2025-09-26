@@ -13,6 +13,18 @@
     width: 100%;
     transition: box-shadow 0.2s;
 }
+.menu-item-includes {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 0.7rem;
+}
+.menu-item-addons {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 0.7rem;
+}
 .cart-menu-img-block {
     display: flex;
     align-items: center;
@@ -36,7 +48,7 @@
 .cart-menu-title {
     font-size: 2.2rem;
     font-weight: bold;
-    color: #222;
+    color: #ee6900;
     margin-bottom: 0.2rem;
     font-family: 'Rock Salt', cursive;
 }
@@ -139,7 +151,7 @@
         font-size: 1.5rem;
     }
     .cart-menu-cart-section {
-        margin: 1.2rem 0 1rem 0;
+        margin: 0 0 1rem 0;
         gap: 0.7rem;
     }
     .cart-row, .cart-upgrade-row {
@@ -155,5 +167,12 @@
     .cart-label {
         font-size: 1.1rem;
         min-width: 100px;
+    }
+    .menu-item-includes {
+        font-size: 0.9rem;
+    }
+    .menu-item-addons {
+        font-size: 0.9rem;
+        margin: 0;
     }
 }
