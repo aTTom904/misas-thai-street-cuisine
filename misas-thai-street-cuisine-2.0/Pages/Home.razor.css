@@ -110,7 +110,8 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-@media (max-width: 600px) {
+
+@media (max-width: 1024px) {
     .homepage-hero {
         flex-direction: column;
         padding: 1vw 0vw;

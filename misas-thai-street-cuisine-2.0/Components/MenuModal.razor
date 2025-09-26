@@ -50,36 +50,47 @@
                                 <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
                             </div>
                         }
-                        <!-- Example: Only show upgrade if you add upgrade info to MenuItem or hardcode for now -->
                         <div class="cart-upgrade-row @((GetPlatterQty(2) > 0 || GetPlatterQty(4) > 0 ? "slide-in" : "slide-out"))">
                             @if (GetPlatterQty(2) > 0)
                             {
-                                <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for a full 24 oz Phad Thai – add $9</span>
-                                <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
-                                <span class="cart-qty">@PhadThai24Qty</span>
-                                <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
+                                <div class="cart-upgrade-option">
+                                    <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 24 oz Phad Thai – <b>add $9</b></span>
+                                    <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
+                                    <span class="cart-qty">@PhadThai24Qty</span>
+                                    <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
+                                </div>
                             }
                             @if (GetPlatterQty(4) > 0)
                             {
-                                <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for a full 48 oz Phad Thai – add $18</span>
-                                <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
-                                <span class="cart-qty">@PhadThai48Qty</span>
-                                <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
+                                <div class="cart-upgrade-option">
+                                    <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 48 oz Phad Thai – <b>add $18</b></span>
+                                    <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
+                                    <span class="cart-qty">@PhadThai48Qty</span>
+                                    <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
+                                </div>
                             }
                         </div>
                     </div>
                 }
-
                 @ChildContent
             </div>
+        }
+    </div>
+</div>
+
 @code {
-    // Cart state
+    [Parameter] public MenuItem? MenuItem { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
     private Dictionary<int, int> PlatterQty = new Dictionary<int, int> { { 2, 0 }, { 4, 0 } };
     private int PhadThai24Qty = 0;
     private int PhadThai48Qty = 0;
-
     private int SideQty = 0;
-    // Prices now come from MenuItem
+
+    private void OnOverlayClick()
+    {
+        OnClose.InvokeAsync();
+    }
 
     private void ChangeSideQty(int delta)
     {
@@ -109,19 +120,5 @@
     {
         if (GetPlatterQty(4) > 0)
             PhadThai48Qty = Math.Max(0, PhadThai48Qty + delta);
-    }
-}
-        }
-    </div>
-</div>
-
-@code {
-    [Parameter] public MenuItem? MenuItem { get; set; }
-    [Parameter] public EventCallback OnClose { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    private void OnOverlayClick()
-    {
-        OnClose.InvokeAsync();
     }
 }
