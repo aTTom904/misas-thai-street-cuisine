@@ -12,6 +12,7 @@
     {
         public int[] Serves { get; set; }
         public Dictionary<int, decimal> Prices { get; set; }
+        public List<string>? AddOns { get; set; }
     }
 
     public class SideDish : MenuItem

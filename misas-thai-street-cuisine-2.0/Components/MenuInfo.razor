@@ -3,6 +3,7 @@
 
 @inject MenuData MenuData
 @inject DeadlineService DeadlineService
+@inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
 
 <div class="menu-info-section">
     <div class="menu-header-row">
@@ -69,7 +70,15 @@
     {
         var now = DateTime.Now;
         UpcomingWednesdays = DeadlineService.GetUpcomingDeliveryWednesdays(now);
-        SelectedDate = UpcomingWednesdays.FirstOrDefault();
+        if (OrderContext.SelectedDate != null && UpcomingWednesdays.Contains(OrderContext.SelectedDate.Value))
+        {
+            SelectedDate = OrderContext.SelectedDate.Value;
+        }
+        else
+        {
+            SelectedDate = UpcomingWednesdays.FirstOrDefault();
+            OrderContext.SelectedDate = SelectedDate;
+        }
     }
 
     private void ShowModal(MenuItem item)
@@ -87,5 +96,9 @@
     private void SelectDate(DateTime date)
     {
         SelectedDate = date;
+        if (OrderContext != null)
+        {
+            OrderContext.SelectedDate = date;
+        }
     }
 }

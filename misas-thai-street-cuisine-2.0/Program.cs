@@ -8,6 +8,7 @@ using Blazorise.Icons.FontAwesome;
 using misas_thai_street_cuisine_2._0.Data;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+builder.Services.AddSingleton<OrderContextService>();
 builder.Services.AddSingleton<DeadlineService>();
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");

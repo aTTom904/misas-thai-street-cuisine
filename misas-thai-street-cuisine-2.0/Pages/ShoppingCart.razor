@@ -1,76 +1,52 @@
 ﻿@using misas_thai_street_cuisine_2._0.Models
 @using Data
+@using misas_thai_street_cuisine_2._0.Components
+@using misas_thai_street_cuisine_2._0.Components.CartMenuItem
 
 @page "/Cart"
 @inject ShoppingCartService Cart
+@inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
 
 <PageTitle>Shopping Cart</PageTitle>
 
 <div class="cart-container">
-    <h3>Your Goodies</h3>
+    <h3>Your Cart</h3>
 
     @if (Cart.Items.Count == 0)
     {
-        <p>Your cart is empty.</p>
+        <p class="cart-empty">Your cart is empty.</p>
     }
     else
     {
-        @foreach (var item in Cart.Items)
+        var groupedPlatters = Cart.Items
+            .Where(i => i.Item is Platter)
+            .GroupBy(i => i.Item.Name)
+            .Select(g => g.First().Item as MenuItem);
+        var sideDishes = Cart.Items
+            .Where(i => i.Item is SideDish)
+            .Select(i => i.Item as MenuItem);
+
+        foreach (var platter in groupedPlatters)
         {
-            <div class="cart-item">
-                <div class="cart-item-details">
-                    <h4 class="cart-item-name">@item.Item.Name</h4>
-                    <p class="cart-item-category">@item.Item.Category</p>
-                    <p class="cart-item-quantity">Quantity: @item.Quantity</p>
-                    @if (item.SelectedServes > 0)
-                    {
-                        <p class="cart-item-serves">Serves: @item.SelectedServes</p>
-                    }
-                    @if (item.UpgradePhadThai24Qty > 0)
-                    {
-                        <p class="cart-item-upgrade">Phad Thai 24oz Upgrades: @item.UpgradePhadThai24Qty × $9</p>
-                    }
-                    @if (item.UpgradePhadThai48Qty > 0)
-                    {
-                        <p class="cart-item-upgrade">Phad Thai 48oz Upgrades: @item.UpgradePhadThai48Qty × $18</p>
-                    }
-                    <p class="cart-item-price">Unit Price: $@item.GetUnitPrice()</p>
-                    <p class="cart-item-total">Total: $@item.GetTotalPrice()</p>
-                </div>
-                <div class="cart-controls">
-                    <button @onclick="() => ChangeCartItemQty(item, -1)">-</button>
-                    <span>@item.Quantity</span>
-                    <button @onclick="() => ChangeCartItemQty(item, 1)">+</button>
-                </div>
-                <button @onclick="() => RemoveCartItem(item)" class="trash-btn">
-                    <i class="fa fa-trash"></i> Remove
-                </button>
-            </div>
+            <CartMenuItem MenuItem="@platter" OnCartChanged="OnCartChanged">
+                <div style="margin-bottom: 1rem;"></div>
+            </CartMenuItem>
+        }
+        foreach (var side in sideDishes)
+        {
+            <CartMenuItem MenuItem="@side" OnCartChanged="OnCartChanged">
+                <div style="margin-bottom: 1rem;"></div>
+            </CartMenuItem>
         }
 
-    <h4 class="total-price">Total Price: $@Cart.Items.Sum(i => i.GetTotalPrice())</h4>
-        <a href="/Finalize" class="button image-button">Finish Up</a>
+        <h4 class="total-price modern-total-price">Total Price: <span class="price-highlight">$@Cart.Items.Sum(i => i.GetTotalPrice())</span></h4>
+        <a href="/Finalize" class="button image-button modern-finalize-btn">Finish Up</a>
     }
 </div>
 
 @code {
-    private void ChangeCartItemQty(CartItem item, int delta)
+    private void OnCartChanged()
     {
-        if (delta == 0) return;
-        if (delta > 0)
-        {
-            // Add one more of the same item (with upgrades)
-            Cart.AddItem(new CartItem(item.Item, 1, item.SelectedServes, item.UpgradePhadThai24Qty, item.UpgradePhadThai48Qty));
-        }
-        else if (delta < 0)
-        {
-            // Remove one of this item (with upgrades)
-            Cart.RemoveItem(item);
-        }
-    }
-
-    private void RemoveCartItem(CartItem item)
-    {
-        Cart.RemoveAll(item);
+        StateHasChanged();
     }
 }
