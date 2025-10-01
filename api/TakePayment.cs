@@ -26,8 +26,7 @@ namespace MisasThaiStreetCuisine.Function
             var orderRequest = JsonConvert.DeserializeObject<CreateOrderRequest>(requestBody);
 
             var accessToken = Environment.GetEnvironmentVariable("Square__AccessToken");
-            var locationId = Environment.GetEnvironmentVariable("Square__LocationId");
-            if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(locationId))
+            if (string.IsNullOrEmpty(accessToken))
             {
                 log.LogError("Square credentials missing.");
                 return new BadRequestObjectResult(new { success = false, error = "Square credentials missing." });
