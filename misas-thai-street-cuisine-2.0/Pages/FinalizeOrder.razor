@@ -1,77 +1,70 @@
-﻿@page "/Finalize"
-@using System.Text.Json
+@page "/FinalizeOrder"
+@using misas_thai_street_cuisine_2._0.Models
 @using misas_thai_street_cuisine_2._0.Services
 @inject ShoppingCartService Cart
 @inject SquarePaymentService PaymentService
 @inject OrderApiService OrderApi
-@implements IAsyncDisposable
 
 <div class="checkout-container">
     <h2>Checkout</h2>
-    
-    @if (Cart.Items.Any())
-        {
-            <div class="checkout-content">
-                <!-- Order Summary -->
-                <div class="order-summary">
-                    <h4>Order Summary</h4>
-                    <div class="cart-items">
-                        @foreach (var item in Cart.Items)
+    @if (Cart?.Items != null && Cart.Items.Count > 0)
+    {
+        <div class="checkout-content">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h4>Order Summary</h4>
+                <div class="cart-items">
+                    @foreach (var item in Cart.Items)
+                    {
+                        if (item != null && item.Item != null)
                         {
-                            if (item != null && item.Item != null)
-                            {
-                                <div class="cart-item">
-                                    <div class="item-info">
-                                        <span class="item-name">@item.Item?.Name ?? "Unnamed"</span>
-                                        <span class="item-price">$@(item.GetUnitPrice().ToString("F2"))</span>
-                                    </div>
-                                    <div class="item-quantity">
-                                        Qty: @(item.Quantity)
-                                    </div>
-                                    <div class="item-total">
-                                        $@(item.GetTotalPrice().ToString("F2"))
-                                    </div>
+                            <div class="cart-item">
+                                <div class="item-info">
+                                    <span class="item-name">@item.Item.Name</span>
+                                    <span class="item-price">$@item.GetUnitPrice().ToString("F2")</span>
                                 </div>
-                            }
-                            else
-                            {
-                                <div class="cart-item">
-                                    <span class="item-name text-danger">Invalid item</span>
-                                </div>
-                            }
+                                <div class="item-quantity">Qty: @item.Quantity</div>
+                                <div class="item-total">$@(item.GetTotalPrice().ToString("F2"))</div>
+                            </div>
                         }
-                    </div>
-                    <div class="total-section">
-                        <strong>Total: $@(Cart.Items.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0).ToString("F2"))</strong>
-                    </div>
+                        else
+                        {
+                            <div class="cart-item">
+                                <span class="item-name text-danger">Invalid item</span>
+                            </div>
+                        }
+                    }
                 </div>
+                <div class="total-section">
+                    <strong>Total: $@(Cart.Items.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0).ToString("F2"))</strong>
+                </div>
+            </div>
 
             @if (currentStep == 0)
             {
                 <!-- Customer Information Step -->
                 <div class="customer-info">
                     <h4>Customer Information</h4>
-                    
                     @if (!string.IsNullOrEmpty(errorMessage))
                     {
                         <div class="alert alert-danger">@errorMessage</div>
                     }
-
                     <div class="form-group">
                         <label>Full Name *</label>
                         <input type="text" @bind="customerName" class="form-control" required />
                     </div>
-                    
                     <div class="form-group">
                         <label>Email *</label>
                         <input type="email" @bind="customerEmail" class="form-control" required />
                     </div>
-                    
                     <div class="form-group">
                         <label>Phone</label>
                         <input type="tel" @bind="customerPhone" class="form-control" />
                     </div>
-
+                        <div class="form-group">
+                            <label>Delivery Address *</label>
+                            <input type="text" @bind="deliveryAddress" class="form-control" required />
+                        </div>
                     <div class="form-group consent-section">
                         <div class="form-check">
                             <input type="checkbox" @bind="consentToUpdates" class="form-check-input" id="consentCheckbox" />
@@ -83,7 +76,6 @@
                             You can unsubscribe at any time. Standard message and data rates may apply for text messages.
                         </small>
                     </div>
-
                     <button class="btn btn-primary" @onclick="ProceedToPayment" disabled="@(!IsCustomerInfoValid())">
                         Proceed to Payment
                     </button>
@@ -94,19 +86,17 @@
                 <!-- Payment Step -->
                 <div class="payment-section">
                     <h4>Payment Information</h4>
-                    
                     @if (!string.IsNullOrEmpty(errorMessage))
                     {
                         <div class="alert alert-danger">@errorMessage</div>
                     }
-
                     @if (!string.IsNullOrEmpty(successMessage))
                     {
                         <div class="alert alert-success">@successMessage</div>
                     }
-
                     <div class="customer-summary">
                         <p><strong>Customer:</strong> @customerName</p>
+                        <p><strong>Delivery Address:</strong> @deliveryAddress</p>
                         <p><strong>Email:</strong> @customerEmail</p>
                         @if (!string.IsNullOrEmpty(customerPhone))
                         {
@@ -114,22 +104,20 @@
                         }
                         <p><strong>Marketing Consent:</strong> @(consentToUpdates ? "Yes - will receive updates" : "No - will not receive updates")</p>
                     </div>
-
                     <div class="form-group">
                         <label>Card Information</label>
                         <div id="card-container" style="min-height: 60px; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background-color: #f8f9fa;"></div>
                     </div>
-
                     <div class="payment-buttons">
                         <button class="btn btn-secondary me-2" @onclick="BackToCustomerInfo" disabled="@isProcessing">
                             Back
                         </button>
-                        <button class="btn btn-success" @onclick="ProcessPayment" disabled="@isProcessing">
+                        <button class="complete-order-btn btn btn-success" @onclick="ProcessPayment" disabled="@isProcessing">
                             @if (isProcessing)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            Complete Order - $@(Cart.Items.Sum(i => i.GetTotalPrice()).ToString("F2"))
+                            Complete Order - $@(Cart.Items.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0).ToString("F2"))
                         </button>
                     </div>
                 </div>
@@ -164,14 +152,11 @@
 
 @code {
     private int currentStep = 0; // 0 = Customer Info, 1 = Payment, 2 = Confirmation
-    
-    // Customer Information
     private string customerName = string.Empty;
     private string customerEmail = string.Empty;
     private string customerPhone = string.Empty;
+    private string deliveryAddress = string.Empty;
     private bool consentToUpdates = false;
-    
-    // Payment State
     private bool isProcessing = false;
     private bool isPaymentInitialized = false;
     private string errorMessage = string.Empty;
@@ -188,12 +173,10 @@
 
     private bool IsCustomerInfoValid()
     {
-        return !string.IsNullOrWhiteSpace(customerName) && 
+        return !string.IsNullOrWhiteSpace(customerName) &&
                !string.IsNullOrWhiteSpace(customerEmail) &&
                customerEmail.Contains("@");
     }
-
-    // GetTotal() replaced by direct sum in markup
 
     private async Task ProceedToPayment()
     {
@@ -202,12 +185,9 @@
             errorMessage = "Please fill in all required fields.";
             return;
         }
-
         errorMessage = string.Empty;
         currentStep = 1;
         StateHasChanged();
-        
-        // Payment initialization will be handled by OnAfterRenderAsync
     }
 
     private async Task BackToCustomerInfo()
@@ -215,8 +195,6 @@
         currentStep = 0;
         errorMessage = string.Empty;
         successMessage = string.Empty;
-        
-        // Clean up payment form if it was initialized
         if (isPaymentInitialized)
         {
             await PaymentService.DestroyAsync();
@@ -227,13 +205,9 @@
     private async Task InitializePayments()
     {
         if (isPaymentInitialized) return;
-        
         try
         {
-            // Clean up any existing payment form first
             await PaymentService.DestroyAsync();
-            
-            // Initialize Square Payments
             var initResult = await PaymentService.InitializeAsync();
             if (!initResult.Success)
             {
@@ -241,8 +215,6 @@
                 StateHasChanged();
                 return;
             }
-
-            // Initialize the card form
             var cardResult = await PaymentService.InitializeCardAsync("card-container");
             if (!cardResult.Success)
             {
@@ -250,7 +222,6 @@
                 StateHasChanged();
                 return;
             }
-
             isPaymentInitialized = true;
             StateHasChanged();
         }
@@ -268,73 +239,57 @@
             errorMessage = "Payment system not initialized";
             return;
         }
-
         isProcessing = true;
         errorMessage = string.Empty;
         successMessage = string.Empty;
         StateHasChanged();
-
         try
         {
-            // Tokenize the card
             var tokenResult = await PaymentService.TokenizeCardAsync();
-            
             if (tokenResult.Success && !string.IsNullOrEmpty(tokenResult.Token))
             {
-                // Create order request for API
                 var orderRequest = new CreateOrderRequest
                 {
                     CustomerName = customerName,
                     CustomerEmail = customerEmail,
                     CustomerPhone = customerPhone ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
-                    Total = Cart.Items.Sum(i => i.GetTotalPrice()),
+                    Total = Cart.Items.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0),
                     PaymentToken = tokenResult.Token,
-                    Items = Cart.Items.Select(item => new OrderItemRequest
+                    Items = Cart.Items.Where(i => i != null && i.Item != null).Select(item => new OrderItemRequest
                     {
                         ItemName = item.Item.Name,
                         Category = item.Item.Category,
                         Price = item.GetUnitPrice(),
                         Quantity = item.Quantity
-                    }).ToList()
+                    }).ToList(),
+                    DeliveryAddress = deliveryAddress
                 };
-
-                // Try to save order to database via API
                 try
                 {
                     var apiResult = await OrderApi.CreateOrderAsync(orderRequest);
-                    
                     if (apiResult.Success && apiResult.Data != null)
                     {
-                        // Order saved successfully to database
                         orderConfirmation = apiResult.Data.OrderNumber;
                         successMessage = "Payment processed and order saved successfully!";
                     }
                     else
                     {
-                        // Payment succeeded but API call failed - generate fallback order number
                         orderConfirmation = $"ORDER-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}";
                         successMessage = "Payment processed successfully!";
-                        // Note: In production, you'd want to log this for manual order entry
                     }
                 }
                 catch (Exception)
                 {
-                    // API call failed but payment succeeded - generate fallback order number
                     orderConfirmation = $"ORDER-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}";
                     successMessage = "Payment processed successfully!";
-                    // In production, log this error for manual order entry
                 }
-                
-                // Clear the cart and move to confirmation
                 Cart.ClearCart();
                 currentStep = 2;
             }
             else
             {
-                var errors = tokenResult.Errors != null ? 
-                    string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : 
-                    tokenResult.Error ?? "Unknown error occurred";
+                var errors = tokenResult.Errors != null ? string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : tokenResult.Error ?? "Unknown error occurred";
                 errorMessage = $"Payment failed: {errors}";
             }
         }
@@ -348,14 +303,6 @@
             StateHasChanged();
         }
     }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (isPaymentInitialized)
-        {
-            await PaymentService.DestroyAsync();
-        }
-    }
 }
 
 <style>
@@ -364,23 +311,19 @@
         margin: 2rem auto;
         padding: 2rem;
     }
-
     .checkout-content {
         display: grid;
         gap: 2rem;
     }
-
     .order-summary {
         background: #f8f9fa;
         padding: 1.5rem;
         border-radius: 8px;
         border: 1px solid #dee2e6;
     }
-
     .cart-items {
         margin-bottom: 1rem;
     }
-
     .cart-item {
         display: flex;
         justify-content: space-between;
@@ -388,57 +331,47 @@
         padding: 0.75rem 0;
         border-bottom: 1px solid #eee;
     }
-
     .cart-item:last-child {
         border-bottom: none;
     }
-
     .item-info {
         flex: 1;
         display: flex;
         flex-direction: column;
     }
-
     .item-name {
         font-weight: bold;
         color: #333;
     }
-
     .item-price {
         color: #666;
         font-size: 0.9rem;
     }
-
     .item-quantity, .item-total {
         margin-left: 1rem;
         font-weight: bold;
     }
-
     .total-section {
         border-top: 2px solid #ee6900;
         padding-top: 1rem;
         margin-top: 1rem;
         font-size: 1.2rem;
     }
-
     .customer-info, .payment-section {
         background: white;
         padding: 2rem;
         border-radius: 8px;
         border: 1px solid #dee2e6;
     }
-
     .form-group {
         margin-bottom: 1rem;
     }
-
     .form-group label {
         font-weight: bold;
         margin-bottom: 0.5rem;
         display: block;
         color: #333;
     }
-
     .form-control {
         width: 100%;
         padding: 0.75rem;
@@ -446,7 +379,6 @@
         border-radius: 4px;
         font-size: 1rem;
     }
-
     .consent-section {
         background: #f8f9fa;
         padding: 1rem;
@@ -454,44 +386,37 @@
         border: 1px solid #e9ecef;
         margin: 1.5rem 0;
     }
-
     .form-check {
         display: flex;
         align-items: flex-start;
         gap: 0.5rem;
     }
-
     .form-check-input {
         margin-top: 0.25rem;
         flex-shrink: 0;
     }
-
     .form-check-label {
         font-weight: normal !important;
         line-height: 1.4;
         margin-bottom: 0.5rem !important;
         cursor: pointer;
     }
-
     .form-text {
         font-size: 0.875rem;
         margin-top: 0.5rem;
         display: block;
     }
-
     .customer-summary {
         background: #f8f9fa;
         padding: 1rem;
         border-radius: 4px;
         margin-bottom: 1.5rem;
     }
-
     .payment-buttons {
         display: flex;
         gap: 1rem;
         margin-top: 2rem;
     }
-
     .order-confirmation {
         text-align: center;
         padding: 3rem;
@@ -499,12 +424,10 @@
         border-radius: 8px;
         border: 1px solid #dee2e6;
     }
-
     .empty-cart {
         text-align: center;
         padding: 3rem;
     }
-
     #card-container {
         background-color: #f8f9fa !important;
     }

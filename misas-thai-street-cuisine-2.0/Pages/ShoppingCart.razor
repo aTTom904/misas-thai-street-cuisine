@@ -6,41 +6,48 @@
 @page "/Cart"
 @inject ShoppingCartService Cart
 @inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
+@inject NavigationManager NavigationManager
 
 <PageTitle>Shopping Cart</PageTitle>
 
 <div class="cart-container">
     <h3>Your Cart</h3>
 
-    @if (Cart.Items.Count == 0)
+    @if (Cart?.Items == null || Cart.Items.Count == 0)
     {
         <p class="cart-empty">Your cart is empty.</p>
     }
     else
     {
         var groupedPlatters = Cart.Items
-            .Where(i => i.Item is Platter)
+            .Where(i => i?.Item != null && i.Item is Platter)
             .GroupBy(i => i.Item.Name)
             .Select(g => g.First().Item as MenuItem);
         var sideDishes = Cart.Items
-            .Where(i => i.Item is SideDish)
+            .Where(i => i?.Item != null && i.Item is SideDish)
             .Select(i => i.Item as MenuItem);
 
         foreach (var platter in groupedPlatters)
         {
-            <CartMenuItem MenuItem="@platter" OnCartChanged="OnCartChanged">
-                <div style="margin-bottom: 1rem;"></div>
-            </CartMenuItem>
+            if (platter != null)
+            {
+                <CartMenuItem MenuItem="@platter" OnCartChanged="OnCartChanged">
+                    <div style="margin-bottom: 1rem;"></div>
+                </CartMenuItem>
+            }
         }
         foreach (var side in sideDishes)
         {
-            <CartMenuItem MenuItem="@side" OnCartChanged="OnCartChanged">
-                <div style="margin-bottom: 1rem;"></div>
-            </CartMenuItem>
+            if (side != null)
+            {
+                <CartMenuItem MenuItem="@side" OnCartChanged="OnCartChanged">
+                    <div style="margin-bottom: 1rem;"></div>
+                </CartMenuItem>
+            }
         }
 
-        <h4 class="total-price modern-total-price">Total Price: <span class="price-highlight">$@Cart.Items.Sum(i => i.GetTotalPrice())</span></h4>
-        <a href="/Finalize" class="button image-button modern-finalize-btn">Finish Up</a>
+        <h4 class="total-price">Total Price: <span class="price-highlight">$@Cart.Items.Where(i => i != null).Sum(i => i.GetTotalPrice())</span></h4>
+        <button type="submit" @onclick="OnFinishUpClicked" class="finish-up-btn">Finish Up</button>
     }
 </div>
 
@@ -48,5 +55,10 @@
     private void OnCartChanged()
     {
         StateHasChanged();
+    }
+
+    private void OnFinishUpClicked()
+    {
+        NavigationManager.NavigateTo("/FinalizeOrder");
     }
 }

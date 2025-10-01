@@ -55,14 +55,14 @@
     transition: background 0.2s, box-shadow 0.2s;
     margin-top: 1rem;
 }
+    .delivery-submit:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 16px #ee690088;
+    }
 .delivery-submit-row {
     display: flex;
     justify-content: center;
     width: 100%;
-}
-.delivery-submit:hover {
-    background: #ff9800;
-    box-shadow: 0 4px 16px #ee690088;
 }
 
 .delivery-result {

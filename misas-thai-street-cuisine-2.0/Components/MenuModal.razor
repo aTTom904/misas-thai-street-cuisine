@@ -23,7 +23,7 @@
                             <span> @string.Join(" \u2022 ", platter.Includes)</span>
                         }
                     </div>
-                    @if (platter.AddOns != null && platter.AddOns.Count > 0)
+                    @* @if (platter.AddOns != null && platter.AddOns.Count > 0)
                     {
                         <ul class="menu-modal-addons">
                             <div><strong>Served with:</strong></div>
@@ -33,7 +33,7 @@
                                 <br/>
                             }
                         </ul>
-                    }
+                    } *@
                     <div class="modal-cart-section">
                         @foreach (var serve in platter.Serves)
                         {
