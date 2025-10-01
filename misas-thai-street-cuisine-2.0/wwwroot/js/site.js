@@ -4,7 +4,7 @@ window.preloadImage = function (url) {
 };
 
 function scrollToMenuInfo() {
-    const header = document.querySelector('.navbar'); // Replace with your actual header class or id
+    const header = document.querySelector('.navbar');
     const menuInfo = document.getElementById('menu-info');
     if (menuInfo) {
         const headerHeight = header ? header.offsetHeight : 0;
