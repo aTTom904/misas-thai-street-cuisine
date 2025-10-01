@@ -6,29 +6,40 @@
 
 
 <div class="layout-container">
-    <header class="navbar minimal-navbar">
+    <header class="navbar minimal-navbar @(isHeaderShrunk ? "navbar-shrunk" : "")">
         <div class="logo-hamburger">
             <a href="/" class="logo-link">
                 <img src="/Resources/Images/Logos/ORNG M RED CHILI.png" alt="Logo" class="logo" />
             </a>
-            <div class="hamburger-menu" @onclick="OnHamburgerClick">
+            @* <div class="hamburger-menu" @onclick="OnHamburgerClick">
                 <i class="fas fa-bars"></i>
-            </div>
+            </div> *@
         </div>
-        <div class="countdown right-countdown">
-            <span class="countdown-text" 
-                    tabindex="0"
-                    @onfocusout="() => showTooltip = false"
-                    @onmouseover="() => showTooltip = true" 
-                    @onmouseout="() => showTooltip = false"
-                    @onclick="() => showTooltip = !showTooltip">
-                <i class="far fa-clock countdown-clock"></i>
-                <span class="countdown-single">@CountdownText</span>
-                @if (showTooltip)
+        <div class="header-right">
+            <div class="countdown right-countdown">
+                <span class="countdown-text" 
+                        tabindex="0"
+                        @onfocusout="() => showTooltip = false"
+                        @onmouseover="() => showTooltip = true" 
+                        @onmouseout="() => showTooltip = false"
+                        @onclick="() => showTooltip = !showTooltip">
+                    <i class="far fa-clock countdown-clock"></i>
+                    <span class="countdown-single">@CountdownText</span>
+                    @if (showTooltip)
+                    {
+                        <span class="countdown-tooltip">Order deadline is every second and fourth Monday of the month at 5:00 PM. Orders placed after the deadline will be delivered the following delivery day. Delivery days are the second and fourth Wednesdays of the month.</span>
+                    }
+                </span>
+            </div>
+            <div class="cart-anim-wrapper">
+                @if (CartItemCount > 0)
                 {
-                    <span class="countdown-tooltip">Order deadline is every second and fourth Monday of the month at 5:00 PM. Orders placed after the deadline will be delivered the following delivery day. Delivery days are the second and fourth Wednesdays of the month.</span>
+                    <a href="/cart" class="cart-icon-link cart-slide-in" aria-label="View cart">
+                        <i class="fas fa-shopping-cart cart-icon"></i>
+                        <span class="cart-total">$@Cart.GetTotalPrice().ToString("0.00")</span>
+                    </a>
                 }
-            </span>
+            </div>
         </div>
     </header>
     @if (isMobileMenuVisible)
@@ -49,22 +60,19 @@
 </div>
 
 <footer class="footer">
-    <div class="footer-content">
-        <div class="footer-left">
-            <p>&copy; @DateTime.Now.Year Misa's Thai Street Cuisine</p>
-        </div>
-        <div class="footer-right">
-            <a href="https://www.facebook.com/misasthaistreetcuisine" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-            <a href="mailto:info@misasthaistreetcuisine.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-        </div>
+    <div class="footer-left">
+        <p>&copy; @DateTime.Now.Year Misa's Thai Street Cuisine</p>
+    </div>
+    <div class="footer-right">
+        <a href="https://www.facebook.com/misasthaistreetcuisine" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="mailto:info@misasthaistreetcuisine.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
     </div>
 </footer>
 
 
 
 @code {
-
     private bool isMobileMenuVisible = false;
     private bool showTooltip = false;
     private int CartItemCount = 0;
@@ -72,6 +80,9 @@
     private Timer? countdownTimer;
     private double mobileMenuX = 0;
     private double mobileMenuY = 0;
+    private bool isHeaderShrunk = false;
+
+    [Inject] private IJSRuntime JS { get; set; }
 
     private async Task OnHamburgerClick(MouseEventArgs e)
     {
@@ -127,6 +138,23 @@
 
         CountdownText = $"{remainingTime.Days}d {remainingTime.Hours:D2}h {remainingTime.Minutes:D2}m";
 
+        InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("window.misasHeaderScrollInit");
+            DotNetObjectReference<MainLayout> objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("window.misasSetHeaderShrinkCallback", objRef);
+        }
+    }
+
+    [JSInvokable]
+    public void SetHeaderShrunk(bool shrunk)
+    {
+        isHeaderShrunk = shrunk;
         InvokeAsync(StateHasChanged);
     }
 

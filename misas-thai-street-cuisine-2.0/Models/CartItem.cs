@@ -14,11 +14,16 @@
         // For platters, which serving size was selected (null for sides)
         public int? SelectedServes { get; set; }
 
-        public CartItem(ICartItem item, int quantity, int? selectedServes = null)
+        public int UpgradePhadThai24Qty { get; set; }
+        public int UpgradePhadThai48Qty { get; set; }
+
+        public CartItem(ICartItem item, int quantity, int? selectedServes = null, int upgradePhadThai24Qty = 0, int upgradePhadThai48Qty = 0)
         {
             Item = item;
             Quantity = quantity;
             SelectedServes = selectedServes;
+            UpgradePhadThai24Qty = upgradePhadThai24Qty;
+            UpgradePhadThai48Qty = upgradePhadThai48Qty;
         }
 
         public decimal GetUnitPrice()
@@ -37,7 +42,10 @@
 
         public decimal GetTotalPrice()
         {
-            return GetUnitPrice() * Quantity;
+            decimal total = GetUnitPrice() * Quantity;
+            total += UpgradePhadThai24Qty * 9m;
+            total += UpgradePhadThai48Qty * 18m;
+            return total;
         }
     }
 }

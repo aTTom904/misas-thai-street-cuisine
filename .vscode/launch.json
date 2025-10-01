@@ -1,0 +1,60 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (No Browser)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "dotnet",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/misas-thai-street-cuisine-2.0/misas-thai-street-cuisine-2.0.csproj",
+                "--urls",
+                "http://localhost:5000"
+            ],
+            "cwd": "${workspaceFolder}/misas-thai-street-cuisine-2.0",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "Azure Functions Host",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "dotnet",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/misas-thai-street-cuisine-2.0/api/api.csproj"
+            ],
+            "cwd": "${workspaceFolder}/api",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Blazor WebAssembly Debug (Chrome)",
+            "type": "blazorwasm",
+            "request": "launch",
+            "url": "http://localhost:5000",
+            "browser": "chrome"
+        },
+        {
+            "name": "Attach to .NET Functions",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:azureFunctions.pickProcess}"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Blazor Debug",
+            "configurations": [
+                ".NET Core Launch (No Browser)",
+                "Blazor WebAssembly Debug (Chrome)",
+            ]
+        }
+    ]
+}

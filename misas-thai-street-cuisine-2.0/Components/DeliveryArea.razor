@@ -1,6 +1,7 @@
 
 @using misas_thai_street_cuisine_2._0.Components
 @using Microsoft.AspNetCore.Components.Forms
+@inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
 
 <div class="delivery-area-section">
     <div class="delivery-area-columns">
@@ -77,6 +78,7 @@
     private async Task OnSubmit()
     {
         var userAddress = $"{Street}, {City}, {State} {ZipCode}";
+        OrderContext.Address = userAddress;
         var userLocation = await JS.InvokeAsync<LatLngResult>("geocodeAddress", userAddress);
         if (userLocation == null)
         {

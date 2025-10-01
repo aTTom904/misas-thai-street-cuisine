@@ -1,5 +1,7 @@
 @using misas_thai_street_cuisine_2._0.Models
 
+@inject ShoppingCartService Cart
+
 <div class="menu-modal-overlay" @onclick="OnOverlayClick">
     <div class="menu-modal" @onclick:stopPropagation>
         <button class="menu-modal-close" @onclick="OnClose">&times;</button>
@@ -14,13 +16,58 @@
                 <div class="menu-modal-desc">@MenuItem.Description</div>
                 @if (MenuItem is Platter platter)
                 {
-                    <div class="menu-modal-price">
+                    <div class="menu-modal-includes" style="margin-bottom:0.7rem;">
+                        <span style="font-weight:bold;">Starting from </span>
+                        @if (platter.Includes != null && platter.Includes.Count > 0)
+                        {
+                            <span> @string.Join(" \u2022 ", platter.Includes)</span>
+                        }
+                    </div>
+                    @* @if (platter.AddOns != null && platter.AddOns.Count > 0)
+                    {
+                        <ul class="menu-modal-addons">
+                            <div><strong>Served with:</strong></div>
+                            @foreach (var addon in platter.AddOns)
+                            {
+                                <li>@addon</li>
+                                <br/>
+                            }
+                        </ul>
+                    } *@
+                    <div class="modal-cart-section">
                         @foreach (var serve in platter.Serves)
                         {
-                            <div>
-                                <b>Serves @serve:</b> $@platter.Prices[serve]
+                            <div class="cart-row">
+                                <span class="cart-label">Serves @serve</span>
+                                <span class="cart-price">$@platter.Prices[serve]</span>
+                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, -1)">−</button>
+                                <span class="cart-qty">@GetPlatterQty(serve)</span>
+                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
                             </div>
+                            @if (serve == 2 && GetPlatterQty(2) > 0)
+                            {
+                                <div class="cart-upgrade-row slide-in">
+                                    <div class="cart-upgrade-option">
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $9</b></span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
+                                        <span class="cart-qty">@PhadThai24Qty</span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
+                                    </div>
+                                </div>
+                            }
+                            @if (serve == 4 && GetPlatterQty(4) > 0)
+                            {
+                                <div class="cart-upgrade-row slide-in">
+                                    <div class="cart-upgrade-option">
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $18</b></span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
+                                        <span class="cart-qty">@PhadThai48Qty</span>
+                                        <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
+                                    </div>
+                                </div>
+                            }
                         }
+                        <!-- Cart is updated automatically on every change -->
                     </div>
                 }
                 else if (MenuItem is SideDish side)
@@ -39,38 +86,7 @@
 
                 @if (MenuItem is Platter platter2)
                 {
-                    <div class="modal-cart-section">
-                        @foreach (var serve in platter2.Serves)
-                        {
-                            <div class="cart-row">
-                                <span class="cart-label">@MenuItem.Name (serves @serve)</span>
-                                <span class="cart-price">$@platter2.Prices[serve]</span>
-                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, -1)">−</button>
-                                <span class="cart-qty">@GetPlatterQty(serve)</span>
-                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
-                            </div>
-                        }
-                        <div class="cart-upgrade-row @((GetPlatterQty(2) > 0 || GetPlatterQty(4) > 0 ? "slide-in" : "slide-out"))">
-                            @if (GetPlatterQty(2) > 0)
-                            {
-                                <div class="cart-upgrade-option">
-                                    <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 24 oz Phad Thai – <b>add $9</b></span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
-                                    <span class="cart-qty">@PhadThai24Qty</span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
-                                </div>
-                            }
-                            @if (GetPlatterQty(4) > 0)
-                            {
-                                <div class="cart-upgrade-option">
-                                    <span class="cart-upgrade-label"><b>Upgrade:</b> Swap sticky rice for 48 oz Phad Thai – <b>add $18</b></span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
-                                    <span class="cart-qty">@PhadThai48Qty</span>
-                                    <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
-                                </div>
-                            }
-                        </div>
-                    </div>
+                
                 }
                 @ChildContent
             </div>
@@ -87,6 +103,36 @@
     private int PhadThai48Qty = 0;
     private int SideQty = 0;
 
+    protected override void OnParametersSet()
+    {
+        if (MenuItem is Platter platter)
+        {
+            // Reset
+            PlatterQty[2] = 0;
+            PlatterQty[4] = 0;
+            PhadThai24Qty = 0;
+            PhadThai48Qty = 0;
+            // Check cart for each serve
+            foreach (var serve in platter.Serves)
+            {
+                var match = Cart.Items.FirstOrDefault(i =>
+                    i.Item.Name == platter.Name &&
+                    i.SelectedServes == serve);
+                if (match != null)
+                {
+                    PlatterQty[serve] = match.Quantity;
+                    if (serve == 2) PhadThai24Qty = match.UpgradePhadThai24Qty;
+                    if (serve == 4) PhadThai48Qty = match.UpgradePhadThai48Qty;
+                }
+            }
+        }
+        else if (MenuItem is SideDish side)
+        {
+            var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
+            SideQty = match?.Quantity ?? 0;
+        }
+    }
+
     private void OnOverlayClick()
     {
         OnClose.InvokeAsync();
@@ -95,6 +141,7 @@
     private void ChangeSideQty(int delta)
     {
         SideQty = Math.Max(0, SideQty + delta);
+        UpdateSideInCart();
     }
 
     private void ChangePlatterQty(int serves, int delta)
@@ -102,8 +149,13 @@
         if (!PlatterQty.ContainsKey(serves))
             PlatterQty[serves] = 0;
         PlatterQty[serves] = Math.Max(0, PlatterQty[serves] + delta);
+        // Clamp upgrades to parent qty
+        if (serves == 2) PhadThai24Qty = Math.Min(PhadThai24Qty, PlatterQty[2]);
+        if (serves == 4) PhadThai48Qty = Math.Min(PhadThai48Qty, PlatterQty[4]);
+        // If parent qty is zero, reset upgrades
         if (serves == 2 && PlatterQty[2] == 0) PhadThai24Qty = 0;
         if (serves == 4 && PlatterQty[4] == 0) PhadThai48Qty = 0;
+        UpdatePlatterInCart(serves);
     }
 
     private int GetPlatterQty(int serves)
@@ -113,12 +165,61 @@
 
     private void ChangePhadThai24(int delta)
     {
-        if (GetPlatterQty(2) > 0)
-            PhadThai24Qty = Math.Max(0, PhadThai24Qty + delta);
+        int parentQty = GetPlatterQty(2);
+        if (parentQty > 0)
+        {
+            PhadThai24Qty = Math.Max(0, Math.Min(parentQty, PhadThai24Qty + delta));
+            UpdatePlatterInCart(2);
+        }
     }
     private void ChangePhadThai48(int delta)
     {
-        if (GetPlatterQty(4) > 0)
-            PhadThai48Qty = Math.Max(0, PhadThai48Qty + delta);
+        int parentQty = GetPlatterQty(4);
+        if (parentQty > 0)
+        {
+            PhadThai48Qty = Math.Max(0, Math.Min(parentQty, PhadThai48Qty + delta));
+            UpdatePlatterInCart(4);
+        }
+    }
+    // Update or remove platter in cart for a given serve size
+    private void UpdatePlatterInCart(int serves)
+    {
+        if (MenuItem is Platter platter)
+        {
+            var qty = GetPlatterQty(serves);
+            int upgrade24 = (serves == 2) ? PhadThai24Qty : 0;
+            int upgrade48 = (serves == 4) ? PhadThai48Qty : 0;
+            // Always remove all CartItems for this platter/serve
+            var matches = Cart.Items.Where(i =>
+                i.Item.Name == platter.Name &&
+                i.SelectedServes == serves).ToList();
+            foreach (var match in matches)
+            {
+                Cart.RemoveItem(match);
+            }
+            // Add a single CartItem with current qty and upgrades if qty > 0
+            if (qty > 0)
+            {
+                var cartItem = new CartItem(platter, qty, serves, upgrade24, upgrade48);
+                Cart.AddItem(cartItem);
+            }
+        }
+    }
+
+    // Update or remove side dish in cart
+    private void UpdateSideInCart()
+    {
+        if (MenuItem is SideDish side)
+        {
+            var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
+            if (SideQty > 0)
+            {
+                Cart.AddItem(new CartItem(side, SideQty));
+            }
+            else if (match != null)
+            {
+                Cart.RemoveItem(match);
+            }
+        }
     }
 }

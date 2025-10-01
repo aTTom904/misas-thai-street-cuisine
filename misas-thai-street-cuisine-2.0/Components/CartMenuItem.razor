@@ -1,0 +1,126 @@
+@using misas_thai_street_cuisine_2._0.Models
+@inject ShoppingCartService Cart
+
+@namespace misas_thai_street_cuisine_2._0.Components.CartMenuItem
+<div class="cart-menu-item">
+    @if (MenuItem != null)
+    {
+        <div class="cart-menu-img-block">
+            <img src="@MenuItem.ImageUrl" alt="@MenuItem.Name" class="cart-menu-img" />
+        </div>
+        <div class="cart-menu-content">
+            <h2 class="cart-menu-title">@MenuItem.Name</h2>
+            <div class="cart-menu-desc">@MenuItem.Description</div>
+            @if (MenuItem is Platter platter)
+            {
+                @* <div class="menu-item-includes">
+                    <span style="font-weight:bold;">Starting from </span>
+                    @if (platter.Includes != null && platter.Includes.Count > 0)
+                    {
+                        <span> @string.Join(" \u2022 ", platter.Includes)</span>
+                    }
+                </div>
+                @if (platter.AddOns != null && platter.AddOns.Count > 0)
+                {
+                    <ul class="menu-item-addons">
+                        <div><strong>Served with:</strong></div>
+                        @foreach (var addon in platter.AddOns)
+                        {
+                            <li>@addon</li>
+                        }
+                    </ul>
+                } *@
+                <div class="cart-menu-cart-section">
+                    @foreach (var serve in platter.Serves)
+                    {
+                        var match = Cart.Items.FirstOrDefault(i => i.Item.Name == platter.Name && i.SelectedServes == serve);
+                        if (match != null && match.Quantity > 0)
+                        {
+                            <div class="cart-row">
+                                <span class="cart-label">Serves @serve</span>
+                                <span class="cart-price">$@platter.Prices[serve]</span>
+                                <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, -1)">−</button>
+                                <span class="cart-qty">@match.Quantity</span>
+                                <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, 1)">+</button>
+                            </div>
+                            @if (serve == 2)
+                            {
+                                <div class="cart-upgrade-row">
+                                    <span class="cart-upgrade-label"><b>Upgrade:</b> 24 oz Phad Thai</span>
+                                    <button class="cart-btn" @onclick="() => ChangeUpgradeQty(match, 2, -1)">−</button>
+                                    <span class="cart-qty">@match.UpgradePhadThai24Qty</span>
+                                    <button class="cart-btn" @onclick="() => ChangeUpgradeQty(match, 2, 1)">+</button>
+                                    <span class="cart-upgrade-label">($9 each)</span>
+                                </div>
+                            }
+                            @if (serve == 4)
+                            {
+                                <div class="cart-upgrade-row">
+                                    <span class="cart-upgrade-label"><b>Upgrade:</b> 48 oz Phad Thai</span>
+                                    <button class="cart-btn" @onclick="() => ChangeUpgradeQty(match, 4, -1)">−</button>
+                                    <span class="cart-qty">@match.UpgradePhadThai48Qty</span>
+                                    <button class="cart-btn" @onclick="() => ChangeUpgradeQty(match, 4, 1)">+</button>
+                                    <span class="cart-upgrade-label">($18 each)</span>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+            }
+            else if (MenuItem is SideDish side)
+            {
+                var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
+                if (match != null && match.Quantity > 0)
+                {
+                    <div class="cart-menu-price">$@side.Price</div>
+                    <div class="cart-row">
+                        <span class="cart-label">@side.Name</span>
+                        <span class="cart-price">$@side.Price</span>
+                        <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, -1)">−</button>
+                        <span class="cart-qty">@match.Quantity</span>
+                        <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, 1)">+</button>
+                    </div>
+                }
+            }
+        </div>
+    }
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public MenuItem? MenuItem { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnCartChanged { get; set; }
+
+    private async void ChangeCartItemQty(CartItem match, int delta)
+    {
+        if (delta == 0 || match == null) return;
+        if (delta > 0)
+        {
+            // Increment quantity, preserve upgrades
+            Cart.AddItem(new CartItem(match.Item, match.Quantity + 1, match.SelectedServes, match.UpgradePhadThai24Qty, match.UpgradePhadThai48Qty));
+        }
+        else if (delta < 0)
+        {
+            Cart.RemoveItem(match);
+        }
+        await OnCartChanged.InvokeAsync();
+    }
+
+    private async void ChangeUpgradeQty(CartItem match, int serve, int delta)
+    {
+        if (match == null || delta == 0) return;
+        int parentQty = match.Quantity;
+        if (serve == 2 && parentQty > 0)
+        {
+            int newQty = Math.Max(0, Math.Min(parentQty, match.UpgradePhadThai24Qty + delta));
+            Cart.AddItem(new CartItem(match.Item, match.Quantity, match.SelectedServes, newQty, match.UpgradePhadThai48Qty));
+        }
+        else if (serve == 4 && parentQty > 0)
+        {
+            int newQty = Math.Max(0, Math.Min(parentQty, match.UpgradePhadThai48Qty + delta));
+            Cart.AddItem(new CartItem(match.Item, match.Quantity, match.SelectedServes, match.UpgradePhadThai24Qty, newQty));
+        }
+        await OnCartChanged.InvokeAsync();
+    }
+}

@@ -1,88 +1,64 @@
 ﻿@using misas_thai_street_cuisine_2._0.Models
 @using Data
+@using misas_thai_street_cuisine_2._0.Components
+@using misas_thai_street_cuisine_2._0.Components.CartMenuItem
 
 @page "/Cart"
 @inject ShoppingCartService Cart
+@inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
+@inject NavigationManager NavigationManager
 
 <PageTitle>Shopping Cart</PageTitle>
 
 <div class="cart-container">
-    <h3>Your Goodies</h3>
+    <h3>Your Cart</h3>
 
-    @if (Cart.Items.Count == 0)
+    @if (Cart?.Items == null || Cart.Items.Count == 0)
     {
-        <p>Your cart is empty.</p>
+        <p class="cart-empty">Your cart is empty.</p>
     }
     else
     {
-        @foreach (var item in Cart.Items)
-        {
-            <div class="cart-item">
-                <div class="cart-item-details">
-                    <h4 class="cart-item-name">@item.Item.Name</h4>
-                    <p class="cart-item-category">@item.Item.Category</p>
-                    <p class="cart-item-quantity">@RenderCartControls(@item.Item)</p>
-                    <p class="cart-item-price">Price: @item.GetUnitPrice()</p>
-                    <p class="cart-item-total">Total: @item.GetTotalPrice()</p>
-                </div>
+        var groupedPlatters = Cart.Items
+            .Where(i => i?.Item != null && i.Item is Platter)
+            .GroupBy(i => i.Item.Name)
+            .Select(g => g.First().Item as MenuItem);
+        var sideDishes = Cart.Items
+            .Where(i => i?.Item != null && i.Item is SideDish)
+            .Select(i => i.Item as MenuItem);
 
-                <button @onclick="() => RemoveItemFromCart(item)" class="trash-btn">
-                    <i class="fa fa-trash"></i> Remove
-                </button>
-            </div>
+        foreach (var platter in groupedPlatters)
+        {
+            if (platter != null)
+            {
+                <CartMenuItem MenuItem="@platter" OnCartChanged="OnCartChanged">
+                    <div style="margin-bottom: 1rem;"></div>
+                </CartMenuItem>
+            }
+        }
+        foreach (var side in sideDishes)
+        {
+            if (side != null)
+            {
+                <CartMenuItem MenuItem="@side" OnCartChanged="OnCartChanged">
+                    <div style="margin-bottom: 1rem;"></div>
+                </CartMenuItem>
+            }
         }
 
-    <h4 class="total-price">Total Price: @Cart.Items.Sum(i => i.GetTotalPrice())</h4>
-        <a href="/Finalize" class="button image-button">Finish Up</a>
+        <h4 class="total-price">Total Price: <span class="price-highlight">$@Cart.Items.Where(i => i != null).Sum(i => i.GetTotalPrice())</span></h4>
+        <button type="submit" @onclick="OnFinishUpClicked" class="finish-up-btn">Finish Up</button>
     }
 </div>
 
-@code
-{
-    private void RemoveItemFromCart(CartItem item)
+@code {
+    private void OnCartChanged()
     {
-        Cart.RemoveAll(item.Item);
+        StateHasChanged();
     }
 
-    private void AddToOrder(string itemName, string category)
+    private void OnFinishUpClicked()
     {
-        var item = MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
-                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
-
-        if (item != null)
-        {
-            Cart.AddItem(item, 1);
-        }
-    }
-
-    private void RemoveFromOrder(string itemName, string category)
-    {
-        var item = MenuData.SideDishes.FirstOrDefault(sd => sd.Name == itemName && sd.Category == category) as ICartItem ??
-                   MenuData.Platters.FirstOrDefault(p => p.Name == itemName && p.Category == category) as ICartItem;
-
-        if (item != null)
-        {
-            Cart.RemoveItem(item);
-        }
-    }
-
-    private RenderFragment RenderCartControls(ICartItem item)
-    {
-        int quantity = Cart.GetItemQuantity(item);
-
-        if (quantity > 0)
-        {
-            return
-            @<div class="cart-controls">
-                <button @onclick="() => RemoveFromOrder(item.Name, item.Category)">-</button>
-                <span>@quantity</span>
-                <button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>
-            </div>;
-        }
-        else
-        {
-            return
-           @<button @onclick="() => AddToOrder(item.Name, item.Category)">+</button>;
-        }
+        NavigationManager.NavigateTo("/FinalizeOrder");
     }
 }

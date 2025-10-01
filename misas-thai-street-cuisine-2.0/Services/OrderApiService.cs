@@ -1,5 +1,4 @@
 using System.Text.Json;
-using misas_thai_street_cuisine_2._0.Models;
 
 namespace misas_thai_street_cuisine_2._0.Services;
 
@@ -13,7 +12,7 @@ public class OrderApiService
     {
         _httpClient = httpClient;
         _logger = logger;
-        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://localhost:7071/api";
+        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://localhost:7071/api";
     }
 
     public async Task<ApiResponse<OrderResponse>> CreateOrderAsync(CreateOrderRequest request)
@@ -26,7 +25,7 @@ public class OrderApiService
             });
 
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/orders", content);
+            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/TakePayment", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -114,6 +113,7 @@ public class CreateOrderRequest
     public string CustomerEmail { get; set; } = string.Empty;
     public string CustomerPhone { get; set; } = string.Empty;
     public bool ConsentToUpdates { get; set; }
+    public string DeliveryAddress { get; set; } = string.Empty;
     public decimal Total { get; set; }
     public string PaymentToken { get; set; } = string.Empty;
     public List<OrderItemRequest> Items { get; set; } = new();

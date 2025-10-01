@@ -1,144 +1,173 @@
 ﻿.cart-container {
+    max-width: 900px;
+    margin: 4rem auto 2rem auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
     text-align: center;
 }
 
 h3 {
-    font-size: 2.5rem;
-    font-family: "Rock Salt", cursive;
-    margin-bottom: 25px;
-    color: black;
-    padding-bottom: 10px;
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 2px 2px 8px #00000022;
 }
-
+.cart-empty {
+    font-size: 1.3rem;
+    color: #ee6900;
+    font-family: 'Montserrat', sans-serif;
+    margin: 2rem 0;
+}
 .cart-item {
+    background: linear-gradient(90deg, #fff7f0 60%, #ffde59 100%);
+    border-radius: 20px;
+    box-shadow: 0 4px 16px #ee690055;
+    border: 3px solid #ee6900;
+    margin-bottom: 2rem;
+    padding: 1.5rem 1rem 1rem 1rem;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 5px solid goldenrod;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    background: linear-gradient(to right, #ffde59, #ff914d);
-    padding: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .cart-item-details {
-    text-align: center;
-    margin-bottom: 15px;
+    text-align: left;
+    margin-bottom: 1rem;
+    width: 100%;
 }
-
 .cart-item-name {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
+    font-family: 'Rock Salt', cursive;
     font-weight: bold;
-    color: black;
+    color: #ee6900;
+    margin-bottom: 0.2rem;
 }
-
-.cart-item-category,
-.cart-item-quantity,
-.cart-item-price,
-.cart-item-total {
-    font-size: 1.2rem;
-    color: black;
-    margin: 5px 0;
+.cart-item-category {
+    font-size: 1.1rem;
+    color: #ee6900;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 0.5rem;
 }
-
-.cart-controls {
+.cart-item-qty-row {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.cart-item-quantity, .cart-item-serves {
+    font-size: 1.1rem;
+    color: #333;
+    font-family: 'Montserrat', sans-serif;
+}
+.cart-item-upgrade {
+    font-size: 1.1rem;
+    color: #ee6900;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 0.3rem;
+    display: block;
+}
+.cart-item-price {
+    font-size: 1.1rem;
+    color: #333;
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+.cart-btn.minus-btn {
+    background: #ffde59;
+    color: #ee6900;
+}
+.cart-btn.plus-btn {
+    background: #ee6900;
+    color: #fff;
+}
+.cart-btn:hover {
+    background: #ff9800;
+    color: #fff;
+    box-shadow: 0 4px 16px #ee690088;
 }
 
-    .cart-controls button {
-        background-color: #ffde59;
-        color: black;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border: 2px solid #ff914d;
-        border-radius: 5px;
-        font-size: 1rem;
-        font-weight: bold;
-        transition: background-color 0.3s ease, border 0.3s ease;
-    }
-
-        .cart-controls button:hover {
-            background-color: #ff914d;
-            border: 2px solid #ffde59;
-        }
-
-    .cart-controls span {
-        font-size: 1.25rem;
-        color: black;
-    }
+.cart-qty {
+    font-size: 1.3rem;
+    color: #ee6900;
+    font-family: 'Rock Salt', cursive;
+    font-weight: bold;
+    min-width: 2.5em;
+    text-align: center;
+}
 
 .trash-btn {
-    background-color: transparent;
+    background: none;
     border: none;
+    color: #ee6900;
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
     cursor: pointer;
-    font-size: 1rem;
-    color: darkgoldenrod;
-    transition: color 0.3s ease;
-    font-weight: bold;
+    transition: color 0.2s;
 }
-
-    .trash-btn:hover {
-        color: #8B6508;
-    }
+.trash-btn:hover {
+    color: #ff9800;
+}
 
 .total-price {
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
-    color: black;
-    margin-top: 20px;
+    color: #333;
+    text-shadow: 2px 2px 8px #00000022;
+}
+.price-highlight {
+    color: #ee6900;
+    font-weight: bold;
+    font-size: 2rem;
+    text-shadow: 1px 1px 4px #ee690055;
 }
 
-.button {
-    padding: 12px 50px;
-    background-image: url('/Resources/Images/Icons/thai-label.png');
-    background-size: cover;
-    background-position: center;
-    color: black;
+.finish-up-btn {
+    font-size: 1rem;
+    color: #fff;
+    background-color: #ee6900;
+    padding: 0.5rem 2rem;
     border: none;
-    text-decoration: none;
-    font-size: 1vw;
-    font-family: "Rock Salt", cursive;
-    transition: color 0.2s ease;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #ee690055;
+    transition: background 0.2s, box-shadow 0.2s;
+    margin-top: 1rem;
 }
-
-    .button:hover {
-        color: #fff;
+    .finish-up-btn:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 16px #ee690088;
     }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
     .cart-container {
-        padding: 15px;
-        margin: 0;
+        padding: 1.2rem 0.3rem;
+        max-width: 100vw;
     }
-
+    .cart-item {
+        padding: 1rem 0.3rem 0.7rem 0.3rem;
+    }
     .cart-item-name {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
-
     .cart-item-category,
-    .cart-item-quantity,`
+    .cart-item-quantity,
+    .cart-item-serves,
+    .cart-item-upgrade,
     .cart-item-price,
     .cart-item-total {
         font-size: 1rem;
     }
-
     .total-price {
+        font-size: 1.1rem;
+    }
+    .price-highlight {
         font-size: 1.2rem;
     }
-
-    .button {
-        font-size: 4vw;
+    .finalize-btn {
+        font-size: 1rem;
+        padding: 10px 30px;
     }
 }
