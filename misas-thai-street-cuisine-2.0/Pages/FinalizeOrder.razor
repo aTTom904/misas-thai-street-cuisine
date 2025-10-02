@@ -4,6 +4,8 @@
 @inject ShoppingCartService Cart
 @inject SquarePaymentService PaymentService
 @inject OrderApiService OrderApi
+@inject OrderContextService OrderContext
+@inject DeadlineService DeadlineService
 
 <div class="checkout-container">
     <h2>Checkout</h2>
@@ -50,6 +52,16 @@
                         <div class="alert alert-danger">@errorMessage</div>
                     }
                     <div class="form-group">
+                        <label>Delivery Date *</label>
+                        <select @bind="SelectedDeliveryDate" class="form-control delivery-date-select" required>
+                            <option value="">Select a delivery date</option>
+                            @foreach (var date in availableDeliveryDates)
+                            {
+                                <option value="@date.ToString("yyyy-MM-dd")">@date.ToString("MMMM dd, yyyy (dddd)")</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Full Name *</label>
                         <input type="text" @bind="customerName" class="form-control" required />
                     </div>
@@ -61,10 +73,19 @@
                         <label>Phone</label>
                         <input type="tel" @bind="customerPhone" class="form-control" />
                     </div>
-                        <div class="form-group">
-                            <label>Delivery Address *</label>
-                            <input type="text" @bind="deliveryAddress" class="form-control" required />
+                    <div class="delivery-address-section">
+                        <label>Delivery Address *</label>
+                        <div class="address-fields">
+                            <input type="text" @bind="streetAddress" class="form-control address-input" placeholder="Street Address" required />
+                            <div class="city-state-zip">
+                                <input type="text" @bind="city" class="form-control city-input" placeholder="City" required />
+                                <select @bind="state" class="form-control state-input" required>
+                                    <option value="Florida">Florida</option>
+                                </select>
+                                <input type="text" @bind="zipCode" class="form-control zip-input" placeholder="Zip Code" required />
+                            </div>
                         </div>
+                    </div>
                     <div class="form-group consent-section">
                         <div class="form-check">
                             <input type="checkbox" @bind="consentToUpdates" class="form-check-input" id="consentCheckbox" />
@@ -76,9 +97,11 @@
                             You can unsubscribe at any time. Standard message and data rates may apply for text messages.
                         </small>
                     </div>
-                    <button class="btn btn-primary" @onclick="ProceedToPayment" disabled="@(!IsCustomerInfoValid())">
-                        Proceed to Payment
-                    </button>
+                    <div class="button-container">
+                        <button class="btn btn-primary" @onclick="ProceedToPayment" disabled="@(!IsCustomerInfoValid())">
+                            Proceed to Payment
+                        </button>
+                    </div>
                 </div>
             }
             else if (currentStep == 1)
@@ -96,6 +119,7 @@
                     }
                     <div class="customer-summary">
                         <p><strong>Customer:</strong> @customerName</p>
+                        <p><strong>Delivery Date:</strong> @deliveryDateDisplay</p>
                         <p><strong>Delivery Address:</strong> @deliveryAddress</p>
                         <p><strong>Email:</strong> @customerEmail</p>
                         @if (!string.IsNullOrEmpty(customerPhone))
@@ -156,12 +180,55 @@
     private string customerEmail = string.Empty;
     private string customerPhone = string.Empty;
     private string deliveryAddress = string.Empty;
+    private string deliveryDateDisplay = string.Empty;
+    private string selectedDeliveryDate = string.Empty;
+    private List<DateTime> availableDeliveryDates = new();
+    
+    // Address components
+    private string streetAddress = string.Empty;
+    private string city = string.Empty;
+    private string state = "Florida";
+    private string zipCode = string.Empty;
+    
     private bool consentToUpdates = false;
     private bool isProcessing = false;
     private bool isPaymentInitialized = false;
     private string errorMessage = string.Empty;
     private string successMessage = string.Empty;
     private string orderConfirmation = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        // Get available delivery dates (next 4 Wednesdays starting from next available)
+        var now = DateTime.Now;
+        var (nextDelivery, _) = DeadlineService.GetNextAvailableDelivery(now);
+        
+        availableDeliveryDates = new List<DateTime>();
+        var currentDate = nextDelivery;
+        
+        for (int i = 0; i < 4; i++)
+        {
+            availableDeliveryDates.Add(currentDate);
+            // Move to next Wednesday (add 7 days)
+            currentDate = currentDate.AddDays(7);
+        }
+        
+        // Initialize delivery date from OrderContext or default to first available
+        if (OrderContext.SelectedDate.HasValue && availableDeliveryDates.Contains(OrderContext.SelectedDate.Value))
+        {
+            SelectedDeliveryDate = OrderContext.SelectedDate.Value.ToString("yyyy-MM-dd");
+        }
+        else if (availableDeliveryDates.Count > 0)
+        {
+            SelectedDeliveryDate = availableDeliveryDates[0].ToString("yyyy-MM-dd");
+        }
+        
+        // Initialize address from OrderContext if available
+        if (!string.IsNullOrEmpty(OrderContext.Address))
+        {
+            ParseAddressFromContext(OrderContext.Address);
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -171,20 +238,69 @@
         }
     }
 
+    private void ParseAddressFromContext(string address)
+    {
+        // Parse the address format from DeliveryArea: "Street, City, State ZipCode"
+        var parts = address.Split(',');
+        if (parts.Length >= 3)
+        {
+            streetAddress = parts[0].Trim();
+            city = parts[1].Trim();
+            
+            var stateZip = parts[2].Trim().Split(' ');
+            if (stateZip.Length >= 2)
+            {
+                state = stateZip[0];
+                zipCode = stateZip[1];
+            }
+        }
+        
+        // Update deliveryAddress for the API
+        UpdateDeliveryAddress();
+    }
+
+    private void UpdateDeliveryAddress()
+    {
+        deliveryAddress = $"{streetAddress}, {city}, {state} {zipCode}".Trim();
+    }
+
     private bool IsCustomerInfoValid()
     {
         return !string.IsNullOrWhiteSpace(customerName) &&
                !string.IsNullOrWhiteSpace(customerEmail) &&
-               customerEmail.Contains("@");
+               customerEmail.Contains("@") &&
+               !string.IsNullOrWhiteSpace(streetAddress) &&
+               !string.IsNullOrWhiteSpace(city) &&
+               !string.IsNullOrWhiteSpace(zipCode) &&
+               !string.IsNullOrWhiteSpace(SelectedDeliveryDate);
     }
 
-    private async Task ProceedToPayment()
+    private string SelectedDeliveryDate
+    {
+        get => selectedDeliveryDate;
+        set
+        {
+            selectedDeliveryDate = value;
+            if (DateTime.TryParse(value, out var selectedDate))
+            {
+                deliveryDateDisplay = selectedDate.ToString("MMMM dd, yyyy (dddd)");
+                // Update OrderContext
+                OrderContext.SelectedDate = selectedDate;
+            }
+        }
+    }
+
+    private void ProceedToPayment()
     {
         if (!IsCustomerInfoValid())
         {
             errorMessage = "Please fill in all required fields.";
             return;
         }
+        
+        // Update the combined delivery address
+        UpdateDeliveryAddress();
+        
         errorMessage = string.Empty;
         currentStep = 1;
         StateHasChanged();
@@ -304,131 +420,3 @@
         }
     }
 }
-
-<style>
-    .checkout-container {
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 2rem;
-    }
-    .checkout-content {
-        display: grid;
-        gap: 2rem;
-    }
-    .order-summary {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border: 1px solid #dee2e6;
-    }
-    .cart-items {
-        margin-bottom: 1rem;
-    }
-    .cart-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #eee;
-    }
-    .cart-item:last-child {
-        border-bottom: none;
-    }
-    .item-info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
-    .item-name {
-        font-weight: bold;
-        color: #333;
-    }
-    .item-price {
-        color: #666;
-        font-size: 0.9rem;
-    }
-    .item-quantity, .item-total {
-        margin-left: 1rem;
-        font-weight: bold;
-    }
-    .total-section {
-        border-top: 2px solid #ee6900;
-        padding-top: 1rem;
-        margin-top: 1rem;
-        font-size: 1.2rem;
-    }
-    .customer-info, .payment-section {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        border: 1px solid #dee2e6;
-    }
-    .form-group {
-        margin-bottom: 1rem;
-    }
-    .form-group label {
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-        display: block;
-        color: #333;
-    }
-    .form-control {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        font-size: 1rem;
-    }
-    .consent-section {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 4px;
-        border: 1px solid #e9ecef;
-        margin: 1.5rem 0;
-    }
-    .form-check {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    .form-check-input {
-        margin-top: 0.25rem;
-        flex-shrink: 0;
-    }
-    .form-check-label {
-        font-weight: normal !important;
-        line-height: 1.4;
-        margin-bottom: 0.5rem !important;
-        cursor: pointer;
-    }
-    .form-text {
-        font-size: 0.875rem;
-        margin-top: 0.5rem;
-        display: block;
-    }
-    .customer-summary {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-radius: 4px;
-        margin-bottom: 1.5rem;
-    }
-    .payment-buttons {
-        display: flex;
-        gap: 1rem;
-        margin-top: 2rem;
-    }
-    .order-confirmation {
-        text-align: center;
-        padding: 3rem;
-        background: white;
-        border-radius: 8px;
-        border: 1px solid #dee2e6;
-    }
-    .empty-cart {
-        text-align: center;
-        padding: 3rem;
-    }
-    #card-container {
-        background-color: #f8f9fa !important;
-    }
-</style>

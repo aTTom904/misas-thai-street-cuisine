@@ -37,7 +37,7 @@ namespace MisasThaiStreetCuisine.Function
                 var client = new SquareClient(
                     token: accessToken,
                     clientOptions: new ClientOptions{
-                        BaseUrl = SquareEnvironment.Production
+                        BaseUrl = SquareEnvironment.Sandbox
                     }
                 );
                 log.LogInformation("Square client initialized with access token: " + (string.IsNullOrEmpty(accessToken) ? "null or empty" : accessToken));

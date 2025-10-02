@@ -56,7 +56,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Category = "Side",
                 Price = 6.00m,
                 Description = "1 Grilled Thai sausage link infused with herbs and spices.",
-                ImageUrl = "/Resources/Images/HomepageCarousel/ms-sausage.png"
+                ImageUrl = "/Resources/Images/Food/ms-sausage.jpg"
             },
             new SideDish
             {
@@ -64,7 +64,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Category = "Side",
                 Price = 5.00m,
                 Description = "1 Tender grilled chicken skewer.",
-                ImageUrl = "/Resources/Images/HomepageCarousel/grilled-chicken-skewer.png"
+                ImageUrl = "/Resources/Images/Food/grilled-chicken-skewer.jpg"
             },
             new SideDish
             {
@@ -72,7 +72,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Category = "Side",
                 Price = 3.00m,
                 Description = "1 grilled, whole-style chicken wing.",
-                ImageUrl = "/Resources/Images/HomepageCarousel/grilled-chicken-wing.png"
+                ImageUrl = "/Resources/Images/Food/grilled-chicken-wing.jpg"
             },
             new SideDish
             {
@@ -80,7 +80,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Category = "Side",
                 Price = 17.00m,
                 Description = "Classic Thai noodles.",
-                ImageUrl = "/Resources/Images/HomepageCarousel/phad-thai.png"
+                ImageUrl = "/Resources/Images/Food/phad-thai.jpg"
             },
             new SideDish
             {
@@ -88,7 +88,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Category = "Side",
                 Price = 6.00m,
                 Description = "Fresh and spicy salad.",
-                ImageUrl = "/Resources/Images/HomepageCarousel/papaya-salad.png"
+                ImageUrl = "/Resources/Images/Food/papaya-salad.jpg"
             },
             new SideDish
             {
@@ -96,7 +96,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Category = "Side",
                 Price = 4.00m,
                 Description = "Steamed sticky rice.",
-                ImageUrl = "/Resources/Images/HomepageCarousel/sticky-rice.png"
+                ImageUrl = "/Resources/Images/Food/sticky-rice.jpg"
             },
         };
     }
