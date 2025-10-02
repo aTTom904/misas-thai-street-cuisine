@@ -252,6 +252,7 @@
                 {
                     CustomerName = customerName,
                     CustomerEmail = customerEmail,
+                    DeliveryAddress = deliveryAddress,
                     CustomerPhone = customerPhone ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
                     Total = Cart.Items.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0),
@@ -262,8 +263,7 @@
                         Category = item.Item.Category,
                         Price = item.GetUnitPrice(),
                         Quantity = item.Quantity
-                    }).ToList(),
-                    DeliveryAddress = deliveryAddress
+                    }).ToList()
                 };
                 try
                 {
