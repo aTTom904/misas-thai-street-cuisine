@@ -5,21 +5,25 @@ namespace misas_thai_street_cuisine_2._0.Services;
 
 public class DeadlineService
 {
-	// Returns the second and fourth Monday of the given month at 5pm
+	// Manual override dates - set these to override calculated dates
+	public DateTime? ManualFirstDeliveryDate { get; set; } = null;
+	public DateTime? ManualSecondDeliveryDate { get; set; } = null;
+	// Returns the Monday deadlines for the second and fourth Wednesday deliveries at 5pm
 	public List<DateTime> GetSecondAndFourthMondayDeadline(DateTime from)
 	{
-		var mondays = new List<DateTime>();
-		var firstDay = new DateTime(from.Year, from.Month, 1);
-		var day = firstDay;
-		while (mondays.Count < 4)
+		// Get the second and fourth Wednesdays first
+		var wednesdays = GetSecondAndFourthWednesday(from);
+		var deadlines = new List<DateTime>();
+		
+		// Calculate the Monday before each Wednesday at 5:00 PM
+		foreach (var wednesday in wednesdays)
 		{
-			if (day.DayOfWeek == DayOfWeek.Monday)
-			{
-				mondays.Add(day.AddHours(17));
-			}
-			day = day.AddDays(1);
+			// Monday is 2 days before Wednesday
+			var mondayDeadline = wednesday.AddDays(-2).Date.AddHours(17); // 5:00 PM
+			deadlines.Add(mondayDeadline);
 		}
-		return new List<DateTime> { mondays[1], mondays[3] };
+		
+		return deadlines;
 	}
 
 	// Returns the second and fourth Wednesday of the given month
@@ -42,6 +46,42 @@ public class DeadlineService
 	// Returns the next available delivery Wednesday and deadline Monday
 	public (DateTime deliveryWednesday, DateTime deadlineMonday) GetNextAvailableDelivery(DateTime now)
 	{
+		// Check for manual overrides first
+		if (IsUsingManualDates())
+		{
+			var manualDeadline = GetManualDeadlineMonday(now);
+			var firstDelivery = ManualFirstDeliveryDate!.Value;
+			
+			// If we're still before the manual deadline, return first manual delivery
+			if (now <= manualDeadline)
+			{
+				return (firstDelivery, manualDeadline);
+			}
+			// If past the first manual deadline but before second delivery, return second delivery
+			else if (ManualSecondDeliveryDate.HasValue && now < ManualSecondDeliveryDate.Value)
+			{
+				// Calculate deadline for second delivery (Monday before at 5pm)
+				var secondDelivery = ManualSecondDeliveryDate.Value;
+				
+				int daysToSubtract;
+				switch (secondDelivery.DayOfWeek)
+				{
+					case DayOfWeek.Monday: daysToSubtract = 7; break;
+					case DayOfWeek.Tuesday: daysToSubtract = 1; break;
+					case DayOfWeek.Wednesday: daysToSubtract = 2; break;
+					case DayOfWeek.Thursday: daysToSubtract = 3; break;
+					case DayOfWeek.Friday: daysToSubtract = 4; break;
+					case DayOfWeek.Saturday: daysToSubtract = 5; break;
+					case DayOfWeek.Sunday: daysToSubtract = 6; break;
+					default: daysToSubtract = 1; break;
+				}
+				
+				var secondDeadline = secondDelivery.AddDays(-daysToSubtract).Date.AddHours(17);
+				return (secondDelivery, secondDeadline);
+			}
+		}
+		
+		// Fall back to calculated dates
 		var thisMonthMondays = GetSecondAndFourthMondayDeadline(now);
 		var thisMonthWednesdays = GetSecondAndFourthWednesday(now);
 		var nextMonth = now.AddMonths(1);
@@ -64,6 +104,17 @@ public class DeadlineService
 	public List<DateTime> GetUpcomingDeliveryWednesdays(DateTime now)
 	{
 		var dates = new List<DateTime>();
+		
+		// Check for manual overrides first
+		if (ManualFirstDeliveryDate.HasValue && ManualSecondDeliveryDate.HasValue)
+		{
+			// Use manual dates if both are set
+			dates.Add(ManualFirstDeliveryDate.Value);
+			dates.Add(ManualSecondDeliveryDate.Value);
+			return dates;
+		}
+		
+		// Fall back to calculated dates
 		var (firstDelivery, _) = GetNextAvailableDelivery(now);
 		dates.Add(firstDelivery);
 
@@ -82,5 +133,68 @@ public class DeadlineService
 			dates.Add(nextMonthWednesdays[0]);
 		}
 		return dates;
+	}
+	
+	// Helper method to set manual delivery dates
+	public void SetManualDeliveryDates(DateTime firstDate, DateTime secondDate)
+	{
+		ManualFirstDeliveryDate = firstDate;
+		ManualSecondDeliveryDate = secondDate;
+	}
+	
+	// Helper method to clear manual dates and return to calculated dates
+	public void ClearManualDeliveryDates()
+	{
+		ManualFirstDeliveryDate = null;
+		ManualSecondDeliveryDate = null;
+	}
+	
+	// Helper method to check if manual dates are active
+	public bool IsUsingManualDates()
+	{
+		return ManualFirstDeliveryDate.HasValue && ManualSecondDeliveryDate.HasValue;
+	}
+	
+	// Get the deadline Monday for manual delivery dates
+	public DateTime GetManualDeadlineMonday(DateTime now)
+	{
+		if (!ManualFirstDeliveryDate.HasValue)
+			throw new InvalidOperationException("No manual first delivery date set");
+			
+		// Calculate the Monday before the first manual delivery date at 5:00 PM
+		var firstDeliveryDate = ManualFirstDeliveryDate.Value;
+		
+		// Find the Monday before the delivery date
+		int daysToSubtract;
+		switch (firstDeliveryDate.DayOfWeek)
+		{
+			case DayOfWeek.Monday:
+				daysToSubtract = 7; // Previous Monday
+				break;
+			case DayOfWeek.Tuesday:
+				daysToSubtract = 1; // Previous Monday
+				break;
+			case DayOfWeek.Wednesday:
+				daysToSubtract = 2; // Previous Monday
+				break;
+			case DayOfWeek.Thursday:
+				daysToSubtract = 3; // Previous Monday
+				break;
+			case DayOfWeek.Friday:
+				daysToSubtract = 4; // Previous Monday
+				break;
+			case DayOfWeek.Saturday:
+				daysToSubtract = 5; // Previous Monday
+				break;
+			case DayOfWeek.Sunday:
+				daysToSubtract = 6; // Previous Monday
+				break;
+			default:
+				daysToSubtract = 1;
+				break;
+		}
+		
+		var deadlineMonday = firstDeliveryDate.AddDays(-daysToSubtract).Date.AddHours(17); // 5:00 PM
+		return deadlineMonday;
 	}
 }

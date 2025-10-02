@@ -84,14 +84,22 @@
     color: #444;
     font-family: 'Montserrat', sans-serif;
 }
-.menu-grid {
+.platters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
+
+.sides-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
 .menu-divider {
-    grid-column: 1 / -1;
+    margin: 3rem 0 1rem 0;
 }
 .menu-divider-title {
     text-align: left;
@@ -125,6 +133,7 @@
         box-shadow: 0 4px 16px #ee690088;
         cursor: pointer;
     }
+
 .menu-card-img {
     width: 225px;
     height: 225px;
@@ -134,19 +143,67 @@
     border: 3px solid #fff;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
+
+/* Side dish card styling */
+.side-card {
+    background: #ee6900;
+    border-radius: 16px;
+    padding: 0.8rem 0.6rem 1rem 0.6rem;
+    box-shadow: 0 4px 16px #ee690055;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+    .side-card:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 16px #ee690088;
+        cursor: pointer;
+    }
+
+.side-card-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 0.7rem;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
 .menu-card-title {
     font-size: 1.2rem;
     font-weight: 600;
     color: #fff;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.8rem;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
 }
+
 .menu-card-price {
     font-size: 1rem;
     color: #fff;
     font-weight: 500;
+    margin-top: auto;
+    margin-bottom: 0;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.side-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
     margin-bottom: 0.5rem;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.side-card-price {
+    font-size: 0.9rem;
+    color: #fff;
+    font-weight: bolder;
+    margin-top: auto;
+    margin-bottom: 0;
     text-align: center;
     font-family: 'Montserrat', sans-serif;
 }
@@ -186,12 +243,29 @@
         padding: 1rem 0.5rem 1.2rem 0.5rem;
         margin: 0 2rem;
     }
+    
     .menu-card-img {
         width: 175px;
         height: 175px;
     }
-    .menu-grid {
+    
+    .platters-grid {
         gap: 1rem;
+    }
+    
+    .sides-grid {
+        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .side-card {
+        padding: 0.7rem 0.4rem 0.9rem 0.4rem;
+        margin: 0 0.5rem;
+    }
+    
+    .side-card-img {
+        width: 120px;
+        height: 120px;
     }
     .menu-divider-title {
         text-align: center;

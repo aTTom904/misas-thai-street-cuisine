@@ -17,19 +17,19 @@
         </div>
         <div class="header-right">
             <div class="countdown right-countdown">
-                <span class="countdown-text" 
-                        tabindex="0"
-                        @onfocusout="() => showTooltip = false"
-                        @onmouseover="() => showTooltip = true" 
-                        @onmouseout="() => showTooltip = false"
-                        @onclick="() => showTooltip = !showTooltip">
-                    <i class="far fa-clock countdown-clock"></i>
-                    <span class="countdown-single">@CountdownText</span>
+                <div class="countdown-wrapper">
+                    <div class="countdown-main">
+                        <span class="countdown-label-text">Order Deadline:</span>
+                        <div class="countdown-text">
+                            <span class="countdown-single">@CountdownText</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-circle-info countdown-info-icon" @onclick="() => showTooltip = !showTooltip" tabindex="0"></i>
                     @if (showTooltip)
                     {
-                        <span class="countdown-tooltip">Order deadline is every second and fourth Monday of the month at 5:00 PM. Orders placed after the deadline will be delivered the following delivery day. Delivery days are the second and fourth Wednesdays of the month.</span>
+                        <div class="countdown-tooltip">This timer shows how much time you have left to place your order to be eligible for the next delivery day. Orders close the Monday before delivery day at 5:00 PM.</div>
                     }
-                </span>
+                </div>
             </div>
             <div class="cart-anim-wrapper">
                 @if (CartItemCount > 0)

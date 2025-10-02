@@ -4,11 +4,11 @@ namespace misas_thai_street_cuisine_2._0.Services
 {
     public class SquarePaymentService
     {
-        private readonly IJSRuntime _jsRuntime;
+
         
-        // Use sandbox credentials - replace with production when ready
+        private readonly IJSRuntime _jsRuntime;
         private readonly string _applicationId = "sandbox-sq0idb-1gDDPcTuPZCWT0tkbGo2Ig";
-        private readonly string _locationId = "LCV3HFAPCEDEP";
+        private readonly string _locationId = "LT41HRBZ4JM47";
 
         public SquarePaymentService(IJSRuntime jsRuntime)
         {

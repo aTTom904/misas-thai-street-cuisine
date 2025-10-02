@@ -38,41 +38,41 @@
                         @foreach (var serve in platter.Serves)
                         {
                             <div class="cart-row">
-                                <span class="cart-label">Serves @serve</span>
+                                <span class="cart-label">Platter for @serve</span>
                                 <span class="cart-price">$@platter.Prices[serve]</span>
                                 <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, -1)">−</button>
                                 <span class="cart-qty">@GetPlatterQty(serve)</span>
                                 <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
                             </div>
-                            @if (serve == 2 && GetPlatterQty(2) > 0)
+                            
+                            @* Always render upgrade rows, control visibility with CSS classes *@
+                            @if (serve == 2)
                             {
-                                <div class="cart-upgrade-row slide-in">
+                                <div class="cart-upgrade-row @(GetPlatterQty(2) > 0 ? "slide-in" : "slide-out")">
                                     <div class="cart-upgrade-option">
                                         <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $9</b></span>
-                                        <button class="cart-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
+                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
                                         <span class="cart-qty">@PhadThai24Qty</span>
-                                        <button class="cart-btn" @onclick="() => ChangePhadThai24(1)">+</button>
+                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai24(1)">+</button>
                                     </div>
                                 </div>
                             }
-                            @if (serve == 4 && GetPlatterQty(4) > 0)
+                            @if (serve == 4)
                             {
-                                <div class="cart-upgrade-row slide-in">
+                                <div class="cart-upgrade-row @(GetPlatterQty(4) > 0 ? "slide-in" : "slide-out")">
                                     <div class="cart-upgrade-option">
                                         <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $18</b></span>
-                                        <button class="cart-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
+                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
                                         <span class="cart-qty">@PhadThai48Qty</span>
-                                        <button class="cart-btn" @onclick="() => ChangePhadThai48(1)">+</button>
+                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai48(1)">+</button>
                                     </div>
                                 </div>
                             }
                         }
-                        <!-- Cart is updated automatically on every change -->
                     </div>
                 }
                 else if (MenuItem is SideDish side)
                 {
-                    <div class="menu-modal-price">$@side.Price</div>
                     <div class="modal-cart-section">
                         <div class="cart-row">
                             <span class="cart-label">@side.Name</span>
@@ -83,12 +83,12 @@
                         </div>
                     </div>
                 }
-
-                @if (MenuItem is Platter platter2)
-                {
-                
-                }
                 @ChildContent
+                
+                <div class="modal-actions-section">
+                    <button class="modal-keep-shopping-btn" @onclick="OnClose">Keep Shopping</button>
+                    <button class="modal-checkout-btn" @onclick="GoToCart">Check Out</button>
+                </div>
             </div>
         }
     </div>
@@ -98,6 +98,7 @@
     [Parameter] public MenuItem? MenuItem { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
     private Dictionary<int, int> PlatterQty = new Dictionary<int, int> { { 2, 0 }, { 4, 0 } };
     private int PhadThai24Qty = 0;
     private int PhadThai48Qty = 0;
@@ -136,6 +137,12 @@
     private void OnOverlayClick()
     {
         OnClose.InvokeAsync();
+    }
+
+    private void GoToCart()
+    {
+        OnClose.InvokeAsync();
+        Navigation.NavigateTo("/cart");
     }
 
     private void ChangeSideQty(int delta)

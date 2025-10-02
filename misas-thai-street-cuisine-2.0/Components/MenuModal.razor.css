@@ -1,9 +1,8 @@
-/* Cart controls and upgrade rows */
 .modal-cart-section {
     margin: 2rem 0 1.5rem 0;
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 0.8rem;
 }
 .cart-row {
     display: flex;
@@ -54,33 +53,62 @@
     font-family: 'Montserrat', sans-serif;
     background: #fff7ef;
     border-left: 4px solid #ee6900;
-    border-radius: 5px;
-    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
     box-shadow: 0 2px 8px #ee690022;
-    opacity: 1;
-    max-height: 200px;
-    transition: max-height 0.4s cubic-bezier(.4,2,.6,1), opacity 0.3s;
+    margin-top: 0.5rem;
+    margin-left: 1.5rem;
+    border: 1px solid #ee690033;
+    
+    /* Initial state - hidden */
+    opacity: 0;
+    max-height: 0;
+    padding: 0 1.2rem;
+    overflow: hidden;
+    transform: translateY(-10px);
+    
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
+.cart-upgrade-row.slide-in {
+    opacity: 1;
+    max-height: 100px;
+    padding: 0.7rem 1.2rem;
+    transform: translateY(0);
+}
+.cart-upgrade-row.slide-out {
+    opacity: 0;
+    max-height: 0;
+    padding: 0 1.2rem;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
 .cart-upgrade-option {
     display: flex;
     align-items: center;
     gap: 0.7rem;
 }
-.cart-upgrade-row.slide-out {
-    opacity: 0;
-    max-height: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-bottom: 0;
-    pointer-events: none;
-}
 .cart-upgrade-label {
     color: #333;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: 500;
     flex: 1;
+    line-height: 1.3;
 }
+.cart-upgrade-btn {
+    background: #fff;
+    border: 2px solid #ee6900;
+    color: #ee6900;
+    font-size: 0.75rem;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    margin: 0 0.2rem;
+    transition: background 0.15s, color 0.15s;
+}
+    .cart-upgrade-btn:hover {
+        background: #ee6900;
+        color: #fff;
+    }
 .menu-modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -90,17 +118,6 @@
     align-items: center;
     justify-content: center;
 }
-@keyframes modal-pop-in {
-    0% {
-        opacity: 0;
-        transform: scale(0.92) translateY(40px);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
 .menu-modal {
     background: #fff;
     border-radius: 24px;
@@ -183,6 +200,67 @@
 .menu-modal-close:hover {
     color: #ee6900;
 }
+/* Action buttons section */
+.modal-actions-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.modal-keep-shopping-btn {
+    background: #ee6900;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.3);
+    flex: 1;
+}
+
+.modal-keep-shopping-btn:hover {
+    background: #ff9800;
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+}
+
+.modal-checkout-btn {
+    background: #ee6900;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.3);
+    flex: 1;
+}
+
+.modal-checkout-btn:hover {
+    background: #ff9800;
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+}
+
+@keyframes modal-pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 @media (max-width: 1024px) {
     .menu-modal {
         flex-direction: column;
@@ -211,6 +289,10 @@
     .modal-cart-section {
         margin: 0 0 1rem 0;
         gap: 0.7rem;
+    }
+    .modal-keep-shopping-btn, .modal-checkout-btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
     }
     .cart-row, .cart-upgrade-row {
         font-size: 1rem;

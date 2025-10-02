@@ -26,7 +26,7 @@
             <p class="menu-subtitle">Fresh, vibrant, and made for sharing. Every platter includes crisp greens, our signature dips, and your choice of sticky rice or Phad Thai.</p>
         </div>
     </div>
-    <div class="menu-grid">
+    <div class="platters-grid">
         @foreach (var platter in MenuData.Platters)
         {
             <div class="menu-card" @onclick="() => ShowModal(platter)">
@@ -35,20 +35,24 @@
                 <div class="menu-card-price">Starting at $@(platter.Prices != null ? platter.Prices.Values.Min() : 0)</div>
             </div>
         }
-        <div class="menu-divider">
-            <div class="menu-divider-title">
-                A-la-Carte options:
-            </div>
-            <div class="menu-divider-subtext">
-                Add to an existing platter, or build your own!
-            </div>
+    </div>
+    
+    <div class="menu-divider">
+        <div class="menu-divider-title">
+            A-la-Carte options:
         </div>
+        <div class="menu-divider-subtext">
+            Add to an existing platter, or build your own!
+        </div>
+    </div>
+    
+    <div class="sides-grid">
         @foreach (var side in MenuData.SideDishes)
         {
-            <div class="menu-card" @onclick="() => ShowModal(side)">
-                <img src="@side.ImageUrl" alt="@side.Name" class="menu-card-img" />
-                <div class="menu-card-title">@side.Name</div>
-                <div class="menu-card-price">Starting at $@side.Price</div>
+            <div class="side-card" @onclick="() => ShowModal(side)">
+                <img src="@side.ImageUrl" alt="@side.Name" class="side-card-img" />
+                <div class="side-card-title">@side.Name</div>
+                <div class="side-card-price">$@side.Price</div>
             </div>
         }
     </div>
