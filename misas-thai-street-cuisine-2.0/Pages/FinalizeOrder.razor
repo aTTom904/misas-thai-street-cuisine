@@ -69,26 +69,26 @@
                     </div>
                     <div class="form-group">
                         <label>Full Name *</label>
-                        <input type="text" @bind="customerName" class="form-control" required />
+                        <input type="text" @bind="customerName" @bind:event="oninput" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label>Email *</label>
-                        <input type="email" @bind="customerEmail" class="form-control" required />
+                        <input type="email" @bind="customerEmail" @bind:event="oninput" class="form-control" required />
                     </div>
                     <div class="form-group">
                         <label>Phone</label>
-                        <input type="tel" @bind="customerPhone" class="form-control" />
+                        <input type="tel" @bind="customerPhone" @bind:event="oninput" class="form-control" />
                     </div>
                     <div class="delivery-address-section">
                         <label>Delivery Address *</label>
                         <div class="address-fields">
-                            <input type="text" @bind="streetAddress" class="form-control address-input" placeholder="Street Address" required />
+                            <input type="text" @bind="streetAddress" @bind:event="oninput" class="form-control address-input" placeholder="Street Address" required />
                             <div class="city-state-zip">
-                                <input type="text" @bind="city" class="form-control city-input" placeholder="City" required />
+                                <input type="text" @bind="city" @bind:event="oninput" class="form-control city-input" placeholder="City" required />
                                 <select @bind="state" class="form-control state-input" required>
                                     <option value="Florida">Florida</option>
                                 </select>
-                                <input type="text" @bind="zipCode" class="form-control zip-input" placeholder="Zip Code" required />
+                                <input type="text" @bind="zipCode" @bind:event="oninput" class="form-control zip-input" placeholder="Zip Code" required />
                             </div>
                         </div>
                     </div>
