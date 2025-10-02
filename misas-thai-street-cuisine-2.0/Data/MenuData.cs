@@ -60,7 +60,7 @@ namespace misas_thai_street_cuisine_2._0.Data
             },
             new SideDish
             {
-                Name = "Grilled Chicken Skewer",
+                Name = "Chicken Skewer",
                 Category = "Side",
                 Price = 5.00m,
                 Description = "1 Tender grilled chicken skewer.",
@@ -68,7 +68,7 @@ namespace misas_thai_street_cuisine_2._0.Data
             },
             new SideDish
             {
-                Name = "Grilled Chicken Wing",
+                Name = "Chicken Wing",
                 Category = "Side",
                 Price = 3.00m,
                 Description = "1 grilled, whole-style chicken wing.",
