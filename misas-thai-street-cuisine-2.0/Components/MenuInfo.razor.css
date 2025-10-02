@@ -66,6 +66,15 @@
     font-weight: 700;
     color: #222;
 }
+.delivery-time-window-text{
+
+    font-size: 0.75rem;
+    text-align: right;
+    color: #555;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 1rem;
+    font-weight: 500;
+}
 .menu-title-block {
     flex: 1;
     text-align: left;
