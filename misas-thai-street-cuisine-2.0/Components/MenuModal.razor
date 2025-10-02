@@ -44,9 +44,11 @@
                                 <span class="cart-qty">@GetPlatterQty(serve)</span>
                                 <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
                             </div>
-                            @if (serve == 2 && GetPlatterQty(2) > 0)
+                            
+                            @* Always render upgrade rows, control visibility with CSS classes *@
+                            @if (serve == 2)
                             {
-                                <div class="cart-upgrade-row slide-in">
+                                <div class="cart-upgrade-row @(GetPlatterQty(2) > 0 ? "slide-in" : "slide-out")">
                                     <div class="cart-upgrade-option">
                                         <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $9</b></span>
                                         <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
@@ -55,9 +57,9 @@
                                     </div>
                                 </div>
                             }
-                            @if (serve == 4 && GetPlatterQty(4) > 0)
+                            @if (serve == 4)
                             {
-                                <div class="cart-upgrade-row slide-in">
+                                <div class="cart-upgrade-row @(GetPlatterQty(4) > 0 ? "slide-in" : "slide-out")">
                                     <div class="cart-upgrade-option">
                                         <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $18</b></span>
                                         <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
@@ -71,7 +73,6 @@
                 }
                 else if (MenuItem is SideDish side)
                 {
-                    <div class="menu-modal-price">$@side.Price</div>
                     <div class="modal-cart-section">
                         <div class="cart-row">
                             <span class="cart-label">@side.Name</span>

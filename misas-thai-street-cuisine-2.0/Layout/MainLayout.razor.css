@@ -51,8 +51,20 @@
     width: 100%;
     gap: 0.5rem;
     transition: font-size 0.3s, padding 0.3s, gap 0.3s;
+    
+    /* Initial state for animation */
+    opacity: 0;
+    transform: translateX(20px);
+    animation: none;
 }
-
+.cart-icon-link.cart-slide-in {
+    opacity: 1;
+    transform: translateX(0);
+    animation: slideInCart 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.cart-icon-link.cart-update {
+    animation: cartBounce 0.3s ease-in-out;
+}
 .cart-icon {
     margin-right: 0.4em;
     font-size: 1.5em;
@@ -264,6 +276,29 @@
 .navbar-shrunk .cart-icon-link {
     font-size: 1rem;
     gap: 0.2rem;
+}
+
+@keyframes slideInCart {
+    0% {
+        opacity: 0;
+        transform: translateX(20px) scale(0.8);
+    }
+    50% {
+        transform: translateX(-5px) scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes cartBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 @keyframes fadeInMenu {
