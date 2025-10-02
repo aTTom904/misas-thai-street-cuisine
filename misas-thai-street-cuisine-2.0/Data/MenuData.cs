@@ -52,9 +52,33 @@ namespace misas_thai_street_cuisine_2._0.Data
         {
             new SideDish
             {
-                Name = "Phad Thai",
+                Name = "M's Thai Sausage",
                 Category = "Side",
-                Price = 14.00m,
+                Price = 6.00m,
+                Description = "1 Grilled Thai sausage link infused with herbs and spices.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/ms-sausage.png"
+            },
+            new SideDish
+            {
+                Name = "Grilled Chicken Skewer",
+                Category = "Side",
+                Price = 5.00m,
+                Description = "1 Tender grilled chicken skewer.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/grilled-chicken-skewer.png"
+            },
+            new SideDish
+            {
+                Name = "Grilled Chicken Wing",
+                Category = "Side",
+                Price = 3.00m,
+                Description = "1 grilled, whole-style chicken wing.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/grilled-chicken-wing.png"
+            },
+            new SideDish
+            {
+                Name = "Phad Thai for 2",
+                Category = "Side",
+                Price = 17.00m,
                 Description = "Classic Thai noodles.",
                 ImageUrl = "/Resources/Images/HomepageCarousel/phad-thai.png"
             },
@@ -62,10 +86,18 @@ namespace misas_thai_street_cuisine_2._0.Data
             {
                 Name = "Papaya Salad",
                 Category = "Side",
-                Price = 4.00m,
+                Price = 6.00m,
                 Description = "Fresh and spicy salad.",
                 ImageUrl = "/Resources/Images/HomepageCarousel/papaya-salad.png"
-            }
+            },
+            new SideDish
+            {
+                Name = "Sticky Rice",
+                Category = "Side",
+                Price = 4.00m,
+                Description = "Steamed sticky rice.",
+                ImageUrl = "/Resources/Images/HomepageCarousel/sticky-rice.png"
+            },
         };
     }
 }

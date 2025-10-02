@@ -251,3 +251,53 @@
         min-width: 100px;
     }
 }
+
+/* Action buttons section */
+.modal-actions-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.modal-keep-shopping-btn {
+    background: #ee6900;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.3);
+    flex: 1;
+}
+
+.modal-keep-shopping-btn:hover {
+    background: #ff9800;
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+}
+
+.modal-checkout-btn {
+    background: #ee6900;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.3);
+    flex: 1;
+}
+
+.modal-checkout-btn:hover {
+    background: #ff9800;
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+}

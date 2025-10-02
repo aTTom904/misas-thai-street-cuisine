@@ -24,10 +24,10 @@
                             <span class="countdown-single">@CountdownText</span>
                         </div>
                     </div>
-                    <i class="fas fa-info-circle countdown-info-icon" @onclick="() => showTooltip = !showTooltip" tabindex="0"></i>
+                    <i class="fas fa-circle-info countdown-info-icon" @onclick="() => showTooltip = !showTooltip" tabindex="0"></i>
                     @if (showTooltip)
                     {
-                        <div class="countdown-tooltip">This timer shows how much time you have left to place your order. Orders close the Monday before delivery day at 5:00 PM.</div>
+                        <div class="countdown-tooltip">This timer shows how much time you have left to place your order to be eligible for the next delivery day. Orders close the Monday before delivery day at 5:00 PM.</div>
                     }
                 </div>
             </div>
