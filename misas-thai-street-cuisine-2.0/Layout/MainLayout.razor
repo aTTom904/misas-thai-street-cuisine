@@ -4,6 +4,10 @@
 @inject ShoppingCartService Cart
 @inject DeadlineService DeadlineService
 
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
 <div class="layout-container">
     <header class="navbar minimal-navbar @(isHeaderShrunk ? "navbar-shrunk" : "")">

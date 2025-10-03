@@ -1,17 +1,14 @@
-﻿@using Blazorise
-@using Blazorise.Bootstrap
-@using Blazorise.Icons.FontAwesome
-@using System.ComponentModel.DataAnnotations;
+﻿@using System.ComponentModel.DataAnnotations;
 @using System.Diagnostics
 
 <div class="form-container">
     <EditForm Model=@formModel OnValidSubmit=@HandleValidSubmit class="order-details-form">
-        <label for="date">Pickup Date</label>
-        <DatePicker @bind-Date="formModel.SelectedDate"
-        @ref="datePicker"
-        StaticPicker="false"
-        DisabledDays="@disabledDays"
-        Class="mb-3"/>
+        <div class="form-group mb-3">
+            <MudDatePicker Label="Pickup Date" @bind-Date="formModel.SelectedDate" 
+                          @ref="datePicker" 
+                          IsDateDisabledFunc="@IsDateDisabled"
+                          Class="mb-3" />
+        </div>
         <div class="form-group">
             <label for="name">Name</label>
             <InputText id="name" @bind-Value="formModel.Name" class="form-control" />
@@ -31,7 +28,7 @@
 </div>
 
 @code {
-    private DatePicker<DateTime?>? datePicker;
+    private MudDatePicker? datePicker;
     private FormModel formModel = new FormModel();
     public DateTime? SelectedDate { get; set; } = null;
 
@@ -44,6 +41,11 @@
         DayOfWeek.Saturday,
         DayOfWeek.Sunday
     };
+
+    private bool IsDateDisabled(DateTime date)
+    {
+        return disabledDays.Contains(date.DayOfWeek);
+    }
 
     private void HandleValidSubmit()
     {
