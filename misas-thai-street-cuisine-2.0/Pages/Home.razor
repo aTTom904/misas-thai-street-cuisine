@@ -1,7 +1,4 @@
 ﻿@page "/"
-@using Blazorise
-@using Blazorise.Components
-@using Blazorise.Icons.FontAwesome
 
 @using misas_thai_street_cuisine_2._0.Components
 
@@ -16,14 +13,24 @@
     </div>
     <div class="hero-right">
         <div class="carousel-container">
-            <Carousel Crossfade="true">
-                @foreach (var image in CarouselImages)
-                {
-                    <CarouselSlide Name="@image" key="@image">
-                        <img src="@image" alt="Featured Thai Food" class="carousel-img"/>
-                    </CarouselSlide>
-                }
-            </Carousel>
+            <div id="heroCarousel" class="carousel slide carousel-fade">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < CarouselImages.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@CarouselImages[i]" alt="Featured Thai Food" class="carousel-img"/>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -33,21 +40,21 @@
     <div class="how-it-works-steps">
         <div class="step">
             <div class="step-icon">
-                <Blazorise.Icons.FontAwesome.Icon Name="FontAwesomeIcons.ShoppingBasket" IconSize="IconSize.x3" />
+                <i class="fas fa-shopping-basket fa-4x"></i>
             </div>
             <h3 class="step-title">Place Your Order</h3>
             <p class="step-description">Select your dinner platter and order online by the cutoff date.</p>
         </div>
         <div class="step">
             <div class="step-icon">
-                <Blazorise.Icons.FontAwesome.Icon Name="FontAwesomeIcons.FireBurner" IconSize="IconSize.x3" />
+                <i class="fas fa-fire-burner fa-4x"></i>
             </div>
             <h3 class="step-title">We Cook Fresh</h3>
             <p class="step-description">Our kitchen preps and cooks your meal from scratch on delivery day.</p>
         </div>
         <div class="step">
             <div class="step-icon">
-                <Blazorise.Icons.FontAwesome.Icon Name="FontAwesomeIcons.HouseChimney" IconSize="IconSize.x3" />
+                <i class="fas fa-house-chimney fa-4x"></i>
             </div>
             <h3 class="step-title">Delivered to Your Door</h3>
             <p class="step-description">Meals arrive hot in a corrugated box, family-style, with everything you need.</p>
@@ -77,6 +84,17 @@
         foreach (var image in CarouselImages)
         {
             await JS.InvokeVoidAsync("preloadImage", image);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Wait a bit to ensure Bootstrap is fully loaded
+            await Task.Delay(500);
+            // Initialize the carousel after the component has rendered
+            await JS.InvokeVoidAsync("initializeCarousel", "heroCarousel");
         }
     }
 

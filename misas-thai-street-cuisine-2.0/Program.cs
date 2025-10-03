@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using misas_thai_street_cuisine_2._0;
-using Blazorise;
-using Blazorise.Bootstrap5;
-using Blazorise.Icons.FontAwesome;
+using MudBlazor.Services;
 using misas_thai_street_cuisine_2._0.Data;
 using Square;
 using Square.Locations;
@@ -20,14 +18,8 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped<misas_thai_street_cuisine_2._0.Services.ShoppingCartService>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-// Register Blazorise services
-builder.Services
-    .AddBlazorise( options =>
-    {
-        options.Immediate = true;
-    } )
-    .AddBootstrap5Providers()
-    .AddFontAwesomeIcons();
+// Register MudBlazor services
+builder.Services.AddMudServices();
 
 builder.Services.AddSingleton<MenuData>();
 builder.Services.AddScoped<SquarePaymentService>();
