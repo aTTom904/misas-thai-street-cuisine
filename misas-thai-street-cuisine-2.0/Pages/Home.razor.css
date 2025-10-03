@@ -88,6 +88,36 @@
     border-radius: 50%;
 }
 
+/* Bootstrap carousel controls styling for circular design */
+#heroCarousel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+#heroCarousel .carousel-control-prev,
+#heroCarousel .carousel-control-next {
+    width: 15%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#heroCarousel:hover .carousel-control-prev,
+#heroCarousel:hover .carousel-control-next {
+    opacity: 0.8;
+}
+
+#heroCarousel .carousel-control-prev-icon,
+#heroCarousel .carousel-control-next-icon {
+    width: 3rem;
+    height: 3rem;
+}
+
+
+#heroCarousel .carousel-item {
+    border-radius: 50%;
+}
+
 /* Menu Info Section */
 .menu-info-section {
     margin: 6rem auto 2rem auto;
