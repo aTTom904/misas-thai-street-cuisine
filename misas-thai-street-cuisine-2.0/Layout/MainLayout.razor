@@ -15,9 +15,9 @@
             <a href="/" class="logo-link">
                 <img src="/Resources/Images/Logos/ORNG M RED CHILI.png" alt="Logo" class="logo" />
             </a>
-            @* <div class="hamburger-menu" @onclick="OnHamburgerClick">
+            <div class="hamburger-menu" @onclick="OnHamburgerClick">
                 <i class="fas fa-bars"></i>
-            </div> *@
+            </div>
         </div>
         <div class="header-right">
             <div class="countdown right-countdown">
@@ -31,7 +31,7 @@
                     <i class="fas fa-circle-info countdown-info-icon" @onclick="() => showTooltip = !showTooltip" tabindex="0"></i>
                     @if (showTooltip)
                     {
-                        <div class="countdown-tooltip">This timer shows how much time you have left to place your order to be eligible for the next delivery day. Orders close the Monday before delivery day at 5:00 PM.</div>
+                        <div class="countdown-tooltip" @onclick:stopPropagation="true">This timer shows how much time you have left to place your order to be eligible for the next delivery day. Orders close the Monday before delivery day at 5:00 PM.</div>
                     }
                 </div>
             </div>
@@ -46,14 +46,17 @@
             </div>
         </div>
     </header>
+    @if (showTooltip)
+    {
+        <div class="tooltip-overlay" @onclick="() => showTooltip = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 150;"></div>
+    }
     @if (isMobileMenuVisible)
     {
-        <div id="mobile-nav-wrapper" @onclick="() => isMobileMenuVisible = false">
-            <div class="mobile-nav slide-down" style="position: absolute; left:@(mobileMenuX)px; top:@(mobileMenuY)px;">
-                <a href="/menu">Menu</a>
-                <a href="/gallery">Gallery</a>
-                <a href="/about">About</a>
-                <a href="/contact">Contact</a>
+        <div id="mobile-nav-wrapper" @onclick="() => isMobileMenuVisible = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999;">
+            <div class="mobile-nav slide-down" style="position: absolute; left:@(mobileMenuX)px; top:@(mobileMenuY)px;" @onclick:stopPropagation="true">
+                <a href="/gallery" @onclick="() => isMobileMenuVisible = false">Gallery</a>
+                <a href="/about" @onclick="() => isMobileMenuVisible = false">About</a>
+                <a href="/contact" @onclick="() => isMobileMenuVisible = false">Contact</a>
             </div>
         </div>
     }
