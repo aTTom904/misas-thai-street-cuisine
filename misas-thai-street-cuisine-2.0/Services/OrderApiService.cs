@@ -1,4 +1,6 @@
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace misas_thai_street_cuisine_2._0.Services;
 
@@ -12,7 +14,7 @@ public class OrderApiService
     {
         _httpClient = httpClient;
         _logger = logger;
-        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://misasthaistreetcuisine.com/api";
+        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://misas-thai-api.azurewebsites.net/api";
     }
 
     public async Task<ApiResponse<OrderResponse>> CreateOrderAsync(CreateOrderRequest request)
