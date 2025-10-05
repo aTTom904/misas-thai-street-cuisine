@@ -7,8 +7,8 @@ namespace misas_thai_street_cuisine_2._0.Services
 
         
         private readonly IJSRuntime _jsRuntime;
-        private readonly string _applicationId = "sq0idp-vBWKF52a4zCjMaxzbKHJTw";
-        private readonly string _locationId = "LHWQP128FDFZF";
+        private readonly string _applicationId = "sandbox-sq0idb-1gDDPcTuPZCWT0tkbGo2Ig";
+        private readonly string _locationId = "LT41HRBZ4JM47";
 
         public SquarePaymentService(IJSRuntime jsRuntime)
         {
