@@ -12,7 +12,7 @@ public class OrderApiService
     {
         _httpClient = httpClient;
         _logger = logger;
-        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://localhost:7071/api";
+        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://misasthaistreetcuisine.com/api";
     }
 
     public async Task<ApiResponse<OrderResponse>> CreateOrderAsync(CreateOrderRequest request)
@@ -114,6 +114,7 @@ public class CreateOrderRequest
     public string CustomerPhone { get; set; } = string.Empty;
     public bool ConsentToUpdates { get; set; }
     public string DeliveryAddress { get; set; } = string.Empty;
+    public string DeliveryDate { get; set; } = string.Empty;
     public decimal Total { get; set; }
     public string PaymentToken { get; set; } = string.Empty;
     public List<OrderItemRequest> Items { get; set; } = new();

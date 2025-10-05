@@ -365,6 +365,7 @@
                     CustomerName = customerName,
                     CustomerEmail = customerEmail,
                     DeliveryAddress = deliveryAddress,
+                    DeliveryDate = deliveryDateDisplay,
                     CustomerPhone = customerPhone ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
                     Total = Cart?.Items?.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0) ?? 0,
