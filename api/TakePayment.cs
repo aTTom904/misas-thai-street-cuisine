@@ -11,8 +11,6 @@ using Square;
 using Square.Payments;
 using Azure.Communication.Email;
 using System.Linq;
-using System.Collections.Generic;
-
 
 namespace MisasThaiStreetCuisine.Function
 {
@@ -20,15 +18,17 @@ namespace MisasThaiStreetCuisine.Function
     {
         [FunctionName("TakePayment")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("Processing payment request...");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var orderRequest = JsonConvert.DeserializeObject<CreateOrderRequest>(requestBody);
+            log.LogInformation("Request: " + JsonConvert.SerializeObject(orderRequest));
 
             var accessToken = Environment.GetEnvironmentVariable("Square__AccessToken");
+            log.LogInformation("Square Access Token: " + (string.IsNullOrEmpty(accessToken) ? "null or empty" : accessToken));
             if (string.IsNullOrEmpty(accessToken))
             {
                 log.LogError("Square credentials missing.");
@@ -158,7 +158,7 @@ namespace MisasThaiStreetCuisine.Function
                 : "No - You will not receive promotional communications.";
 
             return $@"
-		<html>
+            <html>
             <body style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
                 <h2 style='color: #ee6900;'>Thank you for your order!</h2>
                 <p>Hi {order.CustomerName},</p>
