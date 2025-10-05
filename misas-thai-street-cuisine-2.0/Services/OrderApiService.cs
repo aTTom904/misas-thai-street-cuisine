@@ -19,21 +19,40 @@ public class OrderApiService
     {
         try
         {
+            _logger.LogInformation($"Starting CreateOrderAsync - API Base URL: {_apiBaseUrl}");
+            _logger.LogInformation($"Request Data - Customer: {request.CustomerName}, Email: {request.CustomerEmail}, Total: {request.Total:C}");
+            _logger.LogInformation($"Payment Token: {(!string.IsNullOrEmpty(request.PaymentToken) ? "Present" : "Missing")}");
+            _logger.LogInformation($"Items Count: {request.Items?.Count ?? 0}");
+
             var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
+            _logger.LogInformation($"Serialized JSON (first 500 chars): {json[..Math.Min(json.Length, 500)]}");
+
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+            
+            _logger.LogInformation($"Making POST request to: {_apiBaseUrl}/TakePayment");
+            _logger.LogInformation($"HttpClient BaseAddress: {_httpClient.BaseAddress}");
+            _logger.LogInformation($"Content-Type: application/json, Encoding: UTF8");
+
             var response = await _httpClient.PostAsync($"{_apiBaseUrl}/TakePayment", content);
+            
+            _logger.LogInformation($"Response Status: {response.StatusCode} ({(int)response.StatusCode})");
 
             if (response.IsSuccessStatusCode)
             {
+                _logger.LogInformation("API call successful - reading response content");
                 var responseJson = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation($"Response JSON: {responseJson}");
+                
                 var orderResponse = JsonSerializer.Deserialize<OrderResponse>(responseJson, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
+
+                _logger.LogInformation($"Deserialized response - OrderNumber: {orderResponse?.OrderNumber}, Status: {orderResponse?.Status}");
 
                 return new ApiResponse<OrderResponse>
                 {
@@ -45,6 +64,7 @@ public class OrderApiService
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 _logger.LogError($"API Error: {response.StatusCode} - {errorContent}");
+                _logger.LogError($"Response Headers: {string.Join(", ", response.Headers.Select(h => $"{h.Key}: {string.Join(", ", h.Value)}"))}");
                 
                 return new ApiResponse<OrderResponse>
                 {
@@ -53,9 +73,32 @@ public class OrderApiService
                 };
             }
         }
+        catch (HttpRequestException httpEx)
+        {
+            _logger.LogError(httpEx, "HTTP Request Exception occurred");
+            _logger.LogError($"HTTP Exception Message: {httpEx.Message}");
+            _logger.LogError($"HTTP Exception Data: {httpEx.Data}");
+            return new ApiResponse<OrderResponse>
+            {
+                Success = false,
+                Error = $"HTTP Request error: {httpEx.Message}"
+            };
+        }
+        catch (TaskCanceledException tcEx)
+        {
+            _logger.LogError(tcEx, "Request timed out");
+            return new ApiResponse<OrderResponse>
+            {
+                Success = false,
+                Error = $"Request timeout: {tcEx.Message}"
+            };
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error calling order API");
+            _logger.LogError(ex, "Unexpected error calling order API");
+            _logger.LogError($"Exception Type: {ex.GetType().Name}");
+            _logger.LogError($"Exception Message: {ex.Message}");
+            _logger.LogError($"Stack Trace: {ex.StackTrace}");
             return new ApiResponse<OrderResponse>
             {
                 Success = false,
