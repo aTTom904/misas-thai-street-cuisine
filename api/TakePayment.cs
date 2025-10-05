@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Net.Http;
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -13,8 +11,6 @@ using Square;
 using Square.Payments;
 using Azure.Communication.Email;
 using System.Linq;
-using System.Collections.Generic;
-
 
 namespace MisasThaiStreetCuisine.Function
 {
@@ -29,8 +25,10 @@ namespace MisasThaiStreetCuisine.Function
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var orderRequest = JsonConvert.DeserializeObject<CreateOrderRequest>(requestBody);
+            log.LogInformation("Request: " + JsonConvert.SerializeObject(orderRequest));
 
             var accessToken = Environment.GetEnvironmentVariable("Square__AccessToken");
+            log.LogInformation("Square Access Token: " + (string.IsNullOrEmpty(accessToken) ? "null or empty" : accessToken));
             if (string.IsNullOrEmpty(accessToken))
             {
                 log.LogError("Square credentials missing.");

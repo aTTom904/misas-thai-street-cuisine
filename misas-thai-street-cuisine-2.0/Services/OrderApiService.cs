@@ -1,6 +1,4 @@
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace misas_thai_street_cuisine_2._0.Services;
 
