@@ -12,7 +12,7 @@ public class OrderApiService
     {
         _httpClient = httpClient;
         _logger = logger;
-        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://localhost:7071/api";
+        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "http://misas-thai-api.azurewebsites.net/api";
     }
 
     public async Task<ApiResponse<OrderResponse>> CreateOrderAsync(CreateOrderRequest request)
