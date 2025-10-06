@@ -365,6 +365,7 @@
                     CustomerName = customerName,
                     CustomerEmail = customerEmail,
                     DeliveryAddress = deliveryAddress,
+                    DeliveryDate = deliveryDateDisplay,
                     CustomerPhone = customerPhone ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
                     Total = Cart?.Items?.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0) ?? 0,
@@ -382,27 +383,34 @@
                     var apiResult = await OrderApi.CreateOrderAsync(orderRequest);
                     if (apiResult.Success && apiResult.Data != null)
                     {
+                        // Payment and order both successful
                         orderConfirmation = apiResult.Data.OrderNumber;
                         successMessage = "Payment processed and order saved successfully!";
+                        Cart?.ClearCart();
+                        currentStep = 2;
                     }
                     else
                     {
-                        orderConfirmation = $"ORDER-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}";
-                        successMessage = "Payment processed successfully!";
+                        // Payment tokenized but API failed
+                        @* errorMessage = $"Payment processing failed: {apiResult.Error ?? "Unable to process payment with Square. Please try again or contact support."}"; *@
+                        errorMessage = $"API returned but no data. Error: {apiResult.Error}";
+                        return;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    orderConfirmation = $"ORDER-{DateTime.Now:yyyyMMdd}-{new Random().Next(1000, 9999)}";
-                    successMessage = "Payment processed successfully!";
+                    // Payment tokenized but API threw exception
+                    @* errorMessage = $"Payment processing failed: {ex.Message}. Please try again or contact support."; *@
+                    errorMessage = $"api exception: {ex.Message}";
+                    return;
                 }
-                Cart?.ClearCart();
-                currentStep = 2;
             }
             else
             {
-                var errors = tokenResult.Errors != null ? string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : tokenResult.Error ?? "Unknown error occurred";
-                errorMessage = $"Payment failed: {errors}";
+                // Card tokenization failed
+                var errors = tokenResult.Errors != null ? string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : tokenResult.Error ?? "Unknown card validation error";
+                errorMessage = $"Card validation failed: {errors}. Please check your card information and try again.";
+                return;
             }
         }
         catch (Exception ex)
