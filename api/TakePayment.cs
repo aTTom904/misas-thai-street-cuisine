@@ -26,10 +26,8 @@ namespace MisasThaiStreetCuisine.Function
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var orderRequest = JsonConvert.DeserializeObject<CreateOrderRequest>(requestBody);
-            log.LogInformation("Request: " + JsonConvert.SerializeObject(orderRequest));
 
             var accessToken = System.Environment.GetEnvironmentVariable("Square__AccessToken");
-            log.LogInformation("Square Access Token: " + (string.IsNullOrEmpty(accessToken) ? "null or empty" : accessToken));
             if (string.IsNullOrEmpty(accessToken))
             {
                 log.LogError("Square credentials missing.");
@@ -44,7 +42,6 @@ namespace MisasThaiStreetCuisine.Function
                     )
                     .Environment(Square.Environment.Sandbox)
                     .Build();
-                log.LogInformation("Square client initialized with access token: " + (string.IsNullOrEmpty(accessToken) ? "null or empty" : accessToken));
 
                 var money = new Money(
                     amount: (long)(orderRequest.Total * 100),
@@ -85,9 +82,15 @@ namespace MisasThaiStreetCuisine.Function
         {
             try
             {
+                log.LogInformation("Preparing to send order confirmation email...");
                 var connectionString = System.Environment.GetEnvironmentVariable("AzureCommunicationServices__ConnectionString");
                 var fromEmail = System.Environment.GetEnvironmentVariable("AzureCommunicationServices__FromEmail");
                 var replyToEmail = System.Environment.GetEnvironmentVariable("AzureCommunicationServices__ReplyToEmail");
+                
+                // Debug logging to see actual values
+                log.LogInformation($"Connection String: {(string.IsNullOrEmpty(connectionString) ? "null or empty" : connectionString.Length > 20 ? connectionString.Substring(0, 20) + "..." : connectionString)}");
+                log.LogInformation($"From Email: {fromEmail}");
+                log.LogInformation($"Reply-To Email: {replyToEmail}");
                 
                 if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(fromEmail))
                 {
@@ -95,54 +98,38 @@ namespace MisasThaiStreetCuisine.Function
                     return;
                 }
 
+                // Try basic client creation first
+                log.LogInformation("Creating EmailClient...");
                 var emailClient = new EmailClient(connectionString);
+                log.LogInformation("Email client initialized.");
 
-                // Create email content
-                var subject = $"Misa's Thai Street Cuisine Order Confirmation";
-                var htmlContent = CreateOrderEmailHtml(order, orderNumber);
-                var plainTextContent = CreateOrderEmailText(order, orderNumber);
-
+                // Test with minimal email first
+                log.LogInformation("Creating simple email message...");
                 var emailMessage = new EmailMessage(
                     senderAddress: fromEmail,
                     recipientAddress: order.CustomerEmail,
-                    content: new EmailContent(subject)
+                    content: new EmailContent("Test Order Confirmation")
                     {
-                        PlainText = plainTextContent,
-                        Html = htmlContent
+                        PlainText = "This is a test email from Misa's Thai Street Cuisine.",
+                        Html = "<p>This is a test email from Misa's Thai Street Cuisine.</p>"
                     });
 
-                // Add Reply-To header if configured
-                if (!string.IsNullOrEmpty(replyToEmail))
-                {
-                    emailMessage.ReplyTo.Add(new EmailAddress(replyToEmail));
-                    log.LogInformation($"Reply-To header set to: {replyToEmail}");
-                }
-
+                log.LogInformation("Attempting to send email...");
                 // Send to customer
-                log.LogInformation("Sending order confirmation email to customer: " + order.CustomerEmail + " from: " + fromEmail);
                 var customerEmailResult = await emailClient.SendAsync(Azure.WaitUntil.Completed, emailMessage);
-                log.LogInformation($"Customer email sent successfully. Status: {customerEmailResult.GetRawResponse().Status}");
+                log.LogInformation("Email send completed successfully.");
 
-                // Send to restaurant (optional)
-                var restaurantEmail = System.Environment.GetEnvironmentVariable("Restaurant__NotificationEmail");
-                if (!string.IsNullOrEmpty(restaurantEmail))
-                {
-                    var restaurantMessage = new EmailMessage(
-                        senderAddress: fromEmail,
-                        recipientAddress: restaurantEmail,
-                        content: new EmailContent($"New Order - {orderNumber}")
-                        {
-                            PlainText = $"New order received from {order.CustomerName}\n\n" + plainTextContent,
-                            Html = $"<h2>New Order Received</h2><p>From: {order.CustomerName}</p>" + htmlContent
-                        });
-
-                    var restaurantEmailResult = await emailClient.SendAsync(Azure.WaitUntil.Completed, restaurantMessage);
-                    log.LogInformation($"Restaurant notification email sent successfully. Status: {restaurantEmailResult.GetRawResponse().Status}");
-                }
+                // Restaurant email temporarily disabled for testing
+                // var restaurantEmail = System.Environment.GetEnvironmentVariable("Restaurant__NotificationEmail");
+                // if (!string.IsNullOrEmpty(restaurantEmail)) { ... }
             }
             catch (Exception ex)
             {
-                log.LogError(ex, "Failed to send email notification");
+                log.LogError(ex, "Failed to send email notification. Exception details: {ExceptionType}: {ExceptionMessage}", ex.GetType().Name, ex.Message);
+                if (ex.InnerException != null)
+                {
+                    log.LogError("Inner exception: {InnerExceptionType}: {InnerExceptionMessage}", ex.InnerException.GetType().Name, ex.InnerException.Message);
+                }
                 // Don't throw - email failure shouldn't break the payment process
             }
         }
