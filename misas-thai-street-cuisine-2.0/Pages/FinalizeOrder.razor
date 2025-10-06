@@ -392,16 +392,14 @@
                     else
                     {
                         // Payment tokenized but API failed
-                        @* errorMessage = $"Payment processing failed: {apiResult.Error ?? "Unable to process payment with Square. Please try again or contact support."}"; *@
-                        errorMessage = $"API returned but no data. Error: {apiResult.Error}";
+                        errorMessage = $"Payment processing failed: {apiResult.Error ?? "Unable to process payment with Square. Please try again or contact support."}";
                         return;
                     }
                 }
                 catch (Exception ex)
                 {
                     // Payment tokenized but API threw exception
-                    @* errorMessage = $"Payment processing failed: {ex.Message}. Please try again or contact support."; *@
-                    errorMessage = $"api exception: {ex.Message}";
+                    errorMessage = $"Payment processing failed: {ex.Message}. Please try again or contact support.";
                     return;
                 }
             }
