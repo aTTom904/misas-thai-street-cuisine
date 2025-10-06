@@ -183,10 +183,23 @@
     box-shadow: none;
 }
 
+.minimum-order-notice {
+    font-size: 1rem;
+    color: #ee6900;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem 0;
+    padding: 0.75rem 1rem;
+    background-color: #fff7f0;
+    border: 2px solid #ee6900;
+    border-radius: 8px;
+    text-align: center;
+}
+
 .button-container {
     display: flex;
     justify-content: center;
     margin-top: 1rem;
+    position: relative;
 }
 
 .btn-secondary {
@@ -231,6 +244,36 @@
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+}
+
+.btn-brand-orange {
+    background: transparent;
+    border: 1px solid #ee6900;
+    color: #ee6900;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.btn-brand-orange:hover:not(:disabled) {
+    background: #ee6900;
+    border-color: #ee6900;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+}
+
+.btn-brand-orange:disabled {
+    background: transparent;
+    border-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.7;
 }
 
 .payment-buttons {
