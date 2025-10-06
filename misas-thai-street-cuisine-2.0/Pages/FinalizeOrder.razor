@@ -6,6 +6,7 @@
 @inject OrderApiService OrderApi
 @inject OrderContextService OrderContext
 @inject DeadlineService DeadlineService
+@inject DeliveryValidationService DeliveryValidation
 
 <div class="checkout-container">
     <h2>Checkout</h2>
@@ -76,8 +77,8 @@
                         <input type="email" @bind="customerEmail" @bind:event="oninput" class="form-control" required />
                     </div>
                     <div class="form-group">
-                        <label>Phone</label>
-                        <input type="tel" @bind="customerPhone" @bind:event="oninput" class="form-control" />
+                        <label>Phone *</label>
+                        <input type="tel" @bind="customerPhone" @bind:event="oninput" class="form-control" required />
                     </div>
                     <div class="delivery-address-section">
                         <label>Delivery Address *</label>
@@ -91,6 +92,24 @@
                                 <input type="text" @bind="zipCode" @bind:event="oninput" class="form-control zip-input" placeholder="Zip Code" required />
                             </div>
                         </div>
+                        <div class="address-validation mt-2">
+                            <button type="button" class="btn btn-brand-orange btn-sm" @onclick="CheckDeliveryArea" 
+                                    disabled="@(string.IsNullOrWhiteSpace(streetAddress) || string.IsNullOrWhiteSpace(city) || string.IsNullOrWhiteSpace(zipCode))">
+                                Check Delivery Availability
+                            </button>
+                            @if (!string.IsNullOrEmpty(deliveryValidationMessage))
+                            {
+                                <div class="delivery-message mt-2 @deliveryValidationCssClass">
+                                    @deliveryValidationMessage
+                                </div>
+                            }
+                            @if (!isInDeliveryArea && !string.IsNullOrWhiteSpace(streetAddress) && !string.IsNullOrWhiteSpace(city) && !string.IsNullOrWhiteSpace(zipCode))
+                            {
+                                <div class="alert alert-info mt-2">
+                                    <small><i class="fas fa-info-circle"></i> Address verification required before checkout</small>
+                                </div>
+                            }
+                        </div>
                     </div>
                     <div class="form-group consent-section">
                         <div class="form-check">
@@ -103,7 +122,15 @@
                             You can unsubscribe at any time. Standard message and data rates may apply for text messages.
                         </small>
                     </div>
-                    <div class="button-container">
+                    
+                    @if (cartTotal < minimumOrder)
+                    {
+                        <div class="minimum-order-notice">
+                            $@((minimumOrder - cartTotal).ToString("F2")) more needed to reach the $@minimumOrder.ToString("F2") minimum for delivery.
+                        </div>
+                    }
+                    
+                    <div class="button-container" title="@GetProceedButtonTooltip()">
                         <button class="btn btn-primary" @onclick="ProceedToPayment" disabled="@(!IsCustomerInfoValid())">
                             Proceed to Payment
                         </button>
@@ -190,11 +217,50 @@
     private string selectedDeliveryDate = string.Empty;
     private List<DateTime> availableDeliveryDates = new();
     
-    // Address components
-    private string streetAddress = string.Empty;
-    private string city = string.Empty;
-    private string state = "Florida";
-    private string zipCode = string.Empty;
+    // Address components with validation reset
+    private string _streetAddress = string.Empty;
+    private string streetAddress
+    {
+        get => _streetAddress;
+        set
+        {
+            _streetAddress = value;
+            ResetAddressValidation();
+        }
+    }
+
+    private string _city = string.Empty;
+    private string city
+    {
+        get => _city;
+        set
+        {
+            _city = value;
+            ResetAddressValidation();
+        }
+    }
+
+    private string _state = "Florida";
+    private string state
+    {
+        get => _state;
+        set
+        {
+            _state = value;
+            ResetAddressValidation();
+        }
+    }
+
+    private string _zipCode = string.Empty;
+    private string zipCode
+    {
+        get => _zipCode;
+        set
+        {
+            _zipCode = value;
+            ResetAddressValidation();
+        }
+    }
     
     private bool consentToUpdates = false;
     private bool isProcessing = false;
@@ -202,6 +268,14 @@
     private string errorMessage = string.Empty;
     private string successMessage = string.Empty;
     private string orderConfirmation = string.Empty;
+    
+    // Delivery validation properties
+    private string deliveryValidationMessage = string.Empty;
+    private bool isInDeliveryArea = false;
+    private string deliveryValidationCssClass = string.Empty;
+    
+    private const decimal minimumOrder = 35.00m;
+    private decimal cartTotal => Cart?.Items?.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0) ?? 0m;
 
     protected override void OnInitialized()
     {
@@ -223,6 +297,20 @@
         if (!string.IsNullOrEmpty(OrderContext.Address))
         {
             ParseAddressFromContext(OrderContext.Address);
+            
+            // Check if this address has already been validated on another page
+            if (DeliveryValidation.IsAddressAlreadyValidated(OrderContext.Address))
+            {
+                isInDeliveryArea = DeliveryValidation.LastValidationResult?.IsInDeliveryArea ?? false;
+                deliveryValidationMessage = DeliveryValidation.LastValidationResult?.Message ?? string.Empty;
+                deliveryValidationCssClass = DeliveryValidation.LastValidationResult?.ResultType switch
+                {
+                    "success" => "alert alert-success",
+                    "warning" => "alert alert-warning", 
+                    "error" => "alert alert-danger",
+                    _ => string.Empty
+                };
+            }
         }
     }
 
@@ -268,7 +356,29 @@
                !string.IsNullOrWhiteSpace(streetAddress) &&
                !string.IsNullOrWhiteSpace(city) &&
                !string.IsNullOrWhiteSpace(zipCode) &&
-               !string.IsNullOrWhiteSpace(SelectedDeliveryDate);
+               !string.IsNullOrWhiteSpace(SelectedDeliveryDate) &&
+               cartTotal >= minimumOrder &&
+               isInDeliveryArea; // Require address validation
+    }
+
+    private string GetProceedButtonTooltip()
+    {
+        if (cartTotal < minimumOrder)
+            return $"${minimumOrder:F2} minimum order required for delivery";
+        
+        if (string.IsNullOrWhiteSpace(customerName) || 
+            string.IsNullOrWhiteSpace(customerEmail) ||
+            !customerEmail.Contains("@") ||
+            string.IsNullOrWhiteSpace(streetAddress) ||
+            string.IsNullOrWhiteSpace(city) ||
+            string.IsNullOrWhiteSpace(zipCode) ||
+            string.IsNullOrWhiteSpace(SelectedDeliveryDate))
+            return "Please fill in all required fields";
+        
+        if (!isInDeliveryArea)
+            return "Please verify your delivery address using the 'Check Delivery Area' button";
+        
+        return "";
     }
 
     private string SelectedDeliveryDate
@@ -288,6 +398,12 @@
 
     private void ProceedToPayment()
     {
+        if (cartTotal < minimumOrder)
+        {
+            errorMessage = $"${minimumOrder:F2} minimum order required for delivery. Please add more items to your cart.";
+            return;
+        }
+        
         if (!IsCustomerInfoValid())
         {
             errorMessage = "Please fill in all required fields.";
@@ -420,5 +536,43 @@
             isProcessing = false;
             StateHasChanged();
         }
+    }
+
+    private async Task CheckDeliveryArea()
+    {
+        try
+        {
+            var fullAddress = $"{streetAddress}, {city}, {state} {zipCode}";
+            var result = await DeliveryValidation.ValidateDeliveryAddress(fullAddress);
+            
+            isInDeliveryArea = result.IsInDeliveryArea;
+            deliveryValidationMessage = result.Message;
+            
+            // Set CSS class based on result type
+            deliveryValidationCssClass = result.ResultType switch
+            {
+                "success" => "alert alert-success",
+                "warning" => "alert alert-warning", 
+                "error" => "alert alert-danger",
+                _ => "alert alert-info"
+            };
+            
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            deliveryValidationMessage = $"Error checking delivery area: {ex.Message}";
+            deliveryValidationCssClass = "alert alert-danger";
+            isInDeliveryArea = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ResetAddressValidation()
+    {
+        // Reset validation state when address changes
+        isInDeliveryArea = false;
+        deliveryValidationMessage = string.Empty;
+        deliveryValidationCssClass = string.Empty;
     }
 }

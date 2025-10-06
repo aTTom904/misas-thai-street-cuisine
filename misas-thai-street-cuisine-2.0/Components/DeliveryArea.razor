@@ -1,7 +1,9 @@
 
+@using OneOf.Types
 @using misas_thai_street_cuisine_2._0.Components
 @using Microsoft.AspNetCore.Components.Forms
 @inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
+@inject misas_thai_street_cuisine_2._0.Services.DeliveryValidationService DeliveryValidation
 
 <div class="delivery-area-section">
     <div class="delivery-area-columns">
@@ -11,7 +13,7 @@
         <div class="delivery-area-form-col">
             <h2 class="delivery-title">Delivery Areas</h2>
             <p class="delivery-desc">
-                Enter your address to see if you qualify for free delivery—or just a small fee if you're a little farther out.
+                Enter your address to see if you qualify for free delivery. We’re currently serving select areas in St. Johns, FL — and expanding soon based on demand!
             </p>
             <EditForm Model="this" OnValidSubmit="OnSubmit">
                 <div class="delivery-form-row">
@@ -70,33 +72,15 @@
 
     [Inject] private IJSRuntime JS { get; set; } = default!;
 
-    // Set your static route addresses here
-    private const string RouteStartAddress = "1301 N Orange Ave Suite 102, Green Cove Springs, FL 32043";
-    private const string RouteEndAddress = "850 Beacon Lake Pkwy, St. Augustine, FL 32095";
-    private const double BufferMiles = 5.0;
-
     private async Task OnSubmit()
     {
         var userAddress = $"{Street}, {City}, {State} {ZipCode}";
         OrderContext.Address = userAddress;
-        var userLocation = await JS.InvokeAsync<LatLngResult>("geocodeAddress", userAddress);
-        if (userLocation == null)
-        {
-            ResultType = "error";
-            ResultMessage = "Could not find your address. Please check your input.";
-            return;
-        }
-        // Check if user is within buffer of the static route
-        var isNearRoute = await JS.InvokeAsync<bool>("isPointNearRoute", RouteStartAddress, RouteEndAddress, userLocation.lat, userLocation.lng, BufferMiles);
-        if (isNearRoute)
-        {
-            ResultType = "success";
-            ResultMessage = $"Great news! You're within our free delivery corridor.";
-        }
-        else
-        {
-            ResultType = "warning";
-            ResultMessage = $"You're outside our free delivery corridor. An extra charge may apply.";
-        }
+        
+        // Use the shared delivery validation service
+        var result = await DeliveryValidation.ValidateDeliveryAddress(userAddress);
+        
+        ResultType = result.ResultType;
+        ResultMessage = result.Message;
     }
 }

@@ -75,6 +75,20 @@
     margin-top: 1rem;
     font-weight: 500;
 }
+.delivery-time-sub-text {
+    font-size: 0.85rem;
+    text-align: center;
+    color: #888;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 0.2rem;
+}
+.minimum-order-text {
+    font-size: 0.9rem;
+    color: #ee6900;
+    font-weight: 600;
+    margin-top: 8px;
+    text-align: center;
+}
 .menu-title-block {
     flex: 1;
     text-align: left;

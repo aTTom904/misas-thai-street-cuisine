@@ -124,7 +124,7 @@ h3 {
     text-shadow: 1px 1px 4px #ee690055;
 }
 
-.finish-up-btn {
+.finish-up-btn, .keep-shopping-btn {
     font-size: 1rem;
     color: #fff;
     background-color: #ee6900;
@@ -134,12 +134,43 @@ h3 {
     cursor: pointer;
     box-shadow: 0 2px 8px #ee690055;
     transition: background 0.2s, box-shadow 0.2s;
-    margin-top: 1rem;
 }
-    .finish-up-btn:hover {
+    .finish-up-btn:hover:not(.disabled), .keep-shopping-btn:hover {
         background: #ff9800;
         box-shadow: 0 4px 16px #ee690088;
     }
+    
+    .finish-up-btn.disabled {
+        background-color: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+
+.minimum-order-notice {
+    font-size: 1rem;
+    color: #ee6900;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background-color: #fff7f0;
+    border: 2px solid #ee6900;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.cart-buttons-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.finish-up-container {
+    position: relative;
+}
 
 @media (max-width: 700px) {
     .cart-container {
@@ -166,8 +197,16 @@ h3 {
     .price-highlight {
         font-size: 1.2rem;
     }
-    .finalize-btn {
+    .cart-buttons-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .keep-shopping-btn,
+    .finish-up-btn {
         font-size: 1rem;
         padding: 10px 30px;
+        width: 100%;
+        max-width: 250px;
     }
 }

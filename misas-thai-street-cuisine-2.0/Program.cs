@@ -24,6 +24,7 @@ builder.Services.AddMudServices();
 builder.Services.AddSingleton<MenuData>();
 builder.Services.AddScoped<SquarePaymentService>();
 builder.Services.AddScoped<OrderApiService>();
+builder.Services.AddScoped<DeliveryValidationService>();
 
 var app = builder.Build();
 

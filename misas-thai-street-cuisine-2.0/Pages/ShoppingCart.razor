@@ -47,20 +47,53 @@
             }
         }
 
-        <h4 class="total-price">Total Price: <span class="price-highlight">$@Cart.Items.Where(i => i != null).Sum(i => i.GetTotalPrice())</span></h4>
-        <button type="submit" @onclick="OnFinishUpClicked" class="finish-up-btn">Finish Up</button>
+        <h4 class="total-price">Total Price: <span class="price-highlight">$@cartTotal.ToString("F2")</span></h4>
+        
+        @if (cartTotal < minimumOrder)
+        {
+            <div class="minimum-order-notice">
+                $@((minimumOrder - cartTotal).ToString("F2")) more needed to reach the $@minimumOrder.ToString("F2") minimum for delivery.
+            </div>
+        }
+        
+        <div class="cart-buttons-container">
+            <button type="button" 
+                    @onclick="OnKeepShoppingClicked" 
+                    class="keep-shopping-btn">
+                Keep Shopping
+            </button>
+            
+            <div class="finish-up-container" title="@(cartTotal < minimumOrder ? $"${minimumOrder:F2} minimum order required for delivery" : "")">
+                <button type="submit" 
+                        @onclick="OnFinishUpClicked" 
+                        class="finish-up-btn @(cartTotal < minimumOrder ? "disabled" : "")"
+                        disabled="@(cartTotal < minimumOrder)">
+                    Finish Up
+                </button>
+            </div>
+        </div>
     }
 </div>
 
 @code {
+    private const decimal minimumOrder = 35.00m;
+    private decimal cartTotal => Cart?.Items?.Where(i => i != null).Sum(i => i.GetTotalPrice()) ?? 0m;
+
     private void OnCartChanged()
     {
         StateHasChanged();
     }
 
+    private void OnKeepShoppingClicked()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
     private void OnFinishUpClicked()
     {
-        @* JS.InvokeVoidAsync("alert", "Not currently accepting orders"); *@
-        NavigationManager.NavigateTo("/FinalizeOrder");
+        if (cartTotal >= minimumOrder)
+        {
+            NavigationManager.NavigateTo("/FinalizeOrder");
+        }
     }
 }
