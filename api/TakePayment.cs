@@ -1,11 +1,10 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using Newtonsoft.Json;
 using Square;
 using Square.Models;
@@ -17,11 +16,12 @@ namespace MisasThaiStreetCuisine.Function
 {
     public static class TakePayment
     {
-        [FunctionName("TakePayment")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
-            ILogger log)
+        [Function("TakePayment")]
+        public static async Task<HttpResponseData> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequestData req,
+            FunctionContext executionContext)
         {
+            var log = executionContext.GetLogger("TakePayment");
             log.LogInformation("Processing payment request...");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -31,7 +31,9 @@ namespace MisasThaiStreetCuisine.Function
             if (string.IsNullOrEmpty(accessToken))
             {
                 log.LogError("Square credentials missing.");
-                return new BadRequestObjectResult(new { success = false, error = "Square credentials missing." });
+                var response = req.CreateResponse(HttpStatusCode.BadRequest);
+                await response.WriteAsJsonAsync(new { success = false, error = "Square credentials missing." });
+                return response;
             }
 
             try
@@ -60,21 +62,27 @@ namespace MisasThaiStreetCuisine.Function
                     // Send email notification
                     await SendOrderConfirmationEmail(orderRequest, response.Payment.Id, log);
                     
-                    return new OkObjectResult(new { 
+                    var successResponse = req.CreateResponse(HttpStatusCode.OK);
+                    await successResponse.WriteAsJsonAsync(new { 
                         success = true, 
                         orderNumber = response.Payment.Id, 
                         message = "Payment processed successfully." 
                     });
+                    return successResponse;
                 }
                 else
                 {
-                    return new BadRequestObjectResult(new { success = false, error = "Payment failed.", details = response.Errors });
+                    var failResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                    await failResponse.WriteAsJsonAsync(new { success = false, error = "Payment failed.", details = response.Errors });
+                    return failResponse;
                 }
             }
             catch (Exception ex)
             {
                 log.LogError(ex, "Error processing payment.");
-                return new BadRequestObjectResult(new { success = false, error = ex.Message });
+                var errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
+                await errorResponse.WriteAsJsonAsync(new { success = false, error = ex.Message });
+                return errorResponse;
             }
         }
 
