@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Square;
-using Square.Payments;
+using Square.Models;
+using Square.Authentication;
 using Azure.Communication.Email;
 using System.Linq;
 
@@ -27,7 +28,7 @@ namespace MisasThaiStreetCuisine.Function
             var orderRequest = JsonConvert.DeserializeObject<CreateOrderRequest>(requestBody);
             log.LogInformation("Request: " + JsonConvert.SerializeObject(orderRequest));
 
-            var accessToken = Environment.GetEnvironmentVariable("Square__AccessToken");
+            var accessToken = System.Environment.GetEnvironmentVariable("Square__AccessToken");
             log.LogInformation("Square Access Token: " + (string.IsNullOrEmpty(accessToken) ? "null or empty" : accessToken));
             if (string.IsNullOrEmpty(accessToken))
             {
@@ -37,28 +38,26 @@ namespace MisasThaiStreetCuisine.Function
 
             try
             {
-                var client = new SquareClient(
-                    token: accessToken,
-                    clientOptions: new ClientOptions{
-                        BaseUrl = SquareEnvironment.Sandbox
-                    }
-                );
+                var client = new SquareClient.Builder()
+                    .BearerAuthCredentials(
+                        new BearerAuthModel.Builder(accessToken).Build()
+                    )
+                    .Environment(Square.Environment.Sandbox)
+                    .Build();
                 log.LogInformation("Square client initialized with access token: " + (string.IsNullOrEmpty(accessToken) ? "null or empty" : accessToken));
 
-                var money = new Money
-                {
-                    Amount = (long)(orderRequest.Total * 100),
-                    Currency = Currency.Usd
-                };
+                var money = new Money(
+                    amount: (long)(orderRequest.Total * 100),
+                    currency: "USD"
+                );
 
-                var paymentRequest = new CreatePaymentRequest
-                {
-                    SourceId = orderRequest.PaymentToken,
-                    IdempotencyKey = Guid.NewGuid().ToString(),
-                    AmountMoney = money,
-                };
+                var paymentRequest = new CreatePaymentRequest(
+                    sourceId: orderRequest.PaymentToken,
+                    idempotencyKey: Guid.NewGuid().ToString(),
+                    amountMoney: money
+                );
 
-                var response = await client.Payments.CreateAsync(paymentRequest);
+                var response = await client.PaymentsApi.CreatePaymentAsync(paymentRequest);
                 if (response.Payment != null && response.Payment.Status == "COMPLETED")
                 {
                     // Send email notification
@@ -86,9 +85,9 @@ namespace MisasThaiStreetCuisine.Function
         {
             try
             {
-                var connectionString = Environment.GetEnvironmentVariable("AzureCommunicationServices__ConnectionString");
-                var fromEmail = Environment.GetEnvironmentVariable("AzureCommunicationServices__FromEmail");
-                var replyToEmail = Environment.GetEnvironmentVariable("AzureCommunicationServices__ReplyToEmail");
+                var connectionString = System.Environment.GetEnvironmentVariable("AzureCommunicationServices__ConnectionString");
+                var fromEmail = System.Environment.GetEnvironmentVariable("AzureCommunicationServices__FromEmail");
+                var replyToEmail = System.Environment.GetEnvironmentVariable("AzureCommunicationServices__ReplyToEmail");
                 
                 if (string.IsNullOrEmpty(connectionString) || string.IsNullOrEmpty(fromEmail))
                 {
@@ -125,7 +124,7 @@ namespace MisasThaiStreetCuisine.Function
                 log.LogInformation($"Customer email sent successfully. Status: {customerEmailResult.GetRawResponse().Status}");
 
                 // Send to restaurant (optional)
-                var restaurantEmail = Environment.GetEnvironmentVariable("Restaurant__NotificationEmail");
+                var restaurantEmail = System.Environment.GetEnvironmentVariable("Restaurant__NotificationEmail");
                 if (!string.IsNullOrEmpty(restaurantEmail))
                 {
                     var restaurantMessage = new EmailMessage(
