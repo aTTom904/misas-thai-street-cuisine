@@ -4,7 +4,7 @@
 
 <div class="menu-modal-overlay" @onclick="OnOverlayClick">
     <div class="menu-modal" @onclick:stopPropagation>
-        <button class="menu-modal-close" @onclick="OnClose">&times;</button>
+        <button class="menu-modal-close" @onclick="OnClose" @onclick:stopPropagation>&times;</button>
         @if (MenuItem != null)
         {
             <div class="menu-modal-img-block">
@@ -86,8 +86,8 @@
                 @ChildContent
                 
                 <div class="modal-actions-section">
-                    <button class="modal-keep-shopping-btn" @onclick="OnClose">Keep Shopping</button>
-                    <button class="modal-checkout-btn" @onclick="GoToCart">Check Out</button>
+                    <button class="modal-keep-shopping-btn" @onclick="OnClose" @onclick:stopPropagation>Keep Shopping</button>
+                    <button class="modal-checkout-btn" @onclick="GoToCart" @onclick:stopPropagation>Check Out</button>
                 </div>
             </div>
         }
