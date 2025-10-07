@@ -42,6 +42,7 @@
     line-height: 1;
     margin: 0 0 1rem 0;
     text-shadow: 2px 2px 8px #00000022;
+    outline: none;
 }
 
 .hero-subtitle {
