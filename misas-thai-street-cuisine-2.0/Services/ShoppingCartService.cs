@@ -9,11 +9,22 @@ namespace misas_thai_street_cuisine_2._0.Services
 
         public void AddItem(CartItem cartItem)
         {
-            Items.RemoveAll(i =>
+            // Find existing item with same name, category, and serves
+            var existingItemIndex = Items.FindIndex(i =>
                 i.Item.Name == cartItem.Item.Name &&
                 i.Item.Category == cartItem.Item.Category &&
                 i.SelectedServes == cartItem.SelectedServes);
-            Items.Add(cartItem);
+
+            if (existingItemIndex >= 0)
+            {
+                // Replace existing item at the same position to preserve order
+                Items[existingItemIndex] = cartItem;
+            }
+            else
+            {
+                // Add new item to the end
+                Items.Add(cartItem);
+            }
             OnItemAddedOrRemoved();
         }
 
