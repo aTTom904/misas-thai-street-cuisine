@@ -54,7 +54,7 @@
     {
         <div id="mobile-nav-wrapper" @onclick="() => isMobileMenuVisible = false" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999;">
             <div class="mobile-nav slide-down" style="position: absolute; left:@(mobileMenuX)px; top:@(mobileMenuY)px;" @onclick:stopPropagation="true">
-                <a href="/gallery" @onclick="() => isMobileMenuVisible = false">Gallery</a>
+                @* <a href="/gallery" @onclick="() => isMobileMenuVisible = false">Gallery</a> *@
                 <a href="/about" @onclick="() => isMobileMenuVisible = false">About</a>
                 <a href="/contact" @onclick="() => isMobileMenuVisible = false">Contact</a>
             </div>
@@ -64,18 +64,18 @@
     <div class="main-content" @onclick="() => isMobileMenuVisible = false">
         @Body
     </div>
-</div>
 
-<footer class="footer">
-    <div class="footer-left">
-        <p>&copy; @DateTime.Now.Year Misa's Thai Street Cuisine</p>
-    </div>
-    <div class="footer-right">
-        <a href="https://www.facebook.com/misasthaistreetcuisine" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="mailto:msthaistreetcuisine@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-    </div>
-</footer>
+    <footer class="footer">
+        <div class="footer-left">
+            <p>&copy; @DateTime.Now.Year Misa's Thai Street Cuisine</p>
+        </div>
+        <div class="footer-right">
+            <a href="https://www.facebook.com/misasthaistreetcuisine" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="mailto:msthaistreetcuisine@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+    </footer>
+</div>
 
 
 
