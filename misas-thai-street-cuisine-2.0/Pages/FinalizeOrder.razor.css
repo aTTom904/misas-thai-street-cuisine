@@ -36,6 +36,17 @@
     font-weight: bold;
     color: #333;
 }
+.item-serves {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+.item-upgrade {
+    font-size: 0.875rem;
+    color: #ee6900;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
 .item-price {
     color: #666;
     font-size: 0.9rem;

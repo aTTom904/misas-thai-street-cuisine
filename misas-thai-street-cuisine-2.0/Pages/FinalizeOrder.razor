@@ -28,7 +28,18 @@
                                     <div class="cart-item">
                                         <div class="item-info">
                                             <span class="item-name">@item.Item.Name</span>
-                                            <span class="item-price">$@item.GetUnitPrice().ToString("F2")</span>
+                                            @if (item.SelectedServes.HasValue)
+                                            {
+                                                <span class="item-serves">Serves @item.SelectedServes</span>
+                                            }
+                                            @if (item.UpgradePhadThai24Qty > 0)
+                                            {
+                                                <span class="item-upgrade">@item.UpgradePhadThai24Qty x swap Pad Thai (24oz)</span>
+                                            }
+                                            @if (item.UpgradePhadThai48Qty > 0)
+                                            {
+                                                <span class="item-upgrade">@item.UpgradePhadThai48Qty x swap Pad Thai (48oz)</span>
+                                            }
                                         </div>
                                         <div class="item-quantity">Qty: @item.Quantity</div>
                                         <div class="item-total">$@(item.GetTotalPrice().ToString("F2"))</div>
