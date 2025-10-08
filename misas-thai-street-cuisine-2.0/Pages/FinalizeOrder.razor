@@ -554,23 +554,23 @@
             var initResult = await PaymentService.InitializeAsync();
             if (!initResult.Success)
             {
-                errorMessage = $"Failed to initialize payments: {initResult.Error}";
+                errorMessage = "Failed to initialize payments";
                 StateHasChanged();
                 return;
             }
             var cardResult = await PaymentService.InitializeCardAsync("card-container");
             if (!cardResult.Success)
             {
-                errorMessage = $"Failed to initialize card form: {cardResult.Error}";
+                errorMessage = "Failed to initialize card form";
                 StateHasChanged();
-                return;
-            }
+                    return;
+                }
             isPaymentInitialized = true;
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error initializing payments: {ex.Message}";
+            errorMessage = "Error initializing payments";
             StateHasChanged();
         }
     }
@@ -625,14 +625,14 @@
                     else
                     {
                         // Payment tokenized but API failed
-                        errorMessage = $"Payment processing failed: {apiResult.Error ?? "Unable to process payment with Square. Please try again or contact support."}";
+                        errorMessage = $"Payment processing failed. Please try again or contact support.";
                         return;
                     }
                 }
                 catch (Exception ex)
                 {
                     // Payment tokenized but API threw exception
-                    errorMessage = $"Payment processing failed: {ex.Message}. Please try again or contact support.";
+                    errorMessage = $"Payment processing failed. Please try again or contact support.";
                     return;
                 }
             }
@@ -640,13 +640,13 @@
             {
                 // Card tokenization failed
                 var errors = tokenResult.Errors != null ? string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : tokenResult.Error ?? "Unknown card validation error";
-                errorMessage = $"Card validation failed: {errors}. Please check your card information and try again.";
+                errorMessage = "Card validation failed: Please check your card information and try again.";
                 return;
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error processing payment: {ex.Message}";
+            errorMessage = $"Error processing payment.";
         }
         finally
         {
