@@ -55,14 +55,29 @@
                         }
                     </div>
                     <div class="total-section">
-                        <strong>Total: $@((Cart?.Items?.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0) ?? 0).ToString("F2"))</strong>
+                        @if (tipAmount > 0)
+                        {
+                            <div class="subtotal-line">
+                                <span>Subtotal: $@(cartTotal.ToString("F2"))</span>
+                            </div>
+                            <div class="tip-line">
+                                <span>Tip: $@(tipAmount.ToString("F2"))</span>
+                            </div>
+                            <div class="total-line">
+                                <strong>Total: $@(GetTotalWithTip().ToString("F2"))</strong>
+                            </div>
+                        }
+                        else
+                        {
+                            <strong>Total: $@(cartTotal.ToString("F2"))</strong>
+                        }
                     </div>
                 </div>
             }
 
             @if (currentStep == 0)
             {
-                <!-- Customer Information Step -->
+                <!-- Customer Information Step --> 
                 <div class="customer-info">
                     <h4>Customer Information</h4>
                     @if (!string.IsNullOrEmpty(errorMessage))
@@ -176,16 +191,57 @@
                         <label>Card Information</label>
                         <div id="card-container" style="min-height: 60px; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background-color: #f8f9fa;"></div>
                     </div>
+                    <div class="tip-section">
+                        <h5>Add a Tip</h5>
+                        <div class="tip-percentage-row">
+                            <button type="button" class="tip-btn @(selectedTipType == "percentage" && selectedTipPercentage == 15 ? "active" : "")" 
+                                    @onclick="() => SelectPercentageTip(15)">
+                                15%<br />
+                                <small>$@(CalculatePercentageTip(15).ToString("F2"))</small>
+                            </button>
+                            <button type="button" class="tip-btn @(selectedTipType == "percentage" && selectedTipPercentage == 20 ? "active" : "")" 
+                                    @onclick="() => SelectPercentageTip(20)">
+                                20%<br />
+                                <small>$@(CalculatePercentageTip(20).ToString("F2"))</small>
+                            </button>
+                            <button type="button" class="tip-btn @(selectedTipType == "percentage" && selectedTipPercentage == 25 ? "active" : "")" 
+                                    @onclick="() => SelectPercentageTip(25)">
+                                25%<br />
+                                <small>$@(CalculatePercentageTip(25).ToString("F2"))</small>
+                            </button>
+                        </div>
+                        <div class="tip-custom-row">
+                            <div class="custom-tip-container">
+                                <div class="currency-input-wrapper @(selectedTipType == "custom" ? "active" : "")" @onclick="SelectCustomTip">
+                                    @if (selectedTipType == "custom")
+                                    {
+                                        <span class="currency-symbol">$</span>
+                                        <input type="number" @bind="customTipAmount" @bind:event="oninput" @ref="customTipInputRef"
+                                               class="custom-tip-input active" 
+                                               step="0.01" min="0" max="999.99" />
+                                    }
+                                    else
+                                    {
+                                        <span class="custom-amount-text">Custom Amount</span>
+                                    }
+                                </div>
+                            </div>
+                            <button type="button" class="tip-btn no-tip @(selectedTipType == "none" ? "active" : "")" 
+                                    @onclick="SelectNoTip">
+                                No Tip
+                            </button>
+                        </div>
+                    </div>
                     <div class="payment-buttons">
                         <button class="btn btn-secondary me-2" @onclick="BackToCustomerInfo" disabled="@isProcessing">
                             Back
                         </button>
-                        <button class="complete-order-btn btn btn-success" @onclick="ProcessPayment" disabled="@isProcessing">
+                        <button class="complete-order-btn btn btn-primary" @onclick="ProcessPayment" disabled="@isProcessing">
                             @if (isProcessing)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            Complete Order - $@((Cart?.Items?.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0) ?? 0).ToString("F2"))
+                            Complete Order: $@(GetTotalWithTip().ToString("F2"))
                         </button>
                     </div>
                 </div>
@@ -227,8 +283,56 @@
     private string deliveryDateDisplay = string.Empty;
     private string selectedDeliveryDate = string.Empty;
     private List<DateTime> availableDeliveryDates = new();
-    
-    // Address components with validation reset
+    private string selectedTipType = "none";
+    private int selectedTipPercentage = 0;
+    private decimal customTipAmount = 0;
+    private ElementReference? customTipInputRef;
+    private decimal tipAmount => selectedTipType switch
+    {
+        "percentage" => CalculatePercentageTip(selectedTipPercentage),
+        "custom" => customTipAmount,
+        _ => 0
+    };
+
+    private decimal CalculatePercentageTip(int percentage)
+    {
+        return cartTotal * (percentage / 100.0m);
+    }
+
+    private decimal GetTotalWithTip()
+    {
+        return cartTotal + tipAmount;
+    }
+
+    private void SelectPercentageTip(int percentage)
+    {
+        selectedTipType = "percentage";
+        selectedTipPercentage = percentage;
+        customTipAmount = 0;
+        StateHasChanged();
+    }
+
+    private async Task SelectCustomTip()
+    {
+        selectedTipType = "custom";
+        selectedTipPercentage = 0;
+        StateHasChanged();
+        
+        // Focus the input after the DOM updates
+        await Task.Delay(50);
+        if (customTipInputRef.HasValue)
+        {
+            await customTipInputRef.Value.FocusAsync();
+        }
+    }
+
+    private void SelectNoTip()
+    {
+        selectedTipType = "none";
+        selectedTipPercentage = 0;
+        customTipAmount = 0;
+        StateHasChanged();
+    }
     private string _streetAddress = string.Empty;
     private string streetAddress
     {
@@ -495,7 +599,7 @@
                     DeliveryDate = deliveryDateDisplay,
                     CustomerPhone = customerPhone ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
-                    Total = Cart?.Items?.Where(i => i != null).Sum(i => i?.GetTotalPrice() ?? 0) ?? 0,
+                    Total = GetTotalWithTip(),
                     PaymentToken = tokenResult.Token,
                     Items = Cart?.Items?.Where(i => i != null && i.Item != null).Select(item => new OrderItemRequest
                     {
@@ -515,6 +619,8 @@
                         successMessage = "Payment processed and order saved successfully!";
                         Cart?.ClearCart();
                         currentStep = 2;
+                        StateHasChanged();
+                        return;
                     }
                     else
                     {
