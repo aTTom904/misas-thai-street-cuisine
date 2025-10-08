@@ -61,6 +61,22 @@
     margin-top: 1rem;
     font-size: 1.2rem;
 }
+
+.subtotal-line, .tip-line {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    color: #666;
+    font-size: 1rem;
+}
+
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #ddd;
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
 .customer-info, .payment-section {
     background: white;
     padding: 2.5rem;
@@ -73,6 +89,7 @@
 }
 .form-group label {
     font-weight: bold;
+    font-size: 1.2rem;
     margin-bottom: 0.5rem;
     display: block;
     color: #333;
@@ -303,6 +320,161 @@
     text-align: center;
     padding: 3rem;
 }
+.tip-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.tip-section h5 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.tip-percentage-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tip-custom-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tip-custom-row > * {
+    flex: 0 0 calc((100% - 1rem) / 3);
+}
+
+.tip-btn {
+    padding: 0.5rem;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    color: #666;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    height: 48px; /* Match the custom input height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.tip-btn:hover {
+    border-color: #ee6900;
+    background-color: #fff5f0;
+}
+
+.tip-btn.active {
+    border-color: #ee6900;
+    background-color: #ee6900;
+    color: white;
+}
+
+.tip-btn.no-tip {
+    background-color: #f8f9fa;
+}
+
+.tip-btn.no-tip.active {
+    border-color: #6c757d;
+    background-color: #6c757d;
+    color: white;
+}
+
+.custom-tip-container {
+    display: flex;
+    align-items: center;
+}
+
+.currency-input-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: white;
+    transition: all 0.3s ease;
+    height: 48px; /* Match tip button height */
+    font-size: 0.85rem; /* Smaller text */
+    cursor: pointer;
+}
+
+.currency-input-wrapper:hover {
+    border-color: #ee6900;
+    background-color: #fff5f0;
+}
+
+.currency-input-wrapper:focus-within {
+    border-color: #ee6900;
+    box-shadow: 0 0 0 0.2rem rgba(238, 105, 0, 0.25);
+}
+
+.currency-input-wrapper.active {
+    border-color: #ee6900;
+}
+
+/* .currency-input-wrapper.active .currency-symbol {
+    color: white;
+}
+
+.currency-input-wrapper.active .custom-tip-input {
+    color: white;
+}
+
+.currency-input-wrapper.active .custom-amount-text {
+    color: rgba(255, 255, 255, 0.8);
+} */
+
+.currency-symbol {
+    padding-left: 0.75rem;
+    font-weight: 500;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.custom-amount-text {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    color: #999;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.custom-tip-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0.5rem;
+    font-weight: 500;
+    text-align: left;
+    color: #666;
+    appearance: textfield;
+    -moz-appearance: textfield; 
+    font-size: 0.9rem;
+}
+
+/* Remove spinner arrows in Webkit browsers */
+.custom-tip-input::-webkit-outer-spin-button,
+.custom-tip-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+
 #card-container {
     background-color: #f8f9fa !important;
     border: 2px solid #ddd !important;
@@ -327,5 +499,35 @@
     
     .customer-info, .payment-section {
         padding: 1.5rem;
+    }
+
+    .tip-percentage-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .tip-custom-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
+    
+    .tip-custom-row > * {
+        flex: 1;
+    }
+    
+    .tip-btn {
+        min-height: 50px;
+        font-size: 0.9rem;
+    }
+    
+    .currency-input-wrapper {
+        height: 50px;
+    }
+    
+    .custom-amount-text {
+        font-size: 0.9rem;
+    }
+    .btn-success {
+        font-size: 0.8rem;
     }
 }
