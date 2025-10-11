@@ -39,26 +39,26 @@
                             <div class="cart-row">
                                 <span class="cart-label">Serves @serve</span>
                                 <span class="cart-price">$@platter.Prices[serve]</span>
-                                <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, -1)">−</button>
+                                <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, -1)">−</button>
                                 <span class="cart-qty">@match.Quantity</span>
-                                <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, 1)">+</button>
+                                <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, 1)">+</button>
                             </div>
                             @if (serve == 2)
                             {
                                 <div class="cart-upgrade-row">
                                     <span class="cart-upgrade-label"><b>Upgrade:</b> 24 oz Phad Thai - <b>add $9</b></span>
-                                    <button class="cart-upgrade-btn" @onclick="() => ChangeUpgradeQty(match, 2, -1)">−</button>
+                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, -1)">−</button>
                                     <span class="cart-qty">@match.UpgradePhadThai24Qty</span>
-                                    <button class="cart-upgrade-btn" @onclick="() => ChangeUpgradeQty(match, 2, 1)">+</button>
+                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, 1)">+</button>
                                 </div>
                             }
                             @if (serve == 4)
                             {
                                 <div class="cart-upgrade-row">
                                     <span class="cart-upgrade-label"><b>Upgrade:</b> 48 oz Phad Thai - <b>add $18</b></span>
-                                    <button class="cart-upgrade-btn" @onclick="() => ChangeUpgradeQty(match, 4, -1)">−</button>
+                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, -1)">−</button>
                                     <span class="cart-qty">@match.UpgradePhadThai48Qty</span>
-                                    <button class="cart-upgrade-btn" @onclick="() => ChangeUpgradeQty(match, 4, 1)">+</button>
+                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, 1)">+</button>
                                 </div>
                             }
                         }
@@ -74,9 +74,9 @@
                     <div class="cart-row">
                         <span class="cart-label">@side.Name</span>
                         <span class="cart-price">$@side.Price</span>
-                        <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, -1)">−</button>
+                        <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, -1)">−</button>
                         <span class="cart-qty">@match.Quantity</span>
-                        <button class="cart-btn" @onclick="() => ChangeCartItemQty(match, 1)">+</button>
+                        <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, 1)">+</button>
                     </div>
                 }
             }
@@ -90,34 +90,34 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public EventCallback OnCartChanged { get; set; }
 
-    private async void ChangeCartItemQty(CartItem match, int delta)
+    private async Task ChangeCartItemQty(CartItem match, int delta)
     {
         if (delta == 0 || match == null) return;
         if (delta > 0)
         {
             // Increment quantity, preserve upgrades
-            Cart.AddItem(new CartItem(match.Item, match.Quantity + 1, match.SelectedServes, match.UpgradePhadThai24Qty, match.UpgradePhadThai48Qty));
+            await Cart.AddItemAsync(new CartItem(match.Item, match.Quantity + 1, match.SelectedServes, match.UpgradePhadThai24Qty, match.UpgradePhadThai48Qty));
         }
         else if (delta < 0)
         {
-            Cart.RemoveItem(match);
+            await Cart.RemoveItemAsync(match);
         }
         await OnCartChanged.InvokeAsync();
     }
 
-    private async void ChangeUpgradeQty(CartItem match, int serve, int delta)
+    private async Task ChangeUpgradeQty(CartItem match, int serve, int delta)
     {
         if (match == null || delta == 0) return;
         int parentQty = match.Quantity;
         if (serve == 2 && parentQty > 0)
         {
             int newQty = Math.Max(0, Math.Min(parentQty, match.UpgradePhadThai24Qty + delta));
-            Cart.AddItem(new CartItem(match.Item, match.Quantity, match.SelectedServes, newQty, match.UpgradePhadThai48Qty));
+            await Cart.AddItemAsync(new CartItem(match.Item, match.Quantity, match.SelectedServes, newQty, match.UpgradePhadThai48Qty));
         }
         else if (serve == 4 && parentQty > 0)
         {
             int newQty = Math.Max(0, Math.Min(parentQty, match.UpgradePhadThai48Qty + delta));
-            Cart.AddItem(new CartItem(match.Item, match.Quantity, match.SelectedServes, match.UpgradePhadThai24Qty, newQty));
+            await Cart.AddItemAsync(new CartItem(match.Item, match.Quantity, match.SelectedServes, match.UpgradePhadThai24Qty, newQty));
         }
         await OnCartChanged.InvokeAsync();
     }

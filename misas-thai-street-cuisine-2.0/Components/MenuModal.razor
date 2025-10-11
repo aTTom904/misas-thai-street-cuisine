@@ -40,9 +40,9 @@
                             <div class="cart-row">
                                 <span class="cart-label">Platter for @serve</span>
                                 <span class="cart-price">$@platter.Prices[serve]</span>
-                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, -1)">−</button>
+                                <button class="cart-btn" @onclick="async () => await ChangePlatterQty(serve, -1)">−</button>
                                 <span class="cart-qty">@GetPlatterQty(serve)</span>
-                                <button class="cart-btn" @onclick="() => ChangePlatterQty(serve, 1)">+</button>
+                                <button class="cart-btn" @onclick="async () => await ChangePlatterQty(serve, 1)">+</button>
                             </div>
                             
                             @* Always render upgrade rows, control visibility with CSS classes *@
@@ -51,9 +51,9 @@
                                 <div class="cart-upgrade-row @(GetPlatterQty(2) > 0 ? "slide-in" : "slide-out")">
                                     <div class="cart-upgrade-option">
                                         <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $9</b></span>
-                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai24(-1)">−</button>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(-1)">−</button>
                                         <span class="cart-qty">@PhadThai24Qty</span>
-                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai24(1)">+</button>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(1)">+</button>
                                     </div>
                                 </div>
                             }
@@ -62,9 +62,9 @@
                                 <div class="cart-upgrade-row @(GetPlatterQty(4) > 0 ? "slide-in" : "slide-out")">
                                     <div class="cart-upgrade-option">
                                         <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $18</b></span>
-                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai48(-1)">−</button>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(-1)">−</button>
                                         <span class="cart-qty">@PhadThai48Qty</span>
-                                        <button class="cart-upgrade-btn" @onclick="() => ChangePhadThai48(1)">+</button>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(1)">+</button>
                                     </div>
                                 </div>
                             }
@@ -77,9 +77,9 @@
                         <div class="cart-row">
                             <span class="cart-label">@side.Name</span>
                             <span class="cart-price">$@side.Price</span>
-                            <button class="cart-btn" @onclick="() => ChangeSideQty(-1)">−</button>
+                            <button class="cart-btn" @onclick="async () => await ChangeSideQty(-1)">−</button>
                             <span class="cart-qty">@SideQty</span>
-                            <button class="cart-btn" @onclick="() => ChangeSideQty(1)">+</button>
+                            <button class="cart-btn" @onclick="async () => await ChangeSideQty(1)">+</button>
                         </div>
                     </div>
                 }
@@ -145,13 +145,13 @@
         Navigation.NavigateTo("/cart");
     }
 
-    private void ChangeSideQty(int delta)
+    private async Task ChangeSideQty(int delta)
     {
         SideQty = Math.Max(0, SideQty + delta);
-        UpdateSideInCart();
+        await UpdateSideInCart();
     }
 
-    private void ChangePlatterQty(int serves, int delta)
+    private async Task ChangePlatterQty(int serves, int delta)
     {
         if (!PlatterQty.ContainsKey(serves))
             PlatterQty[serves] = 0;
@@ -162,7 +162,7 @@
         // If parent qty is zero, reset upgrades
         if (serves == 2 && PlatterQty[2] == 0) PhadThai24Qty = 0;
         if (serves == 4 && PlatterQty[4] == 0) PhadThai48Qty = 0;
-        UpdatePlatterInCart(serves);
+        await UpdatePlatterInCart(serves);
     }
 
     private int GetPlatterQty(int serves)
@@ -170,26 +170,26 @@
         return PlatterQty.ContainsKey(serves) ? PlatterQty[serves] : 0;
     }
 
-    private void ChangePhadThai24(int delta)
+    private async Task ChangePhadThai24(int delta)
     {
         int parentQty = GetPlatterQty(2);
         if (parentQty > 0)
         {
             PhadThai24Qty = Math.Max(0, Math.Min(parentQty, PhadThai24Qty + delta));
-            UpdatePlatterInCart(2);
+            await UpdatePlatterInCart(2);
         }
     }
-    private void ChangePhadThai48(int delta)
+    private async Task ChangePhadThai48(int delta)
     {
         int parentQty = GetPlatterQty(4);
         if (parentQty > 0)
         {
             PhadThai48Qty = Math.Max(0, Math.Min(parentQty, PhadThai48Qty + delta));
-            UpdatePlatterInCart(4);
+            await UpdatePlatterInCart(4);
         }
     }
     // Update or remove platter in cart for a given serve size
-    private void UpdatePlatterInCart(int serves)
+    private async Task UpdatePlatterInCart(int serves)
     {
         if (MenuItem is Platter platter)
         {
@@ -202,30 +202,30 @@
                 i.SelectedServes == serves).ToList();
             foreach (var match in matches)
             {
-                Cart.RemoveItem(match);
+                await Cart.RemoveAllAsync(match);
             }
             // Add a single CartItem with current qty and upgrades if qty > 0
             if (qty > 0)
             {
                 var cartItem = new CartItem(platter, qty, serves, upgrade24, upgrade48);
-                Cart.AddItem(cartItem);
+                await Cart.AddItemAsync(cartItem);
             }
         }
     }
 
     // Update or remove side dish in cart
-    private void UpdateSideInCart()
+    private async Task UpdateSideInCart()
     {
         if (MenuItem is SideDish side)
         {
             var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
             if (SideQty > 0)
             {
-                Cart.AddItem(new CartItem(side, SideQty));
+                await Cart.AddItemAsync(new CartItem(side, SideQty));
             }
             else if (match != null)
             {
-                Cart.RemoveItem(match);
+                await Cart.RemoveAllAsync(match);
             }
         }
     }
