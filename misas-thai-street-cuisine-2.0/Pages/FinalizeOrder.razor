@@ -1,4 +1,5 @@
 @page "/FinalizeOrder"
+@using System.Linq
 @using misas_thai_street_cuisine_2._0.Models
 @using misas_thai_street_cuisine_2._0.Services
 @inject ShoppingCartService Cart
@@ -101,10 +102,29 @@
                     <div class="form-group">
                         <label>Email *</label>
                         <input type="email" @bind="customerEmail" @bind:event="oninput" class="form-control" required />
+                        @if (!string.IsNullOrWhiteSpace(customerEmail) && !IsValidEmail(customerEmail))
+                        {
+                            <small class="text-danger">Please enter a valid email address</small>
+                        }
                     </div>
                     <div class="form-group">
                         <label>Phone *</label>
-                        <input type="tel" @bind="customerPhone" @bind:event="oninput" class="form-control" required />
+                        <input type="tel" @bind="customerPhone" @bind:event="oninput" 
+                               class="form-control" 
+                               pattern="[0-9\s\(\)\-\.]*" 
+                               title="Please enter a valid 10-digit phone number"
+                               maxlength="14"
+                               required />
+                        @if (!string.IsNullOrWhiteSpace(customerPhone) && !IsValidPhoneNumber(customerPhone))
+                        {
+                            <small class="text-danger">Please enter a valid 10-digit phone number</small>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label>Additional Information</label>
+                        <textarea @bind="additionalInformation" @bind:event="oninput" class="form-control additional-info-textarea" 
+                                  placeholder="Delivery instructions, allergy information, special requests, etc." 
+                                  rows="3"></textarea>
                     </div>
                     <div class="delivery-address-section">
                         <label>Delivery Address *</label>
@@ -184,6 +204,10 @@
                         @if (!string.IsNullOrEmpty(customerPhone))
                         {
                             <p><strong>Phone:</strong> @customerPhone</p>
+                        }
+                        @if (!string.IsNullOrEmpty(additionalInformation))
+                        {
+                            <p><strong>Additional Information:</strong> @additionalInformation</p>
                         }
                         <p><strong>Marketing Consent:</strong> @(consentToUpdates ? "Yes - will receive updates" : "No - will not receive updates")</p>
                     </div>
@@ -279,6 +303,7 @@
     private string customerName = string.Empty;
     private string customerEmail = string.Empty;
     private string customerPhone = string.Empty;
+    private string additionalInformation = string.Empty;
     private string deliveryAddress = string.Empty;
     private string deliveryDateDisplay = string.Empty;
     private string selectedDeliveryDate = string.Empty;
@@ -463,11 +488,46 @@
         deliveryAddress = $"{streetAddress}, {city}, {state} {zipCode}".Trim();
     }
 
+    private bool IsValidPhoneNumber(string phoneNumber)
+    {
+        if (string.IsNullOrWhiteSpace(phoneNumber))
+            return false;
+
+        // Remove all non-digit characters
+        string digitsOnly = new string(phoneNumber.Where(char.IsDigit).ToArray());
+        
+        // Check if it's exactly 10 digits
+        return digitsOnly.Length == 10;
+    }
+
+    private bool IsValidEmail(string email)
+    {
+        if (string.IsNullOrWhiteSpace(email))
+            return false;
+
+        // Basic email validation: contains @ and has text before and after @
+        var atIndex = email.IndexOf('@');
+        if (atIndex <= 0 || atIndex >= email.Length - 1)
+            return false;
+
+        // Check for only one @ symbol
+        if (email.LastIndexOf('@') != atIndex)
+            return false;
+
+        // Check for at least one dot after the @
+        var domainPart = email.Substring(atIndex + 1);
+        if (!domainPart.Contains('.') || domainPart.EndsWith('.'))
+            return false;
+
+        // Basic character validation (no spaces, basic valid email characters)
+        return !email.Contains(' ') && email.All(c => char.IsLetterOrDigit(c) || ".-_@".Contains(c));
+    }
+
     private bool IsCustomerInfoValid()
     {
         return !string.IsNullOrWhiteSpace(customerName) &&
-               !string.IsNullOrWhiteSpace(customerEmail) &&
-               customerEmail.Contains("@") &&
+               IsValidEmail(customerEmail) &&
+               IsValidPhoneNumber(customerPhone) &&
                !string.IsNullOrWhiteSpace(streetAddress) &&
                !string.IsNullOrWhiteSpace(city) &&
                !string.IsNullOrWhiteSpace(zipCode) &&
@@ -482,13 +542,17 @@
             return $"${minimumOrder:F2} minimum order required for delivery";
         
         if (string.IsNullOrWhiteSpace(customerName) || 
-            string.IsNullOrWhiteSpace(customerEmail) ||
-            !customerEmail.Contains("@") ||
             string.IsNullOrWhiteSpace(streetAddress) ||
             string.IsNullOrWhiteSpace(city) ||
             string.IsNullOrWhiteSpace(zipCode) ||
             string.IsNullOrWhiteSpace(SelectedDeliveryDate))
             return "Please fill in all required fields";
+        
+        if (!IsValidEmail(customerEmail))
+            return "Please enter a valid email address";
+            
+        if (!IsValidPhoneNumber(customerPhone))
+            return "Please enter a valid 10-digit phone number";
         
         if (!isInDeliveryArea)
             return "Please verify your delivery address using the 'Check Delivery Area' button";
@@ -598,6 +662,7 @@
                     DeliveryAddress = deliveryAddress,
                     DeliveryDate = deliveryDateDisplay,
                     CustomerPhone = customerPhone ?? string.Empty,
+                    AdditionalInformation = additionalInformation ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
                     Total = GetTotalWithTip(),
                     PaymentToken = tokenResult.Token,
