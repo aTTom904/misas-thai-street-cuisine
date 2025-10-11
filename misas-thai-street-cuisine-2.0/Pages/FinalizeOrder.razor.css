@@ -109,6 +109,12 @@
     outline: none;
 }
 
+.additional-info-textarea {
+    resize: vertical;
+    min-height: 80px;
+    max-height: 150px;
+}
+
 .delivery-date-display {
     background: #f8f9fa;
     color: #666;

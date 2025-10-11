@@ -12,7 +12,8 @@ public class OrderApiService
     {
         _httpClient = httpClient;
         _logger = logger;
-        _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://misas-thai-api.azurewebsites.net/api";
+        // _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://misas-thai-api.azurewebsites.net/api";
+        _apiBaseUrl = "http://localhost:7071/api";
     }
 
     public async Task<ApiResponse<OrderResponse>> CreateOrderAsync(CreateOrderRequest request)
@@ -139,6 +140,7 @@ public class CreateOrderRequest
     public string CustomerName { get; set; } = string.Empty;
     public string CustomerEmail { get; set; } = string.Empty;
     public string CustomerPhone { get; set; } = string.Empty;
+    public string AdditionalInformation { get; set; } = string.Empty;
     public bool ConsentToUpdates { get; set; }
     public string DeliveryAddress { get; set; } = string.Empty;
     public string DeliveryDate { get; set; } = string.Empty;

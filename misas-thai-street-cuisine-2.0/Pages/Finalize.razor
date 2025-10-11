@@ -71,6 +71,16 @@
                         <label>Phone</label>
                         <input type="tel" @bind="customerPhone" class="form-control" />
                     </div>
+                    
+                    <div class="form-group">
+                        <label>Additional Information</label>
+                        <textarea @bind="additionalInformation" class="form-control additional-info-textarea" 
+                                  placeholder="Delivery instructions, allergy information, special requests, etc." 
+                                  rows="3"></textarea>
+                        <small class="form-text text-muted">
+                            Optional: Include any special delivery instructions, allergy information, or other requests.
+                        </small>
+                    </div>
 
                     <div class="form-group consent-section">
                         <div class="form-check">
@@ -111,6 +121,10 @@
                         @if (!string.IsNullOrEmpty(customerPhone))
                         {
                             <p><strong>Phone:</strong> @customerPhone</p>
+                        }
+                        @if (!string.IsNullOrEmpty(additionalInformation))
+                        {
+                            <p><strong>Additional Information:</strong> @additionalInformation</p>
                         }
                         <p><strong>Marketing Consent:</strong> @(consentToUpdates ? "Yes - will receive updates" : "No - will not receive updates")</p>
                     </div>
@@ -169,6 +183,7 @@
     private string customerName = string.Empty;
     private string customerEmail = string.Empty;
     private string customerPhone = string.Empty;
+    private string additionalInformation = string.Empty;
     private bool consentToUpdates = false;
     
     // Payment State
@@ -287,6 +302,7 @@
                     CustomerName = customerName,
                     CustomerEmail = customerEmail,
                     CustomerPhone = customerPhone ?? string.Empty,
+                    AdditionalInformation = additionalInformation ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
                     Total = Cart.Items.Sum(i => i.GetTotalPrice()),
                     PaymentToken = tokenResult.Token,
