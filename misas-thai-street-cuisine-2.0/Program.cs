@@ -10,6 +10,11 @@ using Square.Locations;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+// Add configuration from wwwroot
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile($"appsettings.{builder.HostEnvironment.Environment}.json", optional: true, reloadOnChange: true);
+
 builder.Services.AddSingleton<OrderContextService>();
 builder.Services.AddSingleton<DeadlineService>();
 builder.RootComponents.Add<App>("#app");
@@ -26,6 +31,7 @@ builder.Services.AddScoped<MenuService>();
 builder.Services.AddScoped<SquarePaymentService>();
 builder.Services.AddScoped<OrderApiService>();
 builder.Services.AddScoped<DeliveryValidationService>();
+builder.Services.AddScoped<GoogleMapsConfigService>();
 
 var app = builder.Build();
 

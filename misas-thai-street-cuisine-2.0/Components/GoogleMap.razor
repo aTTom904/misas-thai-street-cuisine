@@ -1,7 +1,17 @@
 @using Microsoft.JSInterop
+@using misas_thai_street_cuisine_2._0.Services
+@inject GoogleMapsConfigService GoogleMapsConfig
 
 <div class="google-map-container">
     <div id="@MapId"></div>
+    @if (_isLoading)
+    {
+        <div class="map-loading">Loading map...</div>
+    }
+    @if (!string.IsNullOrEmpty(_errorMessage))
+    {
+        <div class="map-error text-danger">@_errorMessage</div>
+    }
 </div>
 
 @code {
@@ -13,6 +23,10 @@
     private double _prevLat;
     private double _prevLng;
     private string _mapId = "google-map-main";
+    private bool _initialized = false;
+    private bool _isLoading = true;
+    private string _errorMessage = string.Empty;
+
     protected override void OnInitialized()
     {
         if (string.IsNullOrEmpty(MapId))
@@ -20,19 +34,50 @@
             MapId = _mapId;
         }
     }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("initGoogleMap", MapId, Latitude, Longitude, Zoom);
-            _prevLat = Latitude;
-            _prevLng = Longitude;
+            try
+            {
+                _isLoading = true;
+                _errorMessage = string.Empty;
+                Console.WriteLine("GoogleMap: Starting to load Google Maps...");
+                
+                // Ensure Google Maps is loaded before initializing
+                await GoogleMapsConfig.LoadGoogleMapsAsync();
+                Console.WriteLine("GoogleMap: Google Maps script loaded, initializing map...");
+                
+                await JS.InvokeVoidAsync("initGoogleMap", MapId, Latitude, Longitude, Zoom);
+                _prevLat = Latitude;
+                _prevLng = Longitude;
+                _initialized = true;
+                _isLoading = false;
+                Console.WriteLine("GoogleMap: Map initialized successfully!");
+                StateHasChanged(); // Force UI update to hide loading message
+            }
+            catch (Exception ex)
+            {
+                _isLoading = false;
+                _errorMessage = $"Failed to load map: {ex.Message}";
+                Console.WriteLine($"Failed to initialize Google Maps: {ex.Message}");
+                Console.WriteLine($"Exception details: {ex}");
+            }
         }
-        else if (_prevLat != Latitude || _prevLng != Longitude)
+        else if (_initialized && (_prevLat != Latitude || _prevLng != Longitude))
         {
-            await JS.InvokeVoidAsync("updateGoogleMap", MapId, Latitude, Longitude);
-            _prevLat = Latitude;
-            _prevLng = Longitude;
+            try
+            {
+                await JS.InvokeVoidAsync("updateGoogleMap", MapId, Latitude, Longitude);
+                _prevLat = Latitude;
+                _prevLng = Longitude;
+            }
+            catch (Exception ex)
+            {
+                _errorMessage = $"Failed to update map: {ex.Message}";
+                Console.WriteLine($"Failed to update Google Maps: {ex.Message}");
+            }
         }
     }
 }
