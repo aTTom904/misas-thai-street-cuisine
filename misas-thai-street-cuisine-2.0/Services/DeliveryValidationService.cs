@@ -5,10 +5,12 @@ namespace misas_thai_street_cuisine_2._0.Services
     public class DeliveryValidationService
     {
         private readonly IJSRuntime _jsRuntime;
+        private readonly GoogleMapsConfigService _googleMapsConfig;
 
-        public DeliveryValidationService(IJSRuntime jsRuntime)
+        public DeliveryValidationService(IJSRuntime jsRuntime, GoogleMapsConfigService googleMapsConfig)
         {
             _jsRuntime = jsRuntime;
+            _googleMapsConfig = googleMapsConfig;
         }
 
         // Shared validation state
@@ -53,6 +55,21 @@ namespace misas_thai_street_cuisine_2._0.Services
             }
             else
             {
+                try
+                {
+                    // Ensure Google Maps is loaded before making API calls
+                    await _googleMapsConfig.LoadGoogleMapsAsync();
+                }
+                catch (Exception ex)
+                {
+                    return new DeliveryValidationResult
+                    {
+                        IsInDeliveryArea = false,
+                        Message = "Unable to validate delivery address. Please try again later.",
+                        ResultType = "error"
+                    };
+                }
+
                 var userLocation = await _jsRuntime.InvokeAsync<LatLngResult>("geocodeAddress", address);
                 if (userLocation == null)
                 {
