@@ -25,7 +25,7 @@ namespace misas_thai_street_cuisine_2._0.Services
                 {
                     // Try to get from API config first
                     _applicationId = _apiConfigService.GetSquareApplicationId();
-                    _locationId = _configuration["Square:LocationId"] ?? throw new InvalidOperationException("Square Location ID not configured");
+                    _locationId = _apiConfigService.GetSquareLocationId();
                 }
                 catch (Exception)
                 {

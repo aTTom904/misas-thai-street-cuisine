@@ -64,6 +64,12 @@ namespace misas_thai_street_cuisine_2._0.Services
             return _configData?.Square?.ApplicationId ?? throw new InvalidOperationException("Square ApplicationId not configured");
         }
 
+        public string GetSquareLocationId()
+        {
+            EnsureConfigLoaded();
+            return _configData?.Square?.LocationId ?? throw new InvalidOperationException("Square LocationId not configured");
+        }
+
         public string GetSquareEnvironment()
         {
             EnsureConfigLoaded();
@@ -107,6 +113,7 @@ namespace misas_thai_street_cuisine_2._0.Services
     {
         public string ApplicationId { get; set; } = string.Empty;
         public string Environment { get; set; } = "sandbox";
+        public string LocationId { get; set; } = string.Empty;
     }
 
     public class GoogleMapsConfig
