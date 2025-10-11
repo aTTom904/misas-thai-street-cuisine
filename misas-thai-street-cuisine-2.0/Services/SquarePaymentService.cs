@@ -4,15 +4,17 @@ namespace misas_thai_street_cuisine_2._0.Services
 {
     public class SquarePaymentService
     {
-
-        
         private readonly IJSRuntime _jsRuntime;
-        private readonly string _applicationId = "sandbox-sq0idb-1gDDPcTuPZCWT0tkbGo2Ig";
-        private readonly string _locationId = "LT41HRBZ4JM47";
+        private readonly IConfiguration _configuration;
+        private readonly string _applicationId;
+        private readonly string _locationId;
 
-        public SquarePaymentService(IJSRuntime jsRuntime)
+        public SquarePaymentService(IJSRuntime jsRuntime, IConfiguration configuration)
         {
             _jsRuntime = jsRuntime;
+            _configuration = configuration;
+            _applicationId = _configuration["Square:ApplicationId"] ?? throw new InvalidOperationException("Square Application ID not configured");
+            _locationId = _configuration["Square:LocationId"] ?? throw new InvalidOperationException("Square Location ID not configured");
         }
 
         public async Task<PaymentInitResult> InitializeAsync()
