@@ -6,24 +6,37 @@ namespace misas_thai_street_cuisine_2._0.Services
     {
         private readonly IJSRuntime _jsRuntime;
         private readonly IConfiguration _configuration;
-        private readonly string _apiKey;
+        private readonly ApiConfigurationService _apiConfigService;
+        private string _apiKey = string.Empty;
         private bool _isLoaded = false;
 
-        public GoogleMapsConfigService(IJSRuntime jsRuntime, IConfiguration configuration)
+        public GoogleMapsConfigService(IJSRuntime jsRuntime, IConfiguration configuration, ApiConfigurationService apiConfigService)
         {
             _jsRuntime = jsRuntime;
             _configuration = configuration;
-            _apiKey = _configuration["GoogleMaps:ApiKey"] ?? string.Empty;
-            
-            Console.WriteLine($"GoogleMapsConfigService initialized with API Key: {(!string.IsNullOrEmpty(_apiKey) ? "CONFIGURED" : "NOT CONFIGURED")}");
-            
+            _apiConfigService = apiConfigService;
+        }
+
+        private void EnsureApiKeyLoaded()
+        {
             if (string.IsNullOrEmpty(_apiKey))
             {
-                Console.WriteLine("Warning: Google Maps API Key not configured. Maps functionality will be disabled.");
-                Console.WriteLine("Available configuration keys:");
-                foreach (var config in _configuration.AsEnumerable())
+                try
                 {
-                    Console.WriteLine($"  {config.Key} = {config.Value}");
+                    // Try to get from API config first
+                    _apiKey = _apiConfigService.GetGoogleMapsApiKey();
+                    Console.WriteLine($"GoogleMapsConfigService loaded API Key from API: {(!string.IsNullOrEmpty(_apiKey) ? "CONFIGURED" : "NOT CONFIGURED")}");
+                }
+                catch (Exception)
+                {
+                    // Fall back to static configuration
+                    _apiKey = _configuration["GoogleMaps:ApiKey"] ?? string.Empty;
+                    Console.WriteLine($"GoogleMapsConfigService loaded API Key from static config: {(!string.IsNullOrEmpty(_apiKey) ? "CONFIGURED" : "NOT CONFIGURED")}");
+                }
+
+                if (string.IsNullOrEmpty(_apiKey))
+                {
+                    Console.WriteLine("Warning: Google Maps API Key not configured. Maps functionality will be disabled.");
                 }
             }
         }
@@ -31,6 +44,8 @@ namespace misas_thai_street_cuisine_2._0.Services
         public async Task LoadGoogleMapsAsync()
         {
             if (_isLoaded) return;
+            
+            EnsureApiKeyLoaded();
             
             if (string.IsNullOrEmpty(_apiKey))
             {
@@ -67,6 +82,13 @@ namespace misas_thai_street_cuisine_2._0.Services
         }
 
         public bool IsLoaded => _isLoaded;
-        public string ApiKey => _apiKey;
+        public string ApiKey 
+        { 
+            get 
+            { 
+                EnsureApiKeyLoaded(); 
+                return _apiKey; 
+            } 
+        }
     }
 }

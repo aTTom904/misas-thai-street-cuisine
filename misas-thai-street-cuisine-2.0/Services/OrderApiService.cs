@@ -6,19 +6,41 @@ public class OrderApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<OrderApiService> _logger;
-    private readonly string _apiBaseUrl;
+    private readonly IConfiguration _configuration;
+    private readonly ApiConfigurationService _apiConfigService;
+    private string _apiBaseUrl = string.Empty;
 
-    public OrderApiService(HttpClient httpClient, ILogger<OrderApiService> logger, IConfiguration configuration)
+    public OrderApiService(HttpClient httpClient, ILogger<OrderApiService> logger, IConfiguration configuration, ApiConfigurationService apiConfigService)
     {
         _httpClient = httpClient;
         _logger = logger;
-        _apiBaseUrl = configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("API Base URL not configured");
+        _configuration = configuration;
+        _apiConfigService = apiConfigService;
+    }
+
+    private void EnsureApiBaseUrlLoaded()
+    {
+        if (string.IsNullOrEmpty(_apiBaseUrl))
+        {
+            try
+            {
+                // Try to get from API config first
+                _apiBaseUrl = _apiConfigService.GetApiBaseUrl();
+            }
+            catch (Exception)
+            {
+                // Fall back to static configuration
+                _apiBaseUrl = _configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("API Base URL not configured");
+            }
+        }
     }
 
     public async Task<ApiResponse<OrderResponse>> CreateOrderAsync(CreateOrderRequest request)
     {
         try
         {
+            EnsureApiBaseUrlLoaded();
+            
             var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -95,6 +117,8 @@ public class OrderApiService
     {
         try
         {
+            EnsureApiBaseUrlLoaded();
+            
             var response = await _httpClient.GetAsync($"{_apiBaseUrl}/orders");
 
             if (response.IsSuccessStatusCode)

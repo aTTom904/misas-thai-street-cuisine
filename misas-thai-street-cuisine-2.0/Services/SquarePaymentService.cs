@@ -6,19 +6,39 @@ namespace misas_thai_street_cuisine_2._0.Services
     {
         private readonly IJSRuntime _jsRuntime;
         private readonly IConfiguration _configuration;
-        private readonly string _applicationId;
-        private readonly string _locationId;
+        private readonly ApiConfigurationService _apiConfigService;
+        private string _applicationId = string.Empty;
+        private string _locationId = string.Empty;
 
-        public SquarePaymentService(IJSRuntime jsRuntime, IConfiguration configuration)
+        public SquarePaymentService(IJSRuntime jsRuntime, IConfiguration configuration, ApiConfigurationService apiConfigService)
         {
             _jsRuntime = jsRuntime;
             _configuration = configuration;
-            _applicationId = _configuration["Square:ApplicationId"] ?? throw new InvalidOperationException("Square Application ID not configured");
-            _locationId = _configuration["Square:LocationId"] ?? throw new InvalidOperationException("Square Location ID not configured");
+            _apiConfigService = apiConfigService;
+        }
+
+        private void EnsureConfigurationLoaded()
+        {
+            if (string.IsNullOrEmpty(_applicationId) || string.IsNullOrEmpty(_locationId))
+            {
+                try
+                {
+                    // Try to get from API config first
+                    _applicationId = _apiConfigService.GetSquareApplicationId();
+                    _locationId = _configuration["Square:LocationId"] ?? throw new InvalidOperationException("Square Location ID not configured");
+                }
+                catch (Exception)
+                {
+                    // Fall back to static configuration
+                    _applicationId = _configuration["Square:ApplicationId"] ?? throw new InvalidOperationException("Square Application ID not configured");
+                    _locationId = _configuration["Square:LocationId"] ?? throw new InvalidOperationException("Square Location ID not configured");
+                }
+            }
         }
 
         public async Task<PaymentInitResult> InitializeAsync()
         {
+            EnsureConfigurationLoaded();
             var result = await _jsRuntime.InvokeAsync<PaymentInitResult>(
                 "squarePayments.init", _applicationId, _locationId);
             return result;
