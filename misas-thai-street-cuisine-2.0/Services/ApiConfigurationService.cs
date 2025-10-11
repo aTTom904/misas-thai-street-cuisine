@@ -30,7 +30,7 @@ namespace misas_thai_street_cuisine_2._0.Services
                 // Get the base API URL from static config first (as fallback)
                 // This will use the ApiBaseUrl from appsettings.json during development
                 // and should be updated to your Azure Functions URL for production
-                var apiBaseUrl = _staticConfiguration["ApiBaseUrl"] ?? "https://your-azure-function-app.azurewebsites.net/api";
+                var apiBaseUrl = _staticConfiguration["ApiBaseUrl"] ?? "https://misas-thai-api.azurewebsites.net/api";
                 
                 var response = await _httpClient.GetAsync($"{apiBaseUrl}/GetConfig");
                 
