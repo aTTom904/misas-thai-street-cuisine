@@ -8,6 +8,7 @@
 @inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JS
+@implements IDisposable
 
 <PageTitle>Shopping Cart</PageTitle>
 
@@ -78,6 +79,24 @@
 @code {
     private const decimal minimumOrder = 35.00m;
     private decimal cartTotal => Cart?.Items?.Where(i => i != null).Sum(i => i.GetTotalPrice()) ?? 0m;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Ensure cart is initialized before displaying items
+        if (Cart != null)
+        {
+            await Cart.InitializeAsync();
+            Cart.CartChanged += OnCartChanged;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (Cart != null)
+        {
+            Cart.CartChanged -= OnCartChanged;
+        }
+    }
 
     private void OnCartChanged()
     {

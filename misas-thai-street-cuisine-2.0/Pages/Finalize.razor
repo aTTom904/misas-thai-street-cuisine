@@ -327,7 +327,7 @@
                 }
                 
                 // Clear the cart and move to confirmation
-                Cart.ClearCart();
+                await Cart.ClearCartAsync();
                 currentStep = 2;
             }
             else

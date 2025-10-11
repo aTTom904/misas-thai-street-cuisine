@@ -617,7 +617,7 @@
                         // Payment and order both successful
                         orderConfirmation = apiResult.Data.OrderNumber;
                         successMessage = "Payment processed and order saved successfully!";
-                        Cart?.ClearCart();
+                        if (Cart != null) await Cart.ClearCartAsync();
                         currentStep = 2;
                         StateHasChanged();
                         return;
