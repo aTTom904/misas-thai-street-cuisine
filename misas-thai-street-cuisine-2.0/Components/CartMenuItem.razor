@@ -10,7 +10,7 @@
         </div>
         <div class="cart-menu-content">
             <h2 class="cart-menu-title">@MenuItem.Name</h2>
-            <div class="cart-menu-desc">@MenuItem.Description</div>
+            @* <div class="cart-menu-desc">@MenuItem.Description</div> *@
             @if (MenuItem is Platter platter)
             {
                 @* <div class="menu-item-includes">
@@ -36,31 +36,36 @@
                         var match = Cart.Items.FirstOrDefault(i => i.Item.Name == platter.Name && i.SelectedServes == serve);
                         if (match != null && match.Quantity > 0)
                         {
-                            <div class="cart-row">
-                                <span class="cart-label">Serves @serve</span>
-                                <span class="cart-price">$@platter.Prices[serve]</span>
-                                <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, -1)">−</button>
-                                <span class="cart-qty">@match.Quantity</span>
-                                <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, 1)">+</button>
+                            <div class="serving-row">
+                                <div class="cart-row">
+                                    <span class="cart-label">Serves @serve</span>
+                                    <span class="cart-price">$@platter.Prices[serve]</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, -1)">−</button>
+                                    <span class="cart-qty">@match.Quantity</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, 1)">+</button>
+                                </div>
+                                <div class="portion-guide">
+                                    <span>@platter.Includes[serve]</span>
+                                </div>
+                                @if (serve == 2)
+                                {
+                                    <div class="cart-upgrade-row">
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> 24 oz Phad Thai - <b>add $9</b></span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, -1)">−</button>
+                                        <span class="cart-qty">@match.UpgradePhadThai24Qty</span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, 1)">+</button>
+                                    </div>
+                                }
+                                @if (serve == 4)
+                                {
+                                    <div class="cart-upgrade-row">
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> 48 oz Phad Thai - <b>add $18</b></span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, -1)">−</button>
+                                        <span class="cart-qty">@match.UpgradePhadThai48Qty</span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, 1)">+</button>
+                                    </div>
+                                }
                             </div>
-                            @if (serve == 2)
-                            {
-                                <div class="cart-upgrade-row">
-                                    <span class="cart-upgrade-label"><b>Upgrade:</b> 24 oz Phad Thai - <b>add $9</b></span>
-                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, -1)">−</button>
-                                    <span class="cart-qty">@match.UpgradePhadThai24Qty</span>
-                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, 1)">+</button>
-                                </div>
-                            }
-                            @if (serve == 4)
-                            {
-                                <div class="cart-upgrade-row">
-                                    <span class="cart-upgrade-label"><b>Upgrade:</b> 48 oz Phad Thai - <b>add $18</b></span>
-                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, -1)">−</button>
-                                    <span class="cart-qty">@match.UpgradePhadThai48Qty</span>
-                                    <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, 1)">+</button>
-                                </div>
-                            }
                         }
                     }
                 </div>

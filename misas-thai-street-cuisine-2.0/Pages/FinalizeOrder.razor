@@ -632,7 +632,7 @@
             isPaymentInitialized = true;
             StateHasChanged();
         }
-        catch (Exception ex)
+    catch (Exception)
         {
             errorMessage = "Error initializing payments";
             StateHasChanged();
@@ -665,13 +665,17 @@
                     AdditionalInformation = additionalInformation ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
                     Total = GetTotalWithTip(),
+                    TipAmount = tipAmount,
                     PaymentToken = tokenResult.Token,
                     Items = Cart?.Items?.Where(i => i != null && i.Item != null).Select(item => new OrderItemRequest
                     {
                         ItemName = item.Item.Name,
                         Category = item.Item.Category,
                         Price = item.GetUnitPrice(),
-                        Quantity = item.Quantity
+                        Quantity = item.Quantity,
+                        SelectedServes = item.SelectedServes,
+                        UpgradePhadThai24Qty = item.UpgradePhadThai24Qty,
+                        UpgradePhadThai48Qty = item.UpgradePhadThai48Qty
                     }).ToList() ?? new List<OrderItemRequest>()
                 };
                 try
@@ -694,7 +698,7 @@
                         return;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // Payment tokenized but API threw exception
                     errorMessage = $"Payment processing failed. Please try again or contact support.";
@@ -709,7 +713,7 @@
                 return;
             }
         }
-        catch (Exception ex)
+    catch (Exception)
         {
             errorMessage = $"Error processing payment.";
         }
@@ -741,9 +745,9 @@
             
             StateHasChanged();
         }
-        catch (Exception ex)
+    catch (Exception)
         {
-            deliveryValidationMessage = $"Error checking delivery area: {ex.Message}";
+            deliveryValidationMessage = $"Error checking delivery area.";
             deliveryValidationCssClass = "alert alert-danger";
             isInDeliveryArea = false;
             StateHasChanged();

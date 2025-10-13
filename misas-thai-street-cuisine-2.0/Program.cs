@@ -53,8 +53,8 @@ catch (Exception ex)
 // Configure manual delivery dates (uncomment and modify as needed)
 var deadlineService = app.Services.GetRequiredService<DeadlineService>();
 deadlineService.SetManualDeliveryDates(
-    new DateTime(2025, 10, 15), // First delivery date
-    new DateTime(2025, 10, 29)  // Second delivery date
+    new DateTime(2025, 10, 29), // First delivery date
+    new DateTime(2025, 11, 12)  // Second delivery date
 );
 
 await app.RunAsync();

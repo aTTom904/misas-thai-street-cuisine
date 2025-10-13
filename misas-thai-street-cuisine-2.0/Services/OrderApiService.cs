@@ -170,6 +170,7 @@ public class CreateOrderRequest
     public decimal Total { get; set; }
     public string PaymentToken { get; set; } = string.Empty;
     public List<OrderItemRequest> Items { get; set; } = new();
+    public decimal TipAmount { get; set; }
 }
 
 public class OrderItemRequest
@@ -178,6 +179,9 @@ public class OrderItemRequest
     public string Category { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public int Quantity { get; set; }
+    public int? SelectedServes { get; set; }
+    public int UpgradePhadThai24Qty { get; set; }
+    public int UpgradePhadThai48Qty { get; set; }
 }
 
 public class OrderResponse
