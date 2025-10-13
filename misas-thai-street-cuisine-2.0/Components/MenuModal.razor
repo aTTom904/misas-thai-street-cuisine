@@ -16,58 +16,51 @@
                 <div class="menu-modal-desc">@MenuItem.Description</div>
                 @if (MenuItem is Platter platter)
                 {
-                    <div class="menu-modal-includes" style="margin-bottom:0.7rem;">
-                        <span style="font-weight:bold;">Starting from </span>
+                    @* <div class="menu-modal-includes">
+                        <span style="font-weight:bold;">Includes </span>
                         @if (platter.Includes != null && platter.Includes.Count > 0)
                         {
                             <span> @string.Join(" \u2022 ", platter.Includes)</span>
                         }
-                    </div>
-                    @* @if (platter.AddOns != null && platter.AddOns.Count > 0)
-                    {
-                        <ul class="menu-modal-addons">
-                            <div><strong>Served with:</strong></div>
-                            @foreach (var addon in platter.AddOns)
-                            {
-                                <li>@addon</li>
-                                <br/>
-                            }
-                        </ul>
-                    } *@
+                    </div> *@
                     <div class="modal-cart-section">
                         @foreach (var serve in platter.Serves)
                         {
-                            <div class="cart-row">
-                                <span class="cart-label">Platter for @serve</span>
-                                <span class="cart-price">$@platter.Prices[serve]</span>
-                                <button class="cart-btn" @onclick="async () => await ChangePlatterQty(serve, -1)">−</button>
-                                <span class="cart-qty">@GetPlatterQty(serve)</span>
-                                <button class="cart-btn" @onclick="async () => await ChangePlatterQty(serve, 1)">+</button>
+                            <div class="serving-row">
+                                <div class="cart-row">
+                                    <span class="cart-label">Platter for @serve</span>
+                                    <span class="cart-price">$@platter.Prices[serve]</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangePlatterQty(serve, -1)">−</button>
+                                    <span class="cart-qty">@GetPlatterQty(serve)</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangePlatterQty(serve, 1)">+</button>
+                                </div>
+                                <div class="portion-guide">
+                                    <span>@platter.Includes[serve]</span>
+                                </div>
+                                @if (serve == 2)
+                                {
+
+                                    <div class="cart-upgrade-row @(GetPlatterQty(2) > 0 ? "slide-in" : "slide-out")">
+                                        <div class="cart-upgrade-option">
+                                            <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $9</b></span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(-1)">−</button>
+                                            <span class="cart-qty">@PhadThai24Qty</span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(1)">+</button>
+                                        </div>
+                                    </div>
+                                }
+                                @if (serve == 4)
+                                {
+                                    <div class="cart-upgrade-row @(GetPlatterQty(4) > 0 ? "slide-in" : "slide-out")">
+                                        <div class="cart-upgrade-option">
+                                            <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $18</b></span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(-1)">−</button>
+                                            <span class="cart-qty">@PhadThai48Qty</span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(1)">+</button>
+                                        </div>
+                                    </div>
+                                }
                             </div>
-                            
-                            @* Always render upgrade rows, control visibility with CSS classes *@
-                            @if (serve == 2)
-                            {
-                                <div class="cart-upgrade-row @(GetPlatterQty(2) > 0 ? "slide-in" : "slide-out")">
-                                    <div class="cart-upgrade-option">
-                                        <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $9</b></span>
-                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(-1)">−</button>
-                                        <span class="cart-qty">@PhadThai24Qty</span>
-                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(1)">+</button>
-                                    </div>
-                                </div>
-                            }
-                            @if (serve == 4)
-                            {
-                                <div class="cart-upgrade-row @(GetPlatterQty(4) > 0 ? "slide-in" : "slide-out")">
-                                    <div class="cart-upgrade-option">
-                                        <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $18</b></span>
-                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(-1)">−</button>
-                                        <span class="cart-qty">@PhadThai48Qty</span>
-                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(1)">+</button>
-                                    </div>
-                                </div>
-                            }
                         }
                     </div>
                 }
@@ -84,7 +77,6 @@
                     </div>
                 }
                 @ChildContent
-                
                 <div class="modal-actions-section">
                     <button class="modal-keep-shopping-btn" @onclick="OnClose" @onclick:stopPropagation>Keep Shopping</button>
                     <button class="modal-checkout-btn" @onclick="GoToCart" @onclick:stopPropagation>Check Out</button>
