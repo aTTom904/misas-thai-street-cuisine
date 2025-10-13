@@ -12,7 +12,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Category = "Platter",
                 Serves = new int[] { 2, 4 },
                 Prices = new Dictionary<int, decimal> { { 2, 42.00m }, { 4, 84.00m } },
-                Description = "A perfect pairing of our Northern Thai Sai Ua sausage, packed with bold lemongrass and fragrant herbs, and our grilled chicken, marinated overnight in lemongrass, cilantro roots, garlic, coriander seeds, and soy. Served with both Prik Noom and Jao dips, plus sticky rice and fresh, pre-washed greens. A copmlete Thai street-style experience. ",
+                Description = "A perfect pairing of our Northern Thai Sai Ua sausage, packed with bold lemongrass and fragrant herbs, and our grilled chicken, marinated overnight in lemongrass, cilantro roots, garlic, coriander seeds, and soy. Served with both Prik Noom and Jao dips, plus sticky rice and fresh, pre-washed greens. A complete Thai street-style experience. ",
                 ImageUrl = "/Resources/Images/HomepageCarousel/ms-platter.png",
                 Includes = new Dictionary<int, string> {
                     {2, string.Join(" \u2022 ", ["2 Sausages", "2 Skewers", "2 Wings", "2 Sticky rice", "2 Dips", "Fresh Greens"])},
