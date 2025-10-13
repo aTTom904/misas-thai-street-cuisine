@@ -6,20 +6,41 @@ public class OrderApiService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<OrderApiService> _logger;
-    private readonly string _apiBaseUrl;
+    private readonly IConfiguration _configuration;
+    private readonly ApiConfigurationService _apiConfigService;
+    private string _apiBaseUrl = string.Empty;
 
-    public OrderApiService(HttpClient httpClient, ILogger<OrderApiService> logger, IConfiguration configuration)
+    public OrderApiService(HttpClient httpClient, ILogger<OrderApiService> logger, IConfiguration configuration, ApiConfigurationService apiConfigService)
     {
         _httpClient = httpClient;
         _logger = logger;
-        // _apiBaseUrl = configuration["ApiBaseUrl"] ?? "https://misas-thai-api.azurewebsites.net/api";
-        _apiBaseUrl = "http://localhost:7071/api";
+        _configuration = configuration;
+        _apiConfigService = apiConfigService;
+    }
+
+    private void EnsureApiBaseUrlLoaded()
+    {
+        if (string.IsNullOrEmpty(_apiBaseUrl))
+        {
+            try
+            {
+                // Try to get from API config first
+                _apiBaseUrl = _apiConfigService.GetApiBaseUrl();
+            }
+            catch (Exception)
+            {
+                // Fall back to static configuration
+                _apiBaseUrl = _configuration["ApiBaseUrl"] ?? throw new InvalidOperationException("API Base URL not configured");
+            }
+        }
     }
 
     public async Task<ApiResponse<OrderResponse>> CreateOrderAsync(CreateOrderRequest request)
     {
         try
         {
+            EnsureApiBaseUrlLoaded();
+            
             var json = JsonSerializer.Serialize(request, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -96,6 +117,8 @@ public class OrderApiService
     {
         try
         {
+            EnsureApiBaseUrlLoaded();
+            
             var response = await _httpClient.GetAsync($"{_apiBaseUrl}/orders");
 
             if (response.IsSuccessStatusCode)
@@ -147,6 +170,7 @@ public class CreateOrderRequest
     public decimal Total { get; set; }
     public string PaymentToken { get; set; } = string.Empty;
     public List<OrderItemRequest> Items { get; set; } = new();
+    public decimal TipAmount { get; set; }
 }
 
 public class OrderItemRequest
@@ -155,6 +179,9 @@ public class OrderItemRequest
     public string Category { get; set; } = string.Empty;
     public decimal Price { get; set; }
     public int Quantity { get; set; }
+    public int? SelectedServes { get; set; }
+    public int UpgradePhadThai24Qty { get; set; }
+    public int UpgradePhadThai48Qty { get; set; }
 }
 
 public class OrderResponse

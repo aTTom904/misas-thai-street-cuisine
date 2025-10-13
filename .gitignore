@@ -193,6 +193,10 @@ publish/
 # in these scripts will be unencrypted
 PublishScripts/
 
+# Configuration files with sensitive data
+appsettings.Development.json
+wwwroot/appsettings.Development.json
+
 # NuGet Packages
 *.nupkg
 # NuGet Symbol Packages
