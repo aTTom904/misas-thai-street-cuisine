@@ -20,7 +20,7 @@ namespace misas_thai_street_cuisine_2._0.Services
 
         // Constants from DeliveryArea component
         private const string RouteStartAddress = "1301 N Orange Ave Suite 102, Green Cove Springs, FL 32043";
-        private const string RouteEndAddress = "850 Beacon Lake Pkwy, St. Augustine, FL 32095";
+        private const string RouteEndAddress = "211 Davis Park Rd, Ponte Vedra Beach, FL 32081";
         private const double BufferMiles = 5.0;
         private const bool IsFreeDeliveryForEveryone = false;
         private const string FreeDeliveryMessage = "🎉 Special Offer: We're currently offering FREE delivery for everyone! No minimum distance required.";
