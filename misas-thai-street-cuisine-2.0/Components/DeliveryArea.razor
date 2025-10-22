@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inject misas_thai_street_cuisine_2._0.Services.OrderContextService OrderContext
 @inject misas_thai_street_cuisine_2._0.Services.DeliveryValidationService DeliveryValidation
+@inject misas_thai_street_cuisine_2._0.Services.AddressVerificationApiService AddressVerificationApi
 
 <div class="delivery-area-section">
     <div class="delivery-area-columns">
@@ -75,11 +76,20 @@
     {
         var userAddress = $"{Street}, {City}, {State} {ZipCode}";
         OrderContext.Address = userAddress;
-        
+
         // Use the shared delivery validation service
         var result = await DeliveryValidation.ValidateDeliveryAddress(userAddress);
-        
+
         ResultType = result.ResultType;
         ResultMessage = result.Message;
+
+        // Save to address_verification table
+        var avDto = new misas_thai_street_cuisine_2._0.Services.AddressVerificationApiService.AddressVerificationCreateDto
+        {
+            address = userAddress,
+            addressVerified = result.ResultType == "success",
+
+        };
+        AddressVerificationApi.CreateAddressVerificationAsync(avDto);
     }
 }
