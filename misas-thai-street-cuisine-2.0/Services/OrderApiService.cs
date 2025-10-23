@@ -171,6 +171,7 @@ public class CreateOrderRequest
     public string PaymentToken { get; set; } = string.Empty;
     public List<OrderItemRequest> Items { get; set; } = new();
     public decimal TipAmount { get; set; }
+    public decimal SalesTax { get; set; }
 }
 
 public class OrderItemRequest
