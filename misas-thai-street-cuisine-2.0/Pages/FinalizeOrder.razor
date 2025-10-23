@@ -56,22 +56,21 @@
                         }
                     </div>
                     <div class="total-section">
+                        <div class="subtotal-line">
+                            <span>Subtotal: $@(cartTotal.ToString("F2"))</span>
+                        </div>
+                        <div class="tax-line">
+                            <span>Sales Tax: $@(salesTax.ToString("F2"))</span>
+                        </div>
                         @if (tipAmount > 0)
                         {
-                            <div class="subtotal-line">
-                                <span>Subtotal: $@(cartTotal.ToString("F2"))</span>
-                            </div>
                             <div class="tip-line">
                                 <span>Tip: $@(tipAmount.ToString("F2"))</span>
                             </div>
-                            <div class="total-line">
-                                <strong>Total: $@(GetTotalWithTip().ToString("F2"))</strong>
-                            </div>
                         }
-                        else
-                        {
-                            <strong>Total: $@(cartTotal.ToString("F2"))</strong>
-                        }
+                        <div class="total-line">
+                            <strong>Total: $@(totalWithTaxAndTip.ToString("F2"))</strong>
+                        </div>
                     </div>
                 </div>
             }
@@ -265,7 +264,7 @@
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>
                             }
-                            Complete Order: $@(GetTotalWithTip().ToString("F2"))
+                            Complete Order: $@(totalWithTaxAndTip.ToString("F2"))
                         </button>
                     </div>
                 </div>
@@ -324,9 +323,12 @@
         return cartTotal * (percentage / 100.0m);
     }
 
-    private decimal GetTotalWithTip()
+    private const decimal SalesTaxRate = 0.065m;
+    private decimal salesTax => Math.Round(cartTotal * SalesTaxRate, 2);
+    private decimal totalWithTaxAndTip => cartTotal + salesTax + tipAmount;
+    private decimal GetTotalWithTipAndTax()
     {
-        return cartTotal + tipAmount;
+        return totalWithTaxAndTip;
     }
 
     private void SelectPercentageTip(int percentage)
@@ -664,8 +666,9 @@
                     CustomerPhone = customerPhone ?? string.Empty,
                     AdditionalInformation = additionalInformation ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
-                    Total = GetTotalWithTip(),
+                    Total = totalWithTaxAndTip,
                     TipAmount = tipAmount,
+                    SalesTax = salesTax,
                     PaymentToken = tokenResult.Token,
                     Items = Cart?.Items?.Where(i => i != null && i.Item != null).Select(item => new OrderItemRequest
                     {

@@ -62,7 +62,7 @@
     font-size: 1.2rem;
 }
 
-.subtotal-line, .tip-line {
+.subtotal-line, .tax-line, .tip-line {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
