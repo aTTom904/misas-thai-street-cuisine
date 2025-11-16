@@ -63,6 +63,7 @@ window.squarePayments = {
             });
 
             applePay = await payments.applePay(currentPaymentRequest);
+            await applePay.attach(`#${containerId}`);
             return { success: true };
         } catch (error) {
             console.error('Error initializing Apple Pay:', error);
