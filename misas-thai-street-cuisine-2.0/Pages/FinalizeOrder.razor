@@ -217,9 +217,11 @@
                     
                     @if (isApplePayAvailable)
                     {
-                        <div class="form-group mt-3">
+                        <div class="form-group">
                             <label>Or Pay with Apple Pay</label>
-                            <div id="apple-pay-container"></div>
+                            <div id="apple-pay-container">
+                                <button id="apple-pay-button"></button>
+                            </div>
                         </div>
                     }
                     
@@ -321,7 +323,7 @@
     private decimal customTipAmount = 0;
     private ElementReference? customTipInputRef;
     private bool isApplePayAvailable = false;
-    private string selectedPaymentMethod = "card"; // "card" or "applePay"
+    private string selectedPaymentMethod = "card";
     private decimal tipAmount => selectedTipType switch
     {
         "percentage" => CalculatePercentageTip(selectedTipPercentage),
