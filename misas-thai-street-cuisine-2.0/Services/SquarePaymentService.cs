@@ -58,6 +58,35 @@ namespace misas_thai_street_cuisine_2._0.Services
             return result;
         }
 
+        public async Task<bool> IsApplePayAvailableAsync()
+        {
+            try
+            {
+                EnsureConfigurationLoaded();
+                var result = await _jsRuntime.InvokeAsync<bool>(
+                    "squarePayments.isApplePayAvailable");
+                return result;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async Task<PaymentInitResult> InitializeApplePayAsync(string containerId, decimal amount, string label = "Total")
+        {
+            var result = await _jsRuntime.InvokeAsync<PaymentInitResult>(
+                "squarePayments.initApplePay", containerId, amount, label);
+            return result;
+        }
+
+        public async Task<TokenizeResult> TokenizeApplePayAsync()
+        {
+            var result = await _jsRuntime.InvokeAsync<TokenizeResult>(
+                "squarePayments.tokenizeApplePay");
+            return result;
+        }
+
         public async Task DestroyAsync()
         {
             await _jsRuntime.InvokeVoidAsync("squarePayments.destroy");
