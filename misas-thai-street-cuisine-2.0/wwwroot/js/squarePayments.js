@@ -57,7 +57,7 @@ window.squarePayments = {
                 countryCode: 'US',
                 currencyCode: 'USD',
                 total: {
-                    amount: '1.00',
+                    amount: amount.toString(),
                     label: label,
                 },
             });
