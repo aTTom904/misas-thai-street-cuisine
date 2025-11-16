@@ -492,7 +492,7 @@
 
 
 
-#card-container {
+#card-container, #apple-pay-container {
     background-color: #f8f9fa !important;
     border: 2px solid #ddd !important;
     border-radius: 8px !important;
@@ -502,6 +502,18 @@
 #card-container:focus-within {
     border-color: #ee6900 !important;
     box-shadow: 0 0 0 0.2rem rgba(238, 105, 0, 0.25) !important;
+}
+
+#apple-pay-container:focus-within {
+    border-color: #ee6900 !important;
+    box-shadow: 0 0 0 0.2rem rgba(238, 105, 0, 0.25) !important;
+}
+
+.apple-pay-button {
+    display: inline-block;
+    -webkit-appearance: -apple-pay-button;
+    -apple-pay-button-type: plain;
+    -apple-pay-button-style: black;
 }
 
 @media (max-width: 1024px) {

@@ -50,20 +50,19 @@ window.squarePayments = {
         }
     },
 
-    // Initialize Apple Pay with actual amount
+    // Initialize Apple Pay
     async initApplePay(containerId, amount, label = 'Total') {
         try {
             currentPaymentRequest = payments.paymentRequest({
                 countryCode: 'US',
                 currencyCode: 'USD',
                 total: {
-                    amount: amount.toString(),
+                    amount: '1.00',
                     label: label,
                 },
             });
 
             applePay = await payments.applePay(currentPaymentRequest);
-            await applePay.attach(`#${containerId}`);
             return { success: true };
         } catch (error) {
             console.error('Error initializing Apple Pay:', error);
