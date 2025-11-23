@@ -2,8 +2,49 @@ using System.Text.Json;
 
 namespace misas_thai_street_cuisine_2._0.Services;
 
+
 public class OrderApiService
 {
+
+    public async Task<ApiResponse<OrderSummary>> GetOrderByIdAsync(int orderId)
+    {
+        try
+        {
+            EnsureApiBaseUrlLoaded();
+            var response = await _httpClient.GetAsync($"{_apiBaseUrl}/orders/{orderId}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var order = JsonSerializer.Deserialize<OrderSummary>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                return new ApiResponse<OrderSummary>
+                {
+                    Success = true,
+                    Data = order
+                };
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new ApiResponse<OrderSummary>
+                {
+                    Success = false,
+                    Error = $"API Error: {response.StatusCode} - {errorContent}"
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error retrieving order {orderId}");
+            return new ApiResponse<OrderSummary>
+            {
+                Success = false,
+                Error = $"Network error: {ex.Message}"
+            };
+        }
+    }
     private readonly HttpClient _httpClient;
     private readonly ILogger<OrderApiService> _logger;
     private readonly IConfiguration _configuration;

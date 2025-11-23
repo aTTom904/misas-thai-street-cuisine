@@ -35,7 +35,9 @@ builder.Services.AddScoped<SquarePaymentService>();
 builder.Services.AddScoped<OrderApiService>();
 builder.Services.AddScoped<DeliveryValidationService>();
 builder.Services.AddScoped<GoogleMapsConfigService>();
-
+builder.Services.AddScoped<AddressVerificationApiService>();
+builder.Services.AddScoped<CustomerApiService>();
+builder.Services.AddScoped<MenuItemApiService>();
 var app = builder.Build();
 
 // Load configuration from API during startup
