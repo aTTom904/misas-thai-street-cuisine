@@ -1,0 +1,193 @@
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+<div class="discount-code-container">
+    <div class="discount-input-group">
+        <input type="text" 
+               @bind="discountCodeInput" 
+               @bind:event="oninput"
+               class="form-control discount-input" 
+               placeholder="Enter discount code"
+               disabled="@(isValidated || isValidating)"
+               @onkeypress="HandleKeyPress" />
+        <button type="button" 
+                class="btn btn-brand-orange validate-btn" 
+                @onclick="ValidateDiscountCode"
+                disabled="@(string.IsNullOrWhiteSpace(discountCodeInput) || isValidated || isValidating)">
+            @if (isValidating)
+            {
+                <span class="spinner-border spinner-border-sm"></span>
+            }
+            else if (isValidated)
+            {
+                <i class="fas fa-check"></i>
+            }
+            else
+            {
+                <span>Apply</span>
+            }
+        </button>
+        @if (isValidated)
+        {
+            <button type="button" 
+                    class="btn btn-link remove-btn" 
+                    @onclick="RemoveDiscountCode"
+                    title="Remove discount code">
+                <i class="fas fa-times"></i>
+            </button>
+        }
+    </div>
+    
+    @if (!string.IsNullOrEmpty(validationMessage))
+    {
+        <div class="validation-message @validationMessageClass">
+            @validationMessage
+        </div>
+    }
+    
+    @if (isValidated && discountAmount > 0)
+    {
+        <div class="discount-applied">
+            <i class="fas fa-tag"></i>
+            <span class="discount-description">@discountDescription</span>
+            <span class="discount-amount">-$@discountAmount.ToString("F2")</span>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public decimal OrderAmount { get; set; }
+    
+    [Parameter]
+    public EventCallback<DiscountCodeResult> OnDiscountApplied { get; set; }
+    
+    [Parameter]
+    public EventCallback OnDiscountRemoved { get; set; }
+    
+    private string apiBaseUrl = string.Empty;
+    private string discountCodeInput = string.Empty;
+    private bool isValidating = false;
+    private bool isValidated = false;
+    private string validationMessage = string.Empty;
+    private string validationMessageClass = string.Empty;
+    private decimal discountAmount = 0;
+    private string discountDescription = string.Empty;
+    private string appliedDiscountCode = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        apiBaseUrl = Configuration["ApiBaseUrl"] ?? "https://misas-thai-api.azurewebsites.net/api";
+        if (!apiBaseUrl.EndsWith("/")) apiBaseUrl += "/";
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(discountCodeInput) && !isValidated)
+        {
+            await ValidateDiscountCode();
+        }
+    }
+
+    private async Task ValidateDiscountCode()
+    {
+        if (string.IsNullOrWhiteSpace(discountCodeInput) || isValidating)
+            return;
+
+        isValidating = true;
+        validationMessage = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            var apiUrl = $"{apiBaseUrl}discount-codes/validate";
+            
+            var requestBody = new
+            {
+                code = discountCodeInput.Trim(),
+                orderAmount = OrderAmount
+            };
+
+            var response = await Http.PostAsJsonAsync(apiUrl, requestBody);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<ValidateDiscountCodeResponse>();
+                
+                if (result != null && result.IsValid)
+                {
+                    isValidated = true;
+                    discountAmount = result.DiscountAmount;
+                    discountDescription = result.Description ?? $"{result.Code} applied";
+                    appliedDiscountCode = result.Code;
+                    validationMessage = "Discount code applied successfully!";
+                    validationMessageClass = "alert alert-success";
+                    
+                    // Notify parent component
+                    await OnDiscountApplied.InvokeAsync(new DiscountCodeResult
+                    {
+                        Code = result.Code,
+                        DiscountAmount = result.DiscountAmount,
+                        Description = result.Description ?? string.Empty
+                    });
+                }
+                else
+                {
+                    validationMessage = "Invalid discount code";
+                    validationMessageClass = "alert alert-danger";
+                }
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                validationMessage = errorContent?.Error ?? "Invalid or expired discount code";
+                validationMessageClass = "alert alert-danger";
+            }
+        }
+        catch (Exception)
+        {
+            validationMessage = "Error validating discount code. Please try again.";
+            validationMessageClass = "alert alert-danger";
+        }
+        finally
+        {
+            isValidating = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RemoveDiscountCode()
+    {
+        isValidated = false;
+        discountAmount = 0;
+        discountDescription = string.Empty;
+        appliedDiscountCode = string.Empty;
+        discountCodeInput = string.Empty;
+        validationMessage = string.Empty;
+        validationMessageClass = string.Empty;
+        
+        await OnDiscountRemoved.InvokeAsync();
+        StateHasChanged();
+    }
+
+    public class ValidateDiscountCodeResponse
+    {
+        public bool IsValid { get; set; }
+        public string Code { get; set; } = string.Empty;
+        public decimal DiscountAmount { get; set; }
+        public string? Description { get; set; }
+        public string? DiscountType { get; set; }
+    }
+
+    public class ErrorResponse
+    {
+        public string Error { get; set; } = string.Empty;
+    }
+
+    public class DiscountCodeResult
+    {
+        public string Code { get; set; } = string.Empty;
+        public decimal DiscountAmount { get; set; }
+        public string Description { get; set; } = string.Empty;
+    }
+}

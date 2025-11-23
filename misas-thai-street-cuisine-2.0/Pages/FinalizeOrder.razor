@@ -2,6 +2,7 @@
 @using System.Linq
 @using misas_thai_street_cuisine_2._0.Models
 @using misas_thai_street_cuisine_2._0.Services
+@using misas_thai_street_cuisine_2._0.Components
 @inject ShoppingCartService Cart
 @inject SquarePaymentService PaymentService
 @inject OrderApiService OrderApi
@@ -59,6 +60,12 @@
                         <div class="subtotal-line">
                             <span>Subtotal: $@(cartTotal.ToString("F2"))</span>
                         </div>
+                        @if (discountAmount > 0)
+                        {
+                            <div class="discount-line">
+                                <span>Discount (@appliedDiscountCode): -$@(discountAmount.ToString("F2"))</span>
+                            </div>
+                        }
                         <div class="tax-line">
                             <span>Sales Tax: $@(salesTax.ToString("F2"))</span>
                         </div>
@@ -69,7 +76,7 @@
                             </div>
                         }
                         <div class="total-line">
-                            <strong>Total: $@(totalWithTaxAndTip.ToString("F2"))</strong>
+                            <strong>Total: $@(finalTotal.ToString("F2"))</strong>
                         </div>
                     </div>
                 </div>
@@ -264,6 +271,23 @@
                             </button>
                         </div>
                     </div>
+                    
+                    <div class="discount-code-section mt-3">
+                        <div class="form-check">
+                            <input type="checkbox" @bind="showDiscountCode" class="form-check-input" id="discountCheckbox" />
+                            <label class="form-check-label" for="discountCheckbox">
+                                I have a discount code
+                            </label>
+                        </div>
+                    </div>
+                    
+                    @if (showDiscountCode)
+                    {
+                        <DiscountCode OrderAmount="@subtotalAfterDiscount" 
+                                      OnDiscountApplied="@HandleDiscountApplied" 
+                                      OnDiscountRemoved="@HandleDiscountRemoved" />
+                    }
+                    
                     <div class="payment-buttons">
                         <button class="btn btn-secondary me-2" @onclick="BackToCustomerInfo" disabled="@isProcessing">
                             Back
@@ -335,8 +359,10 @@
     }
 
     private const decimal SalesTaxRate = 0.065m;
-    private decimal salesTax => Math.Round(cartTotal * SalesTaxRate, 2);
-    private decimal totalWithTaxAndTip => cartTotal + salesTax + tipAmount;
+    private decimal subtotalAfterDiscount => Math.Max(0, cartTotal - discountAmount);
+    private decimal salesTax => Math.Round(subtotalAfterDiscount * SalesTaxRate, 2);
+    private decimal totalWithTaxAndTip => subtotalAfterDiscount + salesTax + tipAmount;
+    private decimal finalTotal => totalWithTaxAndTip;
     private decimal GetTotalWithTipAndTax()
     {
         return totalWithTaxAndTip;
@@ -421,6 +447,12 @@
     private string errorMessage = string.Empty;
     private string successMessage = string.Empty;
     private string orderConfirmation = string.Empty;
+    
+    // Discount code properties
+    private bool showDiscountCode = false;
+    private decimal discountAmount = 0;
+    private string appliedDiscountCode = string.Empty;
+    private string discountDescription = string.Empty;
     
     // Delivery validation properties
     private string deliveryValidationMessage = string.Empty;
@@ -798,5 +830,21 @@
         isInDeliveryArea = false;
         deliveryValidationMessage = string.Empty;
         deliveryValidationCssClass = string.Empty;
+    }
+
+    private void HandleDiscountApplied(DiscountCode.DiscountCodeResult result)
+    {
+        discountAmount = result.DiscountAmount;
+        appliedDiscountCode = result.Code;
+        discountDescription = result.Description;
+        StateHasChanged();
+    }
+
+    private void HandleDiscountRemoved()
+    {
+        discountAmount = 0;
+        appliedDiscountCode = string.Empty;
+        discountDescription = string.Empty;
+        StateHasChanged();
     }
 }
