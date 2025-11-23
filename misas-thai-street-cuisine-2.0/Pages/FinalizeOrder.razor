@@ -214,6 +214,15 @@
                         <label class="card-info-label">Card Information</label>
                         <div id="card-container" style="min-height: 60px; border: 1px solid #ddd; border-radius: 4px; padding: 10px; background-color: #f8f9fa;"></div>
                     </div>
+                    
+                    @if (isApplePayAvailable)
+                    {
+                        <div class="form-group">
+                            <label>Or Pay with Apple Pay</label>
+                            <div id="apple-pay-container"></div>
+                        </div>
+                    }
+                    
                     <div class="tip-section">
                         <h5>Add a Tip</h5>
                         <div class="tip-percentage-row">
@@ -311,6 +320,8 @@
     private int selectedTipPercentage = 0;
     private decimal customTipAmount = 0;
     private ElementReference? customTipInputRef;
+    private bool isApplePayAvailable = false;
+    private string selectedPaymentMethod = "card";
     private decimal tipAmount => selectedTipType switch
     {
         "percentage" => CalculatePercentageTip(selectedTipPercentage),
@@ -624,17 +635,29 @@
                 StateHasChanged();
                 return;
             }
+            
+            // Check Apple Pay availability
+            isApplePayAvailable = await PaymentService.IsApplePayAvailableAsync();
+            
+            // Initialize card
             var cardResult = await PaymentService.InitializeCardAsync("card-container");
             if (!cardResult.Success)
             {
                 errorMessage = "Failed to initialize card form";
                 StateHasChanged();
-                    return;
-                }
+                return;
+            }
+            
+            // Initialize Apple Pay if available
+            if (isApplePayAvailable)
+            {
+                await PaymentService.InitializeApplePayAsync("apple-pay-container", totalWithTaxAndTip, "Misa's Thai Street Cuisine");
+            }
+            
             isPaymentInitialized = true;
             StateHasChanged();
         }
-    catch (Exception)
+        catch (Exception)
         {
             errorMessage = "Error initializing payments";
             StateHasChanged();
@@ -654,7 +677,17 @@
         StateHasChanged();
         try
         {
-            var tokenResult = await PaymentService.TokenizeCardAsync();
+            // Tokenize based on selected payment method
+            TokenizeResult tokenResult;
+            if (selectedPaymentMethod == "applePay")
+            {
+                tokenResult = await PaymentService.TokenizeApplePayAsync();
+            }
+            else
+            {
+                tokenResult = await PaymentService.TokenizeCardAsync();
+            }
+            
             if (tokenResult.Success && !string.IsNullOrEmpty(tokenResult.Token))
             {
                 var orderRequest = new CreateOrderRequest
@@ -710,13 +743,15 @@
             }
             else
             {
-                // Card tokenization failed
-                var errors = tokenResult.Errors != null ? string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : tokenResult.Error ?? "Unknown card validation error";
-                errorMessage = "Card validation failed: Please check your card information and try again.";
+                // Card/Apple Pay tokenization failed
+                var errors = tokenResult.Errors != null ? string.Join(", ", tokenResult.Errors.Select(e => e.ToString())) : tokenResult.Error ?? "Unknown validation error";
+                errorMessage = selectedPaymentMethod == "applePay" 
+                    ? "Apple Pay validation failed: Please try again."
+                    : "Card validation failed: Please check your card information and try again.";
                 return;
             }
         }
-    catch (Exception)
+        catch (Exception)
         {
             errorMessage = $"Error processing payment.";
         }
