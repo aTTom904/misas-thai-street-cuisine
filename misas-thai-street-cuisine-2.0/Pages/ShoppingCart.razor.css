@@ -7,12 +7,6 @@
     text-align: center;
 }
 
-h3 {
-    font-size: 3.5rem;
-    font-weight: bold;
-    color: #333;
-    text-shadow: 2px 2px 8px #00000022;
-}
 .cart-empty {
     font-size: 1.3rem;
     color: #ee6900;
@@ -170,6 +164,35 @@ h3 {
 
 .finish-up-container {
     position: relative;
+}
+
+.cart-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+h3 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 2px 2px 8px #00000022;
+}
+
+.clear-cart-btn i {
+    font-size: 1.5rem;
+    color: #ee6900;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.clear-cart-btn i:hover {
+    color: #ff9800;
 }
 
 @media (max-width: 700px) {

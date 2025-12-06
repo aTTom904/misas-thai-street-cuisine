@@ -176,6 +176,7 @@
     }
     .cart-menu-title {
         font-size: 1.5rem;
+        text-align: center;
     }
     .cart-menu-cart-section {
         margin: 0 0 1rem 0;
@@ -186,6 +187,9 @@
         font-family: 'Montserrat', sans-serif;
         color: #444;
         gap: 0.7rem;
+    }
+    .cart-row {
+        justify-content: center;
     }
     .cart-upgrade-row {
         margin-left: 0.7rem;

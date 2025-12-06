@@ -13,8 +13,16 @@
 <PageTitle>Shopping Cart</PageTitle>
 
 <div class="cart-container">
-    <h3>Your Cart</h3>
-
+    <div class="cart-header">
+        <h3>Your Cart</h3>
+    
+        @if (Cart.Items != null && Cart.Items.Count > 0)
+        {
+            <a class="clear-cart-btn" @onclick="ClearCart">
+                <i class="fas fa-trash-alt me-1"></i>
+            </a>
+        }
+    </div>
     @if (Cart?.Items == null || Cart.Items.Count == 0)
     {
         <p class="cart-empty">Your cart is empty.</p>
@@ -113,6 +121,16 @@
         if (cartTotal >= minimumOrder)
         {
             NavigationManager.NavigateTo("/FinalizeOrder");
+        }
+    }
+
+    private async Task ClearCart()
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", "Are you sure you want to clear all items from your cart?");
+        
+        if (confirmed)
+        {
+            await Cart.ClearCartAsync();
         }
     }
 }
