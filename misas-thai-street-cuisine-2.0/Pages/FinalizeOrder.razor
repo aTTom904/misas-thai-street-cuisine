@@ -34,6 +34,10 @@
                                             {
                                                 <span class="item-serves">Serves @item.SelectedServes</span>
                                             }
+                                            @if (!string.IsNullOrEmpty(item.SelectedSize))
+                                            {
+                                                <span class="item-serves">@item.SelectedSize Tray</span>
+                                            }
                                             @if (item.UpgradePhadThai24Qty > 0)
                                             {
                                                 <span class="item-upgrade">@item.UpgradePhadThai24Qty x swap Pad Thai (24oz)</span>
@@ -41,6 +45,12 @@
                                             @if (item.UpgradePhadThai48Qty > 0)
                                             {
                                                 <span class="item-upgrade">@item.UpgradePhadThai48Qty x swap Pad Thai (48oz)</span>
+                                            }
+                                            @if (item.AddOnQty > 0)
+                                            {
+                                                var addOnSize = item.SelectedSize == "Half" ? "16oz" : "32oz";
+                                                var addOnName = item.Item.Name == "Sai Ua Sausage" ? "Prik Noom Sauce" : "Jao Sauce";
+                                                <span class="item-upgrade">@item.AddOnQty x @addOnName (@addOnSize)</span>
                                             }
                                         </div>
                                         <div class="item-quantity">Qty: @item.Quantity</div>
@@ -742,8 +752,10 @@
                         Price = item.GetUnitPrice(),
                         Quantity = item.Quantity,
                         SelectedServes = item.SelectedServes,
+                        SelectedSize = item.SelectedSize,
                         UpgradePhadThai24Qty = item.UpgradePhadThai24Qty,
-                        UpgradePhadThai48Qty = item.UpgradePhadThai48Qty
+                        UpgradePhadThai48Qty = item.UpgradePhadThai48Qty,
+                        AddOnQty = item.AddOnQty
                     }).ToList() ?? new List<OrderItemRequest>()
                 };
                 try

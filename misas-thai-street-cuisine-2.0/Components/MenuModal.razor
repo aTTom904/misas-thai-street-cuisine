@@ -64,6 +64,51 @@
                         }
                     </div>
                 }
+                else if (MenuItem is Tray tray)
+                {
+                    <div class="modal-cart-section">
+                        @foreach (var size in tray.Size)
+                        {
+                            <div class="serving-row">
+                                <div class="cart-row">
+                                    <span class="cart-label">@size Tray</span>
+                                    <span class="cart-price">$@tray.Prices[size]</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangeTrayQty(size, -1)">−</button>
+                                    <span class="cart-qty">@GetTrayQty(size)</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangeTrayQty(size, 1)">+</button>
+                                </div>
+                                <div class="portion-guide">
+                                    <span>@tray.Includes[size] - Serves @tray.Serves[size]</span>
+                                </div>
+                                @* Add-ons based on tray name *@
+                                @if (tray.Name == "Sai Ua Sausage")
+                                {
+                                    var saucePrice = size == "Half" ? 15 : 25;
+                                    <div class="cart-upgrade-row @(GetTrayQty(size) > 0 ? "slide-in" : "slide-out")">
+                                        <div class="cart-upgrade-option">
+                                            <span class="cart-upgrade-label"><b>Add:</b> Prik Noom Sauce – <b>$@saucePrice</b></span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(size, -1)">−</button>
+                                            <span class="cart-qty">@GetTrayAddOnQty(size)</span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(size, 1)">+</button>
+                                        </div>
+                                    </div>
+                                }
+                                else if (tray.Name == "Chicken Skewers" || tray.Name == "Thai Style Wings")
+                                {
+                                    var saucePrice = size == "Half" ? 15 : 25;
+                                    <div class="cart-upgrade-row @(GetTrayQty(size) > 0 ? "slide-in" : "slide-out")">
+                                        <div class="cart-upgrade-option">
+                                            <span class="cart-upgrade-label"><b>Add:</b> Jao Sauce – <b>$@saucePrice</b></span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(size, -1)">−</button>
+                                            <span class="cart-qty">@GetTrayAddOnQty(size)</span>
+                                            <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(size, 1)">+</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
                 else if (MenuItem is SideDish side)
                 {
                     <div class="modal-cart-section">
@@ -94,6 +139,8 @@
     private Dictionary<int, int> PlatterQty = new Dictionary<int, int> { { 2, 0 }, { 4, 0 } };
     private int PhadThai24Qty = 0;
     private int PhadThai48Qty = 0;
+    private Dictionary<string, int> TrayQty = new Dictionary<string, int>();
+    private Dictionary<string, int> TrayAddOnQty = new Dictionary<string, int>();
     private int SideQty = 0;
 
     protected override void OnParametersSet()
@@ -116,6 +163,27 @@
                     PlatterQty[serve] = match.Quantity;
                     if (serve == 2) PhadThai24Qty = match.UpgradePhadThai24Qty;
                     if (serve == 4) PhadThai48Qty = match.UpgradePhadThai48Qty;
+                }
+            }
+        }
+        else if (MenuItem is Tray tray)
+        {
+            // Reset
+            TrayQty.Clear();
+            TrayAddOnQty.Clear();
+            // Check cart for each size
+            foreach (var size in tray.Size)
+            {
+                TrayQty[size] = 0;
+                TrayAddOnQty[size] = 0;
+                var match = Cart.Items.FirstOrDefault(i =>
+                    i.Item.Name == tray.Name &&
+                    i.SelectedSize != null &&
+                    i.SelectedSize == size);
+                if (match != null)
+                {
+                    TrayQty[size] = match.Quantity;
+                    TrayAddOnQty[size] = match.AddOnQty;
                 }
             }
         }
@@ -218,6 +286,72 @@
             else if (match != null)
             {
                 await Cart.RemoveAllAsync(match);
+            }
+        }
+    }
+
+    // Tray methods
+    private int GetTrayQty(string size)
+    {
+        return TrayQty.ContainsKey(size) ? TrayQty[size] : 0;
+    }
+
+    private int GetTrayAddOnQty(string size)
+    {
+        return TrayAddOnQty.ContainsKey(size) ? TrayAddOnQty[size] : 0;
+    }
+
+    private async Task ChangeTrayQty(string size, int delta)
+    {
+        if (!TrayQty.ContainsKey(size))
+            TrayQty[size] = 0;
+        if (!TrayAddOnQty.ContainsKey(size))
+            TrayAddOnQty[size] = 0;
+
+        TrayQty[size] = Math.Max(0, TrayQty[size] + delta);
+        // Clamp add-ons to parent qty
+        TrayAddOnQty[size] = Math.Min(TrayAddOnQty[size], TrayQty[size]);
+        // If parent qty is zero, reset add-ons
+        if (TrayQty[size] == 0)
+            TrayAddOnQty[size] = 0;
+
+        await UpdateTrayInCart(size);
+    }
+
+    private async Task ChangeTrayAddOn(string size, int delta)
+    {
+        int parentQty = GetTrayQty(size);
+        if (parentQty > 0)
+        {
+            if (!TrayAddOnQty.ContainsKey(size))
+                TrayAddOnQty[size] = 0;
+            TrayAddOnQty[size] = Math.Max(0, Math.Min(parentQty, TrayAddOnQty[size] + delta));
+            await UpdateTrayInCart(size);
+        }
+    }
+
+    private async Task UpdateTrayInCart(string size)
+    {
+        if (MenuItem is Tray tray)
+        {
+            var qty = GetTrayQty(size);
+            int addOnQty = GetTrayAddOnQty(size);
+
+            // Remove all CartItems for this tray/size
+            var matches = Cart.Items.Where(i =>
+                i.Item.Name == tray.Name &&
+                i.SelectedSize != null &&
+                i.SelectedSize == size).ToList();
+            foreach (var match in matches)
+            {
+                await Cart.RemoveAllAsync(match);
+            }
+
+            // Add a single CartItem with current qty and add-ons if qty > 0
+            if (qty > 0)
+            {
+                var cartItem = new CartItem(tray, qty, size, addOnQty);
+                await Cart.AddItemAsync(cartItem);
             }
         }
     }

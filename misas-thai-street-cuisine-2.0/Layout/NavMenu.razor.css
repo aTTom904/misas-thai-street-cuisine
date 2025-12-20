@@ -76,7 +76,14 @@
     color: white;
 }
 
-.nav-item ::deep .nav-link:hover {
+@media (hover: hover) and (pointer: fine) {
+    .nav-item ::deep .nav-link:hover {
+        background-color: rgba(255,255,255,0.1);
+        color: white;
+    }
+}
+
+.nav-item ::deep .nav-link:active {
     background-color: rgba(255,255,255,0.1);
     color: white;
 }

@@ -29,7 +29,17 @@
     font-size: 0.875rem;
 }
 
-.validate-btn:hover {
+@media (hover: hover) and (pointer: fine) {
+    .validate-btn:hover {
+        background: #ee6900;
+        border-color: #ee6900;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+    }
+}
+
+.validate-btn:active {
     background: #ee6900;
     border-color: #ee6900;
     color: white;
@@ -43,7 +53,13 @@
     text-decoration: none;
 }
 
-.remove-btn:hover {
+@media (hover: hover) and (pointer: fine) {
+    .remove-btn:hover {
+        color: #bb2d3b;
+    }
+}
+
+.remove-btn:active {
     color: #bb2d3b;
 }
 

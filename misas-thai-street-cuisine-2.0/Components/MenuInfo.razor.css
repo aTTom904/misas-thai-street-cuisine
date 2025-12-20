@@ -8,7 +8,7 @@
 .menu-header-row {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content:center;
     gap: 2rem;
     margin-bottom: 2rem;
 }
@@ -18,7 +18,7 @@
     margin-right: 2rem;
 }
 .date-label {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     color: #888;
     margin-bottom: 0.5rem;
     font-family: 'Montserrat', sans-serif;
@@ -41,9 +41,15 @@
     font-family: 'Montserrat', sans-serif;
     transition: box-shadow 0.2s, border-color 0.2s;
 }
-    .date-card:hover {
+    @media (hover: hover) and (pointer: fine) {
+        .date-card:hover {
+            box-shadow: 0 4px 16px #ee690088;
+            cursor: pointer;
+            border-color: #ff9800;
+        }
+    }
+    .date-card:active {
         box-shadow: 0 4px 16px #ee690088;
-        cursor: pointer;
         border-color: #ff9800;
     }
     .date-card.selected {
@@ -95,7 +101,30 @@
     display: flex;
     flex-direction: column;
     margin-top: 5vh;
+    position: relative;
 }
+.view-toggle-btn {
+    font-size: 1rem;
+    color: #fff;
+    background-color: #ee6900;
+    padding: 0.5rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #ee690055;
+    transition: background 0.2s, box-shadow 0.2s;
+    margin-top: 1rem;
+}
+    @media (hover: hover) and (pointer: fine) {
+        .view-toggle-btn:hover {
+            background: #ff9800;
+            box-shadow: 0 4px 16px #ee690088;
+        }
+    }
+    .view-toggle-btn:active {
+        background: #ff9800;
+        box-shadow: 0 4px 16px #ee690088;
+    }
 .menu-title {
     font-size: 3.5rem;
     font-weight: bold;
@@ -107,7 +136,52 @@
     color: #444;
     font-family: 'Montserrat', sans-serif;
 }
+
+/* View container transitions */
+.view-container {
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+    animation-timing-function: ease-in-out;
+}
+
+.slide-in {
+    animation-name: slideIn;
+}
+
+.slide-out {
+    animation-name: slideOut;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-100%);
+    }
+}
+
 .platters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.trays-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
@@ -149,12 +223,17 @@
     flex-direction: column;
     align-items: center;
     transition: background 0.2s, box-shadow 0.2s;
-
 }
-    .menu-card:hover {
+    @media (hover: hover) and (pointer: fine) {
+        .menu-card:hover {
+            background: #ff9800;
+            box-shadow: 0 4px 16px #ee690088;
+            cursor: pointer;
+        }
+    }
+    .menu-card:active {
         background: #ff9800;
         box-shadow: 0 4px 16px #ee690088;
-        cursor: pointer;
     }
 
 .menu-card-img {
@@ -178,10 +257,16 @@
     align-items: center;
     transition: background 0.2s, box-shadow 0.2s;
 }
-    .side-card:hover {
+    @media (hover: hover) and (pointer: fine) {
+        .side-card:hover {
+            background: #ff9800;
+            box-shadow: 0 4px 16px #ee690088;
+            cursor: pointer;
+        }
+    }
+    .side-card:active {
         background: #ff9800;
         box-shadow: 0 4px 16px #ee690088;
-        cursor: pointer;
     }
 
 .side-card-img {
@@ -245,7 +330,6 @@
     }
     .menu-header-row {
         flex-direction: column;
-        align-items: center;
         justify-content: flex-start;
         gap: 2rem;
     }
@@ -255,6 +339,11 @@
     .menu-title-block {
         text-align: center;
         margin: 0;
+    }
+    .view-toggle-btn {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+        margin-top: 1rem;
     }
     .menu-title {
         font-size: 2.5rem;
@@ -273,6 +362,10 @@
     }
     
     .platters-grid {
+        gap: 1rem;
+    }
+    
+    .trays-grid {
         gap: 1rem;
     }
     

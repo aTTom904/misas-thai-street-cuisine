@@ -55,10 +55,18 @@
     transition: background 0.2s, box-shadow 0.2s;
     margin-top: 1rem;
 }
+
+@media (hover: hover) and (pointer: fine) {
     .delivery-submit:hover {
         background: #ff9800;
         box-shadow: 0 4px 16px #ee690088;
     }
+}
+
+.delivery-submit:active {
+    background: #ff9800;
+    box-shadow: 0 4px 16px #ee690088;
+}
 .delivery-submit-row {
     display: flex;
     justify-content: center;

@@ -11,6 +11,10 @@ namespace misas_thai_street_cuisine_2._0.Services
             {
                 return MenuData.Platters.FirstOrDefault(p => p.Name == name);
             }
+            else if (category == "Tray")
+            {
+                return MenuData.Trays.FirstOrDefault(t => t.Name == name);
+            }
             else if (category == "Side")
             {
                 return MenuData.SideDishes.FirstOrDefault(s => s.Name == name);

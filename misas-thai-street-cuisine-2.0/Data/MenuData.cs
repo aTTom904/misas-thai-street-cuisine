@@ -1,4 +1,5 @@
 ﻿using misas_thai_street_cuisine_2._0.Models;
+using Square.Invoices;
 
 namespace misas_thai_street_cuisine_2._0.Data
 {
@@ -57,6 +58,107 @@ namespace misas_thai_street_cuisine_2._0.Data
             }
         };
 
+        public static Tray[] Trays { get; } = new Tray[]
+        {
+            new Tray
+            {
+                Name = "Chicken Skewers",
+                Category = "Tray",
+                Size = new string[] { "Half", "Full" },
+                Prices = new Dictionary<string, decimal> { { "Half", 115.00m }, { "Full", 225.00m } },
+                Description = "Juicy chicken skewers, marinated in lemongrass, cilantro roots, garlic, coriander seeds and soy, then grilled to aromatic, tender perfection.",
+                ImageUrl = "/Resources/Images/Food/chicken-skewer-tray.webp",
+                Includes = new Dictionary<string, string> {
+                    {"Half", string.Join(" \u2022 ", ["25 Skewers"])},
+                    {"Full", string.Join(" \u2022 ", ["50 Skewers"])}
+                },
+                Serves = new Dictionary<string, string> {
+                    {"Half", "8-12"},
+                    {"Full", "18-25"}
+                },
+                AddOns = new List<string> {
+                    "Jao Sauce – Our tangy, slightly sweet-and-savory dip made with tamarind, palm sugar, fish sauce, cilantro, and shallots, and topped with toaEsted rice.",
+                }
+            },
+            new Tray
+            {
+                Name = "Sai Ua Sausage",
+                Category = "Tray",
+                Size = new string[] { "Half", "Full" },
+                Prices = new Dictionary<string, decimal> { { "Half", 105.00m }, { "Full", 210.00m } },
+                Description = "Our signature Northern Thai Sai Ua sausage is packed with fresh lemongrass and fragrant herbs, then grilled to perfection. Intensely aromatic and perfectly seasoned, our Sai Ua offers a bold yet balanced flavor that's unmistakably Thai.",
+                ImageUrl = "/Resources/Images/Food/sausage-tray.webp",
+                Includes = new Dictionary<string, string> {
+                    {"Half", string.Join(" \u2022 ", ["20 Sausage Links"])},
+                    {"Full", string.Join(" \u2022 ", ["40 Sausage Links"])}
+                },
+                Serves = new Dictionary<string, string> {
+                    {"Half", "10-15"},
+                    {"Full", "20-30"}
+                },
+                AddOns = new List<string> {
+                    "Prik Noom Sauce – A roasted pepper, shallot, and garlic blend, perfectly paired with our Sai Ua sausage.",
+                }
+            },
+            new Tray
+            {
+                Name = "Thai Style Wings",
+                Category = "Tray",
+                Size = new string[] { "Half", "Full" },
+                Prices = new Dictionary<string, decimal> { { "Half", 75.00m }, { "Full", 150.00m } },
+                Description = "Crispy-skinned chicken wings marinated in lemongrass, cilantro roots, garlic, coriander seeds and soy, then grilled to juicy perfection.",
+                ImageUrl = "/Resources/Images/Food/wings-tray.webp",
+                Includes = new Dictionary<string, string> {
+                    {"Half", string.Join(" \u2022 ", ["25 Wings"])},
+                    {"Full", string.Join(" \u2022 ", ["50 Wings"])}
+                },
+                Serves = new Dictionary<string, string> {
+                    {"Half", "8-12"},
+                    {"Full", "18-25"}
+                },
+                AddOns = new List<string> {
+                    "Jao Sauce – Our tangy, slightly sweet-and-savory dip made with tamarind, palm sugar, fish sauce, cilantro, and shallots, and topped with toaEsted rice.",
+                }
+            },
+            new Tray
+            {
+                Name = "Phad Thai",
+                Category = "Tray",
+                Size = new string[] { "Half", "Full" },
+                Prices = new Dictionary<string, decimal> { { "Half", 40.00m }, { "Full", 80.00m } },
+                Description = "Classic Thai noodles stir-fried with eggs, tofu, bean sprouts,  green onions, garnished with crushed peanuts and lime wedges. *Contains shellfish.*",
+                ImageUrl = "/Resources/Images/Food/phad-thai-tray.webp",
+                Includes = new Dictionary<string, string> {
+                    {"Half", string.Join(" \u2022 ", ["Half Tray of Phad Thai", "Crushed Peanuts", "Lime Wedges", "Bean Sprouts"])},
+                    {"Full", string.Join(" \u2022 ", ["Full Tray of Phad Thai", "Crushed Peanuts", "Lime Wedges", "Bean Sprouts"])}
+                },
+                Serves = new Dictionary<string, string> {
+                    {"Half", "4-5"},
+                    {"Full", "8-10"}
+                },
+                AddOns = new List<string> {
+                    "Extra Lime & Peanuts – Additional garnishes for those who love extra zing and crunch."
+                }
+            },
+            new Tray
+            {
+                Name = "Sticky Rice",
+                Category = "Tray",
+                Size = new string[] { "Half", "Full" },
+                Prices = new Dictionary<string, decimal> { { "Half", 38.00m }, { "Full", 75.00m } },
+                Description = "Steamed sticky rice, the perfect complement to any of our grilled dishes.",
+                ImageUrl = "/Resources/Images/Food/sticky-rice-tray.webp",
+                Includes = new Dictionary<string, string> {
+                    {"Half", string.Join(" \u2022 ", ["Half Tray of Sticky Rice"])},
+                    {"Full", string.Join(" \u2022 ", ["Full Tray of Sticky Rice"])}
+                },
+                Serves = new Dictionary<string, string> {
+                    {"Half", "10-12"},
+                    {"Full", "20-25"}
+                },
+            }
+        };
+
         public static SideDish[] SideDishes { get; } = new SideDish[]
         {
             new SideDish
@@ -88,7 +190,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Name = "Phad Thai for 2",
                 Category = "Side",
                 Price = 17.00m,
-                Description = "Classic Thai noodles.",
+                Description = "Classic Thai noodles. *Contains shellfish.*",
                 ImageUrl = "/Resources/Images/Food/phad-thai.webp"
             },
             new SideDish

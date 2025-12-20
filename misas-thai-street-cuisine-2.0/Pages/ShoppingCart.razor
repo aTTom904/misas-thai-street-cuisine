@@ -33,6 +33,10 @@
             .Where(i => i?.Item != null && i.Item is Platter)
             .GroupBy(i => i.Item.Name)
             .Select(g => g.First().Item as MenuItem);
+        var groupedTrays = Cart.Items
+            .Where(i => i?.Item != null && i.Item is Tray)
+            .GroupBy(i => i.Item.Name)
+            .Select(g => g.First().Item as MenuItem);
         var sideDishes = Cart.Items
             .Where(i => i?.Item != null && i.Item is SideDish)
             .Select(i => i.Item as MenuItem);
@@ -42,6 +46,15 @@
             if (platter != null)
             {
                 <CartMenuItem MenuItem="@platter" OnCartChanged="OnCartChanged">
+                    <div style="margin-bottom: 1rem;"></div>
+                </CartMenuItem>
+            }
+        }
+        foreach (var tray in groupedTrays)
+        {
+            if (tray != null)
+            {
+                <CartMenuItem MenuItem="@tray" OnCartChanged="OnCartChanged">
                     <div style="margin-bottom: 1rem;"></div>
                 </CartMenuItem>
             }

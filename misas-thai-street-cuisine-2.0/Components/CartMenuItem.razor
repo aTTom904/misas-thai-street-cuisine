@@ -70,6 +70,54 @@
                     }
                 </div>
             }
+            else if (MenuItem is Tray tray)
+            {
+                <div class="cart-menu-cart-section">
+                    @foreach (var size in tray.Size)
+                    {
+                        var match = Cart.Items.FirstOrDefault(i => 
+                            i.Item.Name == tray.Name && 
+                            i.SelectedSize != null && 
+                            i.SelectedSize == size);
+                        if (match != null && match.Quantity > 0)
+                        {
+                            <div class="serving-row">
+                                <div class="cart-row">
+                                    <span class="cart-label">@size Tray</span>
+                                    <span class="cart-price">$@tray.Prices[size]</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, -1)">−</button>
+                                    <span class="cart-qty">@match.Quantity</span>
+                                    <button class="cart-btn" @onclick="async () => await ChangeCartItemQty(match, 1)">+</button>
+                                </div>
+                                <div class="portion-guide">
+                                    <span>@tray.Includes[size] - Serves @tray.Serves[size]</span>
+                                </div>
+                                @* Add-on sauces based on tray name *@
+                                @if (tray.Name == "Sai Ua Sausage")
+                                {
+                                    var saucePrice = size == "Half" ? 15 : 25;
+                                    <div class="cart-upgrade-row">
+                                        <span class="cart-upgrade-label"><b>Add:</b> Prik Noom Sauce - <b>$@saucePrice</b></span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(match, -1)">−</button>
+                                        <span class="cart-qty">@match.AddOnQty</span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(match, 1)">+</button>
+                                    </div>
+                                }
+                                else if (tray.Name == "Chicken Skewers" || tray.Name == "Thai Style Wings")
+                                {
+                                    var saucePrice = size == "Half" ? 15 : 25;
+                                    <div class="cart-upgrade-row">
+                                        <span class="cart-upgrade-label"><b>Add:</b> Jao Sauce - <b>$@saucePrice</b></span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(match, -1)">−</button>
+                                        <span class="cart-qty">@match.AddOnQty</span>
+                                        <button class="cart-upgrade-btn" @onclick="async () => await ChangeTrayAddOn(match, 1)">+</button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            }
             else if (MenuItem is SideDish side)
             {
                 var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
@@ -100,8 +148,20 @@
         if (delta == 0 || match == null) return;
         if (delta > 0)
         {
-            // Increment quantity, preserve upgrades
-            await Cart.AddItemAsync(new CartItem(match.Item, match.Quantity + 1, match.SelectedServes, match.UpgradePhadThai24Qty, match.UpgradePhadThai48Qty));
+            // Increment quantity, preserve upgrades/add-ons
+            if (match.Item is Platter)
+            {
+                await Cart.AddItemAsync(new CartItem(match.Item, match.Quantity + 1, match.SelectedServes, match.UpgradePhadThai24Qty, match.UpgradePhadThai48Qty));
+            }
+            else if (match.Item is Tray tray && match.SelectedSize != null)
+            {
+                await Cart.AddItemAsync(new CartItem(tray, match.Quantity + 1, match.SelectedSize, match.AddOnQty));
+            }
+            else
+            {
+                // Side dish or other
+                await Cart.AddItemAsync(new CartItem(match.Item, match.Quantity + 1));
+            }
         }
         else if (delta < 0)
         {
@@ -123,6 +183,19 @@
         {
             int newQty = Math.Max(0, Math.Min(parentQty, match.UpgradePhadThai48Qty + delta));
             await Cart.AddItemAsync(new CartItem(match.Item, match.Quantity, match.SelectedServes, match.UpgradePhadThai24Qty, newQty));
+        }
+        await OnCartChanged.InvokeAsync();
+    }
+
+    private async Task ChangeTrayAddOn(CartItem match, int delta)
+    {
+        if (match == null || delta == 0 || match.SelectedSize == null) return;
+        if (match.Item is not Tray tray) return;
+        int parentQty = match.Quantity;
+        if (parentQty > 0)
+        {
+            int newAddOnQty = Math.Max(0, Math.Min(parentQty, match.AddOnQty + delta));
+            await Cart.AddItemAsync(new CartItem(tray, match.Quantity, match.SelectedSize, newAddOnQty));
         }
         await OnCartChanged.InvokeAsync();
     }

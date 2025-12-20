@@ -222,8 +222,10 @@ public class OrderItemRequest
     public decimal Price { get; set; }
     public int Quantity { get; set; }
     public int? SelectedServes { get; set; }
+    public string? SelectedSize { get; set; }
     public int UpgradePhadThai24Qty { get; set; }
     public int UpgradePhadThai48Qty { get; set; }
+    public int AddOnQty { get; set; }
 }
 
 public class OrderResponse
