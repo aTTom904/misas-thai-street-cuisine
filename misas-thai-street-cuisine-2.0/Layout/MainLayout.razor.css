@@ -131,7 +131,13 @@
     margin-top: 0.25rem;
 }
 
-.countdown-info-icon:hover {
+@media (hover: hover) and (pointer: fine) {
+    .countdown-info-icon:hover {
+        color: #ff9800;
+    }
+}
+
+.countdown-info-icon:active {
     color: #ff9800;
 }
 
@@ -207,7 +213,14 @@
     text-decoration: none;
     transition: color 0.2s ease;
 }
-.footer-right a:hover {
+
+@media (hover: hover) and (pointer: fine) {
+    .footer-right a:hover {
+        color: orange;
+    }
+}
+
+.footer-right a:active {
     color: orange;
 }
 
@@ -237,7 +250,15 @@
     transition: background 0.15s, color 0.15s;
     text-align: left;
 }
-.mobile-nav a:hover {
+
+@media (hover: hover) and (pointer: fine) {
+    .mobile-nav a:hover {
+        background: #fff3e0;
+        color: #ff9800;
+    }
+}
+
+.mobile-nav a:active {
     background: #fff3e0;
     color: #ff9800;
 }

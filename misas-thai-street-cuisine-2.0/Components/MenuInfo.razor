@@ -23,42 +23,71 @@
             <div class="delivery-time-text">Delivery Window: 5-7 PM on your chosen Wednesday.</div>
             <div class="delivery-time-sub-text">More exact delivery times will be finalized after the order deadline.</div>
             <div class="minimum-order-text">$35.00 minimum order required for delivery.</div>
-        </div>
-        <div class="menu-title-block">
-            <h2 class="menu-title">Pick Your Platter</h2>
-            <p class="menu-subtitle">Fresh, vibrant, and made for sharing. Every platter includes crisp greens, our signature dips, and your choice of sticky rice or Phad Thai.</p>
+            <button class="view-toggle-btn" @onclick="ToggleView">
+                @(ShowTrayOptions ? "View Dinner Platters" : "View Tray Options")
+            </button>
         </div>
     </div>
-    <div class="platters-grid">
-        @foreach (var platter in MenuData.Platters)
-        {
-            <div class="menu-card" @onclick="() => ShowModal(platter)">
-                <img src="@platter.ImageUrl" alt="@platter.Name" class="menu-card-img" />
-                <div class="menu-card-title">@platter.Name</div>
-                <div class="menu-card-price">Starting at $@(platter.Prices != null ? platter.Prices.Values.Min() : 0)</div>
+
+    @if (!ShowTrayOptions)
+    {
+        <div class="view-container @(ShowTrayOptions ? "slide-out" : "slide-in")">
+            <div class="menu-title-block">
+                <h2 class="menu-title">Pick Your Platter</h2>
+                <p class="menu-subtitle">Fresh, vibrant, and made for sharing. Every platter includes crisp greens, our signature dips, and your choice of sticky rice or Phad Thai.</p>
             </div>
-        }
-    </div>
-    
-    <div class="menu-divider">
-        <div class="menu-divider-title">
-            A-la-Carte options:
-        </div>
-        <div class="menu-divider-subtext">
-            Add to an existing platter, or build your own!
-        </div>
-    </div>
-    
-    <div class="sides-grid">
-        @foreach (var side in MenuData.SideDishes)
-        {
-            <div class="side-card" @onclick="() => ShowModal(side)">
-                <img src="@side.ImageUrl" alt="@side.Name" class="side-card-img" />
-                <div class="side-card-title">@side.Name</div>
-                <div class="side-card-price">$@side.Price</div>
+            <div class="platters-grid">
+                @foreach (var platter in MenuData.Platters)
+                {
+                    <div class="menu-card" @onclick="() => ShowModal(platter)">
+                        <img src="@platter.ImageUrl" alt="@platter.Name" class="menu-card-img" />
+                        <div class="menu-card-title">@platter.Name</div>
+                        <div class="menu-card-price">Starting at $@(platter.Prices != null ? platter.Prices.Values.Min() : 0)</div>
+                    </div>
+                }
             </div>
-        }
-    </div>
+
+            <div class="menu-divider">
+                <div class="menu-divider-title">
+                    A-la-Carte options:
+                </div>
+                <div class="menu-divider-subtext">
+                    Add to an existing platter, or build your own!
+                </div>
+            </div>
+
+            <div class="sides-grid">
+                @foreach (var side in MenuData.SideDishes)
+                {
+                    <div class="side-card" @onclick="() => ShowModal(side)">
+                        <img src="@side.ImageUrl" alt="@side.Name" class="side-card-img" />
+                        <div class="side-card-title">@side.Name</div>
+                        <div class="side-card-price">$@side.Price</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="view-container @(ShowTrayOptions ? "slide-in" : "slide-out")">
+            <div class="menu-title-block">
+                <h2 class="menu-title">Tray Options</h2>
+                <p class="menu-subtitle">Half and full trays. Perfect for larger gatherings, events, and bulk orders. Order now and feed a crowd!</p>
+            </div>
+            <div class="trays-grid">
+                @foreach (var tray in MenuData.Trays)
+                {
+                    <div class="menu-card" @onclick="() => ShowModal(tray)">
+                        <img src="@tray.ImageUrl" alt="@tray.Name" class="menu-card-img" />
+                        <div class="menu-card-title">@tray.Name</div>
+                        <div class="menu-card-price">Starting at $@(tray.Prices != null ? tray.Prices.Values.Min() : 0)</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
     @if (IsModalOpen && SelectedMenuItem != null)
     {
         <MenuModal MenuItem="SelectedMenuItem" OnClose="CloseModal" />
@@ -69,9 +98,11 @@
     public List<DateTime> UpcomingWednesdays { get; set; } = new();
     public DateTime? SelectedDate { get; set; }
 
-
     public bool IsModalOpen { get; set; } = false;
     public MenuItem? SelectedMenuItem { get; set; }
+    public bool ShowTrayOptions { get; set; } = false;
+
+    [Inject] private IJSRuntime JS { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -107,5 +138,10 @@
         {
             OrderContext.SelectedDate = date;
         }
+    }
+
+    private async Task ToggleView()
+    {
+        ShowTrayOptions = !ShowTrayOptions;
     }
 }

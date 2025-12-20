@@ -125,11 +125,12 @@ namespace misas_thai_street_cuisine_2._0.Services
         {
             await InitializeAsync(); // Ensure cart is initialized
             
-            // Find existing item with same name, category, and serves
+            // Find existing item with same name, category, serves, and size
             var existingItemIndex = Items.FindIndex(i =>
                 i.Item.Name == cartItem.Item.Name &&
                 i.Item.Category == cartItem.Item.Category &&
-                i.SelectedServes == cartItem.SelectedServes);
+                i.SelectedServes == cartItem.SelectedServes &&
+                i.SelectedSize == cartItem.SelectedSize);
 
             if (existingItemIndex >= 0)
             {
@@ -310,8 +311,10 @@ namespace misas_thai_street_cuisine_2._0.Services
                 Category = item.Item.Category,
                 Quantity = item.Quantity,
                 SelectedServes = item.SelectedServes,
+                SelectedSize = item.SelectedSize,
                 UpgradePhadThai24Qty = item.UpgradePhadThai24Qty,
-                UpgradePhadThai48Qty = item.UpgradePhadThai48Qty
+                UpgradePhadThai48Qty = item.UpgradePhadThai48Qty,
+                AddOnQty = item.AddOnQty
             }).ToList();
         }
 
@@ -324,7 +327,18 @@ namespace misas_thai_street_cuisine_2._0.Services
                 var menuItem = _menuService.GetMenuItem(dto.ItemName, dto.Category);
                 if (menuItem != null)
                 {
-                    cartItems.Add(new CartItem(menuItem, dto.Quantity, dto.SelectedServes, dto.UpgradePhadThai24Qty, dto.UpgradePhadThai48Qty));
+                    CartItem cartItem;
+                    if (menuItem is Tray tray && !string.IsNullOrEmpty(dto.SelectedSize))
+                    {
+                        // Restore tray with size and add-on quantity
+                        cartItem = new CartItem(tray, dto.Quantity, dto.SelectedSize, dto.AddOnQty);
+                    }
+                    else
+                    {
+                        // Restore platter or side dish
+                        cartItem = new CartItem(menuItem, dto.Quantity, dto.SelectedServes, dto.UpgradePhadThai24Qty, dto.UpgradePhadThai48Qty);
+                    }
+                    cartItems.Add(cartItem);
                 }
                 else
                 {

@@ -36,7 +36,15 @@
     margin: 0 0.2rem;
     transition: background 0.15s, color 0.15s;
 }
-.cart-btn:hover {
+
+@media (hover: hover) and (pointer: fine) {
+    .cart-btn:hover {
+        background: #ee6900;
+        color: #fff;
+    }
+}
+
+.cart-btn:active {
     background: #ee6900;
     color: #fff;
 }
@@ -106,10 +114,18 @@
     margin: 0 0.2rem;
     transition: background 0.15s, color 0.15s;
 }
+
+@media (hover: hover) and (pointer: fine) {
     .cart-upgrade-btn:hover {
         background: #ee6900;
         color: #fff;
     }
+}
+
+.cart-upgrade-btn:active {
+    background: #ee6900;
+    color: #fff;
+}
 .menu-modal-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -205,7 +221,14 @@
     z-index: 10;
     transition: color 0.2s;
 }
-.menu-modal-close:hover {
+
+@media (hover: hover) and (pointer: fine) {
+    .menu-modal-close:hover {
+        color: #ee6900;
+    }
+}
+
+.menu-modal-close:active {
     color: #ee6900;
 }
 /* Action buttons section */
@@ -232,7 +255,14 @@
     flex: 1;
 }
 
-.modal-keep-shopping-btn:hover {
+@media (hover: hover) and (pointer: fine) {
+    .modal-keep-shopping-btn:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+    }
+}
+
+.modal-keep-shopping-btn:active {
     background: #ff9800;
     box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
 }
@@ -252,7 +282,14 @@
     flex: 1;
 }
 
-.modal-checkout-btn:hover {
+@media (hover: hover) and (pointer: fine) {
+    .modal-checkout-btn:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+    }
+}
+
+.modal-checkout-btn:active {
     background: #ff9800;
     box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
 }

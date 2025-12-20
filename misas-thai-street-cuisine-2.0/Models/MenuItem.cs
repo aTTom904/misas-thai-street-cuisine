@@ -16,6 +16,15 @@
         public List<string>? AddOns { get; set; }
     }
 
+    public class Tray : MenuItem
+    {
+        public string[] Size { get; set; }
+        public Dictionary<string, decimal> Prices { get; set; }
+        public Dictionary<string, string> Includes { get; set; }
+        public Dictionary<string, string> Serves { get; set; }
+        public List<string>? AddOns { get; set; }
+    }
+
     public class SideDish : MenuItem
     {
         public decimal Price { get; set; }

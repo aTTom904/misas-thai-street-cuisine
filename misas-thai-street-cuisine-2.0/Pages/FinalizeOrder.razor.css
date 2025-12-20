@@ -212,7 +212,16 @@
     transition: all 0.2s;
 }
 
-.btn-primary:hover:not(:disabled) {
+@media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover:not(:disabled) {
+        background: #ff9800;
+        border-color: #ff9800;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+    }
+}
+
+.btn-primary:active:not(:disabled) {
     background: #ff9800;
     border-color: #ff9800;
     transform: translateY(-1px);
@@ -258,7 +267,14 @@
     transition: all 0.2s;
 }
 
-.btn-secondary:hover {
+@media (hover: hover) and (pointer: fine) {
+    .btn-secondary:hover {
+        background: #5a6268;
+        border-color: #5a6268;
+    }
+}
+
+.btn-secondary:active {
     background: #5a6268;
     border-color: #5a6268;
 }
@@ -275,7 +291,16 @@
     font-size: 1.1rem;
 }
 
-.btn-success:hover:not(:disabled) {
+@media (hover: hover) and (pointer: fine) {
+    .btn-success:hover:not(:disabled) {
+        background: #ff9800;
+        border-color: #ff9800;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(238, 105, 0, 0.4);
+    }
+}
+
+.btn-success:active:not(:disabled) {
     background: #ff9800;
     border-color: #ff9800;
     transform: translateY(-1px);
@@ -303,7 +328,17 @@
     font-size: 0.875rem;
 }
 
-.btn-brand-orange:hover:not(:disabled) {
+@media (hover: hover) and (pointer: fine) {
+    .btn-brand-orange:hover:not(:disabled) {
+        background: #ee6900;
+        border-color: #ee6900;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+    }
+}
+
+.btn-brand-orange:active:not(:disabled) {
     background: #ee6900;
     border-color: #ee6900;
     color: white;
@@ -387,7 +422,14 @@
     font-size: 0.85rem;
 }
 
-.tip-btn:hover {
+@media (hover: hover) and (pointer: fine) {
+    .tip-btn:hover {
+        border-color: #ee6900;
+        background-color: #fff5f0;
+    }
+}
+
+.tip-btn:active {
     border-color: #ee6900;
     background-color: #fff5f0;
 }
@@ -427,7 +469,14 @@
     cursor: pointer;
 }
 
-.currency-input-wrapper:hover {
+@media (hover: hover) and (pointer: fine) {
+    .currency-input-wrapper:hover {
+        border-color: #ee6900;
+        background-color: #fff5f0;
+    }
+}
+
+.currency-input-wrapper:active {
     border-color: #ee6900;
     background-color: #fff5f0;
 }

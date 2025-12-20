@@ -54,7 +54,7 @@
 }
 
 .order-now-btn {
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: #fff;
     background-color: #ee6900;
     padding: 0.75rem 2.5rem;
@@ -65,7 +65,13 @@
     transition: background 0.2s, box-shadow 0.2s;
     margin-top: 1rem;
 }
-.order-now-btn:hover {
+@media (hover: hover) and (pointer: fine) {
+    .order-now-btn:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 16px #ee690088;
+    }
+}
+.order-now-btn:active {
     background: #ff9800;
     box-shadow: 0 4px 16px #ee690088;
 }
@@ -103,9 +109,11 @@
     transition: opacity 0.3s ease;
 }
 
-#heroCarousel:hover .carousel-control-prev,
-#heroCarousel:hover .carousel-control-next {
-    opacity: 0.8;
+@media (hover: hover) and (pointer: fine) {
+    #heroCarousel:hover .carousel-control-prev,
+    #heroCarousel:hover .carousel-control-next {
+        opacity: 0.8;
+    }
 }
 
 #heroCarousel .carousel-control-prev-icon,
