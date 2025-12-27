@@ -1,4 +1,6 @@
 using Microsoft.JSInterop;
+using Microsoft.Extensions.Logging;
+using misas_thai_street_cuisine_2._0.EmailTemplates;
 
 namespace misas_thai_street_cuisine_2._0.Services
 {
@@ -6,11 +8,22 @@ namespace misas_thai_street_cuisine_2._0.Services
     {
         private readonly IJSRuntime _jsRuntime;
         private readonly GoogleMapsConfigService _googleMapsConfig;
+        private readonly ILogger<DeliveryValidationService> _logger;
+        private readonly EmailService _emailService;
+        private readonly IConfiguration _configuration;
 
-        public DeliveryValidationService(IJSRuntime jsRuntime, GoogleMapsConfigService googleMapsConfig)
+        public DeliveryValidationService(
+            IJSRuntime jsRuntime, 
+            GoogleMapsConfigService googleMapsConfig,
+            ILogger<DeliveryValidationService> logger,
+            EmailService emailService,
+            IConfiguration configuration)
         {
             _jsRuntime = jsRuntime;
             _googleMapsConfig = googleMapsConfig;
+            _logger = logger;
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
         // Shared validation state
@@ -62,6 +75,15 @@ namespace misas_thai_street_cuisine_2._0.Services
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Failed to load Google Maps for address validation");
+                    
+                    await SendErrorNotificationAsync(
+                        "DeliveryValidationService.ValidateDeliveryAddress",
+                        "Google Maps API",
+                        ex,
+                        $"Failed to load Google Maps when validating address: {address}"
+                    );
+                    
                     return new DeliveryValidationResult
                     {
                         IsInDeliveryArea = false,
@@ -73,6 +95,8 @@ namespace misas_thai_street_cuisine_2._0.Services
                 var userLocation = await _jsRuntime.InvokeAsync<LatLngResult>("geocodeAddress", address);
                 if (userLocation == null)
                 {
+                    _logger.LogWarning("Failed to geocode address: {Address}", address);
+                    
                     result = new DeliveryValidationResult
                     {
                         IsInDeliveryArea = false,
@@ -82,26 +106,47 @@ namespace misas_thai_street_cuisine_2._0.Services
                 }
                 else
                 {
-                    // Check if user is within buffer of the static route
-                    var isNearRoute = await _jsRuntime.InvokeAsync<bool>("isPointNearRoute",
-                        RouteStartAddress, RouteEndAddress, userLocation.lat, userLocation.lng, BufferMiles);
+                    try
+                    {
+                        // Check if user is within buffer of the static route
+                        var isNearRoute = await _jsRuntime.InvokeAsync<bool>("isPointNearRoute",
+                            RouteStartAddress, RouteEndAddress, userLocation.lat, userLocation.lng, BufferMiles);
 
-                    if (isNearRoute)
-                    {
-                        result = new DeliveryValidationResult
+                        if (isNearRoute)
                         {
-                            IsInDeliveryArea = true,
-                            Message = "Great news! You're within our free delivery corridor.",
-                            ResultType = "success"
-                        };
+                            result = new DeliveryValidationResult
+                            {
+                                IsInDeliveryArea = true,
+                                Message = "Great news! You're within our free delivery corridor.",
+                                ResultType = "success"
+                            };
+                        }
+                        else
+                        {
+                            result = new DeliveryValidationResult
+                            {
+                                IsInDeliveryArea = false,
+                                Message = OutOfRangeMessage,
+                                ResultType = "warning"
+                            };
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
+                        _logger.LogError(ex, "Error calculating route distance for address: {Address}", address);
+                        
+                        await SendErrorNotificationAsync(
+                            "DeliveryValidationService.ValidateDeliveryAddress",
+                            "Google Maps Directions API",
+                            ex,
+                            $"Failed to calculate route for address: {address} (Coordinates: {userLocation.lat}, {userLocation.lng})"
+                        );
+                        
                         result = new DeliveryValidationResult
                         {
                             IsInDeliveryArea = false,
-                            Message = OutOfRangeMessage,
-                            ResultType = "warning"
+                            Message = "Unable to validate delivery area. Please try again later.",
+                            ResultType = "error"
                         };
                     }
                 }
@@ -124,6 +169,32 @@ namespace misas_thai_street_cuisine_2._0.Services
         {
             LastValidatedAddress = null;
             LastValidationResult = null;
+        }
+
+        private async Task SendErrorNotificationAsync(string location, string integration, Exception ex, string? additionalInfo = null)
+        {
+            try
+            {
+                var adminEmail = _configuration["AdminEmail"];
+                if (string.IsNullOrEmpty(adminEmail)) return;
+
+                var errorData = new ErrorNotificationData(
+                    Location: location,
+                    IntegrationName: integration,
+                    ErrorType: ex.GetType().Name,
+                    ErrorMessage: ex.Message,
+                    Timestamp: DateTime.UtcNow,
+                    StackTrace: ex.StackTrace,
+                    AdditionalInfo: additionalInfo
+                );
+
+                var emailContent = ErrorNotificationEmail.Create(errorData);
+                await _emailService.SendEmailAsync(adminEmail, emailContent);
+            }
+            catch
+            {
+                // Silently fail - don't let email errors break the service
+            }
         }
     }
 }
