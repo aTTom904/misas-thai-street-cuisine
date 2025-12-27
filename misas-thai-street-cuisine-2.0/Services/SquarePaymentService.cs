@@ -1,4 +1,6 @@
 using Microsoft.JSInterop;
+using Microsoft.Extensions.Logging;
+using misas_thai_street_cuisine_2._0.EmailTemplates;
 
 namespace misas_thai_street_cuisine_2._0.Services
 {
@@ -7,14 +9,23 @@ namespace misas_thai_street_cuisine_2._0.Services
         private readonly IJSRuntime _jsRuntime;
         private readonly IConfiguration _configuration;
         private readonly ApiConfigurationService _apiConfigService;
+        private readonly ILogger<SquarePaymentService> _logger;
+        private readonly EmailService _emailService;
         private string _applicationId = string.Empty;
         private string _locationId = string.Empty;
 
-        public SquarePaymentService(IJSRuntime jsRuntime, IConfiguration configuration, ApiConfigurationService apiConfigService)
+        public SquarePaymentService(
+            IJSRuntime jsRuntime, 
+            IConfiguration configuration, 
+            ApiConfigurationService apiConfigService,
+            ILogger<SquarePaymentService> logger,
+            EmailService emailService)
         {
             _jsRuntime = jsRuntime;
             _configuration = configuration;
             _apiConfigService = apiConfigService;
+            _logger = logger;
+            _emailService = emailService;
         }
 
         private void EnsureConfigurationLoaded()
@@ -38,10 +49,32 @@ namespace misas_thai_street_cuisine_2._0.Services
 
         public async Task<PaymentInitResult> InitializeAsync()
         {
-            EnsureConfigurationLoaded();
-            var result = await _jsRuntime.InvokeAsync<PaymentInitResult>(
-                "squarePayments.init", _applicationId, _locationId);
-            return result;
+            try
+            {
+                EnsureConfigurationLoaded();
+                var result = await _jsRuntime.InvokeAsync<PaymentInitResult>(
+                    "squarePayments.init", _applicationId, _locationId);
+                
+                if (!result.Success)
+                {
+                    _logger.LogWarning("Square payment initialization failed: {Error}", result.Error);
+                }
+                
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception during Square payment initialization");
+                
+                await SendErrorNotificationAsync(
+                    "SquarePaymentService.InitializeAsync",
+                    "Square Payments API",
+                    ex,
+                    $"Failed to initialize Square payments with Application ID: {_applicationId}"
+                );
+                
+                return new PaymentInitResult { Success = false, Error = ex.Message };
+            }
         }
 
         public async Task<PaymentInitResult> InitializeCardAsync(string containerId)
@@ -53,9 +86,31 @@ namespace misas_thai_street_cuisine_2._0.Services
 
         public async Task<TokenizeResult> TokenizeCardAsync()
         {
-            var result = await _jsRuntime.InvokeAsync<TokenizeResult>(
-                "squarePayments.tokenizeCard");
-            return result;
+            try
+            {
+                var result = await _jsRuntime.InvokeAsync<TokenizeResult>(
+                    "squarePayments.tokenizeCard");
+                
+                if (!result.Success && result.Errors != null && result.Errors.Length > 0)
+                {
+                    _logger.LogWarning("Square card tokenization failed: {Errors}", string.Join(", ", result.Errors));
+                }
+                
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Exception during Square card tokenization");
+                
+                await SendErrorNotificationAsync(
+                    "SquarePaymentService.TokenizeCardAsync",
+                    "Square Payments API",
+                    ex,
+                    "Failed to tokenize credit card"
+                );
+                
+                return new TokenizeResult { Success = false, Error = ex.Message };
+            }
         }
 
         public async Task<bool> IsApplePayAvailableAsync()
@@ -90,6 +145,32 @@ namespace misas_thai_street_cuisine_2._0.Services
         public async Task DestroyAsync()
         {
             await _jsRuntime.InvokeVoidAsync("squarePayments.destroy");
+        }
+
+        private async Task SendErrorNotificationAsync(string location, string integration, Exception ex, string? additionalInfo = null)
+        {
+            try
+            {
+                var adminEmail = _configuration["AdminEmail"];
+                if (string.IsNullOrEmpty(adminEmail)) return;
+
+                var errorData = new ErrorNotificationData(
+                    Location: location,
+                    IntegrationName: integration,
+                    ErrorType: ex.GetType().Name,
+                    ErrorMessage: ex.Message,
+                    Timestamp: DateTime.UtcNow,
+                    StackTrace: ex.StackTrace,
+                    AdditionalInfo: additionalInfo
+                );
+
+                var emailContent = ErrorNotificationEmail.Create(errorData);
+                await _emailService.SendEmailAsync(adminEmail, emailContent);
+            }
+            catch
+            {
+                // Silently fail - don't let email errors break the service
+            }
         }
     }
 
