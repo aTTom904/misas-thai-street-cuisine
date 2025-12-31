@@ -745,6 +745,8 @@
                     TipAmount = tipAmount,
                     SalesTax = salesTax,
                     PaymentToken = tokenResult.Token,
+                    DiscountCode = string.IsNullOrEmpty(appliedDiscountCode) ? null : appliedDiscountCode,
+                    DiscountAmount = discountAmount,
                     Items = Cart?.Items?.Where(i => i != null && i.Item != null).Select(item => new OrderItemRequest
                     {
                         ItemName = item.Item.Name,
@@ -766,6 +768,21 @@
                         // Payment and order both successful
                         orderConfirmation = apiResult.Data.OrderNumber;
                         successMessage = "Payment processed and order saved successfully!";
+                        
+                        // Increment discount code usage if a discount was applied
+                        if (!string.IsNullOrEmpty(appliedDiscountCode))
+                        {
+                            try
+                            {
+                                await OrderApi.IncrementDiscountCodeUsageAsync(appliedDiscountCode);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log but don't fail the order if increment fails
+                                Console.WriteLine($"Warning: Failed to increment discount code usage: {ex.Message}");
+                            }
+                        }
+                        
                         if (Cart != null) await Cart.ClearCartAsync();
                         currentStep = 2;
                         StateHasChanged();
