@@ -196,6 +196,49 @@ public class OrderApiService
             };
         }
     }
+
+    public async Task<ApiResponse<IncrementDiscountCodeResponse>> IncrementDiscountCodeUsageAsync(string discountCode)
+    {
+        try
+        {
+            EnsureApiBaseUrlLoaded();
+            
+            var response = await _httpClient.PostAsync($"{_apiBaseUrl}/discount-codes/{discountCode}/increment", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<IncrementDiscountCodeResponse>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return new ApiResponse<IncrementDiscountCodeResponse>
+                {
+                    Success = true,
+                    Data = result
+                };
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new ApiResponse<IncrementDiscountCodeResponse>
+                {
+                    Success = false,
+                    Error = $"API Error: {response.StatusCode} - {errorContent}"
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error incrementing discount code usage");
+            return new ApiResponse<IncrementDiscountCodeResponse>
+            {
+                Success = false,
+                Error = $"Network error: {ex.Message}"
+            };
+        }
+    }
 }
 
 // API Models
@@ -213,6 +256,8 @@ public class CreateOrderRequest
     public List<OrderItemRequest> Items { get; set; } = new();
     public decimal TipAmount { get; set; }
     public decimal SalesTax { get; set; }
+    public string? DiscountCode { get; set; }
+    public decimal DiscountAmount { get; set; }
 }
 
 public class OrderItemRequest
@@ -254,4 +299,10 @@ public class ApiResponse<T>
     public bool Success { get; set; }
     public T? Data { get; set; }
     public string Error { get; set; } = string.Empty;
+}
+
+public class IncrementDiscountCodeResponse
+{
+    public string Message { get; set; } = string.Empty;
+    public int CurrentUses { get; set; }
 }
