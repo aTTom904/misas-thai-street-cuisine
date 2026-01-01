@@ -741,12 +741,12 @@
                     CustomerPhone = customerPhone ?? string.Empty,
                     AdditionalInformation = additionalInformation ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
-                    Total = totalWithTaxAndTip,
+                    OrderTotal = totalWithTaxAndTip,
                     TipAmount = tipAmount,
                     SalesTax = salesTax,
-                    PaymentToken = tokenResult.Token,
-                    DiscountCode = string.IsNullOrEmpty(appliedDiscountCode) ? null : appliedDiscountCode,
                     DiscountAmount = discountAmount,
+                    DiscountCode = string.IsNullOrEmpty(appliedDiscountCode) ? null : appliedDiscountCode,
+                    PaymentToken = tokenResult.Token,
                     Items = Cart?.Items?.Where(i => i != null && i.Item != null).Select(item => new OrderItemRequest
                     {
                         ItemName = item.Item.Name,
