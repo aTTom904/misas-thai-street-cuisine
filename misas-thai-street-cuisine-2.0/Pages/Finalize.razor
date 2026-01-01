@@ -304,7 +304,7 @@
                     CustomerPhone = customerPhone ?? string.Empty,
                     AdditionalInformation = additionalInformation ?? string.Empty,
                     ConsentToUpdates = consentToUpdates,
-                    Total = Cart.Items.Sum(i => i.GetTotalPrice()),
+                    OrderTotal = Cart.Items.Sum(i => i.GetTotalPrice()),
                     PaymentToken = tokenResult.Token,
                     Items = Cart.Items.Select(item => new OrderItemRequest
                     {

@@ -244,20 +244,26 @@ public class OrderApiService
 // API Models
 public class CreateOrderRequest
 {
+    // Customer fields
     public string CustomerName { get; set; } = string.Empty;
     public string CustomerEmail { get; set; } = string.Empty;
     public string CustomerPhone { get; set; } = string.Empty;
-    public string AdditionalInformation { get; set; } = string.Empty;
     public bool ConsentToUpdates { get; set; }
+    
+    // Order fields
     public string DeliveryAddress { get; set; } = string.Empty;
     public string DeliveryDate { get; set; } = string.Empty;
-    public decimal Total { get; set; }
-    public string PaymentToken { get; set; } = string.Empty;
-    public List<OrderItemRequest> Items { get; set; } = new();
+    public decimal OrderTotal { get; set; }
     public decimal TipAmount { get; set; }
-    public decimal SalesTax { get; set; }
-    public string? DiscountCode { get; set; }
     public decimal DiscountAmount { get; set; }
+    public decimal SalesTax { get; set; }
+    public string? AdditionalInformation { get; set; }
+    public string? PaymentToken { get; set; }
+    public string? DiscountCode { get; set; }
+    public List<OrderItemRequest> Items { get; set; } = new();
+    
+    // Legacy compatibility (for TakePayment function which still uses Total)
+    public decimal Total => OrderTotal;
 }
 
 public class OrderItemRequest
