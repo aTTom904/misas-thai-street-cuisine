@@ -282,9 +282,58 @@
                         </div>
                     </div>
                     
+                    <!-- Loyalty Punch Card Section -->
+                    @if (!punchCardCheckFailed)
+                    {
+                        <div class="punch-card-section mt-3">
+                            <h5>Loyalty Rewards</h5>
+                            <div class="punch-card-progress">
+                                <div class="progress" style="height: 30px;">
+                                    <div class="progress-bar" 
+                                         role="progressbar" 
+                                         style="width: @(isPunchCardEligible ? 100 : (punchCardOrderCount % 5) * 20)%;"
+                                         aria-valuenow="@(isPunchCardEligible ? 5 : punchCardOrderCount % 5)" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="5">
+                                        @if (isPunchCardEligible)
+                                        {
+                                            <span>Loyalty Reward Earned!</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@(punchCardOrderCount % 5) of 5 orders</span>
+                                        }
+                                    </div>
+                                </div>
+                                @if (isPunchCardEligible)
+                                {
+                                    @if (!isPunchCardApplied)
+                                    {
+                                        <button type="button" class="btn btn-success mt-2" @onclick="ApplyPunchCard" title="Apply your $5 loyalty reward to this order">
+                                            Apply Loyalty Reward ($5 off)
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-outline-secondary mt-2" @onclick="RemovePunchCard">
+                                            Remove Loyalty Reward
+                                        </button>
+                                        <div class="alert alert-success mt-2">
+                                            <strong><span style="font-size: 1.3em;">✓</span> Loyalty Reward Applied!</strong>
+                                        </div>
+                                    }
+                                }
+                                else if (ordersUntilNextReward > 0)
+                                {
+                                    <p class="mt-2 mb-0"><small>@ordersUntilNextReward more order@(ordersUntilNextReward == 1 ? "" : "s") until your next $5 reward!</small></p>
+                                }
+                            </div>
+                        </div>
+                    }
+                    
                     <div class="discount-code-section mt-3">
                         <div class="form-check">
-                            <input type="checkbox" @bind="showDiscountCode" class="form-check-input" id="discountCheckbox" />
+                            <input type="checkbox" @bind="showDiscountCode" class="form-check-input" id="discountCheckbox" disabled="@isPunchCardApplied" />
                             <label class="form-check-label" for="discountCheckbox">
                                 I have a discount code
                             </label>
@@ -335,7 +384,7 @@
         <div class="empty-cart">
             <h4>Your cart is empty</h4>
             <p>Add some items to your cart before checking out.</p>
-            <a href="/Menu" class="btn btn-primary">Browse Menu</a>
+            <a href="/" class="btn btn-primary">Browse Menu</a>
         </div>
     }
 </div>
@@ -463,6 +512,14 @@
     private decimal discountAmount = 0;
     private string appliedDiscountCode = string.Empty;
     private string discountDescription = string.Empty;
+    
+    // Punch card properties
+    private int punchCardOrderCount = 0;
+    private bool isPunchCardEligible = false;
+    private int ordersUntilNextReward = 5;
+    private bool isPunchCardApplied = false;
+    private bool punchCardCheckFailed = false;
+    private string punchCardErrorMessage = string.Empty;
     
     // Delivery validation properties
     private string deliveryValidationMessage = string.Empty;
@@ -669,6 +726,9 @@
         if (isPaymentInitialized) return;
         try
         {
+            // Check punch card eligibility first
+            await CheckPunchCardEligibility();
+            
             await PaymentService.DestroyAsync();
             var initResult = await PaymentService.InitializeAsync();
             if (!initResult.Success)
@@ -746,6 +806,7 @@
                     SalesTax = salesTax,
                     DiscountAmount = discountAmount,
                     DiscountCode = string.IsNullOrEmpty(appliedDiscountCode) ? null : appliedDiscountCode,
+                    IsPunchCardRedeemed = isPunchCardApplied,
                     PaymentToken = tokenResult.Token,
                     Items = Cart?.Items?.Where(i => i != null && i.Item != null).Select(item => new OrderItemRequest
                     {
@@ -863,6 +924,12 @@
 
     private void HandleDiscountApplied(DiscountCode.DiscountCodeResult result)
     {
+        // Remove punch card if discount code is applied
+        if (isPunchCardApplied)
+        {
+            RemovePunchCard();
+        }
+        
         discountAmount = result.DiscountAmount;
         appliedDiscountCode = result.Code;
         discountDescription = result.Description;
@@ -871,6 +938,61 @@
 
     private void HandleDiscountRemoved()
     {
+        discountAmount = 0;
+        appliedDiscountCode = string.Empty;
+        discountDescription = string.Empty;
+        StateHasChanged();
+    }
+    
+    private async Task CheckPunchCardEligibility()
+    {
+        try
+        {
+            punchCardCheckFailed = false;
+            punchCardErrorMessage = string.Empty;
+            
+            var result = await OrderApi.CheckPunchCardEligibilityAsync(customerEmail, customerPhone);
+            
+            if (result.Success && result.Data != null)
+            {
+                punchCardOrderCount = result.Data.NumberOfOrders;
+                isPunchCardEligible = result.Data.IsEligible;
+                ordersUntilNextReward = result.Data.OrdersUntilNext;
+            }
+            else
+            {
+                // Punch card check failed - hide punch card section but allow checkout
+                punchCardCheckFailed = true;
+                punchCardErrorMessage = "Loyalty rewards temporarily unavailable";
+            }
+        }
+        catch (Exception ex)
+        {
+            // Punch card check failed - hide punch card section but allow checkout
+            punchCardCheckFailed = true;
+            punchCardErrorMessage = "Loyalty rewards temporarily unavailable";
+        }
+    }
+    
+    private void ApplyPunchCard()
+    {
+        // Remove discount code if applied
+        if (!string.IsNullOrEmpty(appliedDiscountCode))
+        {
+            HandleDiscountRemoved();
+            showDiscountCode = false;
+        }
+        
+        isPunchCardApplied = true;
+        discountAmount = 5.00m;
+        appliedDiscountCode = "Loyalty Reward";
+        discountDescription = "5th order reward - $5 off";
+        StateHasChanged();
+    }
+    
+    private void RemovePunchCard()
+    {
+        isPunchCardApplied = false;
         discountAmount = 0;
         appliedDiscountCode = string.Empty;
         discountDescription = string.Empty;

@@ -239,6 +239,49 @@ public class OrderApiService
             };
         }
     }
+
+    public async Task<ApiResponse<PunchCardStatusResponse>> CheckPunchCardEligibilityAsync(string email, string phone)
+    {
+        try
+        {
+            EnsureApiBaseUrlLoaded();
+            
+            var response = await _httpClient.GetAsync($"{_apiBaseUrl}/discount-codes/punch-card/check?email={Uri.EscapeDataString(email)}&phone={Uri.EscapeDataString(phone)}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var result = JsonSerializer.Deserialize<PunchCardStatusResponse>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return new ApiResponse<PunchCardStatusResponse>
+                {
+                    Success = true,
+                    Data = result
+                };
+            }
+            else
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new ApiResponse<PunchCardStatusResponse>
+                {
+                    Success = false,
+                    Error = $"API Error: {response.StatusCode} - {errorContent}"
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error checking punch card eligibility");
+            return new ApiResponse<PunchCardStatusResponse>
+            {
+                Success = false,
+                Error = $"Network error: {ex.Message}"
+            };
+        }
+    }
 }
 
 // API Models
@@ -260,6 +303,7 @@ public class CreateOrderRequest
     public string? AdditionalInformation { get; set; }
     public string? PaymentToken { get; set; }
     public string? DiscountCode { get; set; }
+    public bool IsPunchCardRedeemed { get; set; }
     public List<OrderItemRequest> Items { get; set; } = new();
     
     // Legacy compatibility (for TakePayment function which still uses Total)
@@ -311,4 +355,11 @@ public class IncrementDiscountCodeResponse
 {
     public string Message { get; set; } = string.Empty;
     public int CurrentUses { get; set; }
+}
+
+public class PunchCardStatusResponse
+{
+    public int NumberOfOrders { get; set; }
+    public bool IsEligible { get; set; }
+    public int OrdersUntilNext { get; set; }
 }

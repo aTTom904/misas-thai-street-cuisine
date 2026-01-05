@@ -62,7 +62,7 @@
     font-size: 1.2rem;
 }
 
-.subtotal-line, .tax-line, .tip-line {
+.subtotal-line, .tax-line, .tip-line, .discount-line {
     display: flex;
     justify-content: space-between;
     margin-bottom: 0.5rem;
@@ -539,6 +539,114 @@
     margin: 0;
 }
 
+/* Punch Card Section */
+.punch-card-section {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.punch-card-section h5 {
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #333;
+}
+
+.punch-card-progress .progress {
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #e9ecef;
+}
+
+.punch-card-progress .progress-bar {
+    font-weight: 500;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.3s ease;
+    background-color: #ee6900;
+}
+
+.punch-card-progress .alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 10px 12px;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+}
+
+.punch-card-section .btn-success {
+    background: transparent;
+    border: 1px solid #ee6900;
+    color: #ee6900;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .punch-card-section .btn-success:hover {
+        background: #ee6900;
+        border-color: #ee6900;
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+    }
+}
+
+.punch-card-section .btn-success:active {
+    background: #ee6900;
+    border-color: #ee6900;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+}
+
+.punch-card-section .btn-outline-secondary {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .punch-card-section .btn-outline-secondary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+    }
+}
+
+.punch-card-progress p {
+    margin-top: 8px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Discount Code Section */
+.discount-code-section {
+    margin: 15px 0;
+}
+
+.discount-code-section .form-check-input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.discount-code-section .form-check-label {
+    font-weight: 500;
+    color: #333;
+}
 
 
 #card-container, #apple-pay-container {
