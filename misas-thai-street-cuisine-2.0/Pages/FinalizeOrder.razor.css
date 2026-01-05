@@ -556,8 +556,8 @@
 
 .punch-card-progress .progress {
     border-radius: 6px;
-    overflow: hidden;
-    background-color: #e9ecef;
+    overflow: visible;
+    background-color: #97999b;
 }
 
 .punch-card-progress .progress-bar {
@@ -568,6 +568,21 @@
     justify-content: center;
     transition: width 0.3s ease;
     background-color: #ee6900;
+    white-space: nowrap;
+    overflow: visible;
+    position: relative;
+    box-shadow: 0 0 12px rgba(238, 105, 0, 0.6);
+    border-radius: 6px;
+}
+
+.punch-card-progress .progress-bar span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    width: max-content;
+    max-width: none;
+    padding: 0 8px;
 }
 
 .punch-card-progress .alert-success {
@@ -711,4 +726,13 @@
     .btn-success {
         font-size: 0.8rem;
     }
+    
+    /* .punch-card-progress .progress-bar {
+        font-size: 0.75rem;
+    }
+    
+    .punch-card-progress .progress-bar span {
+        padding: 0 4px;
+        font-size: 0.875rem;
+    } */
 }
