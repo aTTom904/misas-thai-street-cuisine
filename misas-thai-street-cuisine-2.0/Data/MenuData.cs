@@ -5,6 +5,10 @@ namespace misas_thai_street_cuisine_2._0.Data
 {
     public class MenuData
     {
+        // Phad Thai upgrade pricing
+        public static decimal PhadThai24ozUpgradePrice { get; } = 12.00m;
+        public static decimal PhadThai48ozUpgradePrice { get; } = 24.00m;
+
         public static Platter[] Platters { get; } = new Platter[]
         {
             new Platter
@@ -117,7 +121,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                     {"Full", "18-25"}
                 },
                 AddOns = new List<string> {
-                    "Jao Sauce – Our tangy, slightly sweet-and-savory dip made with tamarind, palm sugar, fish sauce, cilantro, and shallots, and topped with toaEsted rice.",
+                    "Jao Sauce – Our tangy, slightly sweet-and-savory dip made with tamarind, palm sugar, fish sauce, cilantro, and shallots, and topped with toasted rice.",
                 }
             },
             new Tray
@@ -125,8 +129,8 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Name = "Phad Thai",
                 Category = "Tray",
                 Size = new string[] { "Half", "Full" },
-                Prices = new Dictionary<string, decimal> { { "Half", 40.00m }, { "Full", 80.00m } },
-                Description = "Classic Thai noodles stir-fried with eggs, tofu, bean sprouts,  green onions, garnished with crushed peanuts and lime wedges. *Contains shellfish.*",
+                Prices = new Dictionary<string, decimal> { { "Half", 75.00m }, { "Full", 150.00m } },
+                Description = "Classic Thai noodles stir-fried with eggs, tofu, bean sprouts,  green onions, garnished with crushed peanuts and lime wedges. *Contains shellfish, eggs, soy*",
                 ImageUrl = "/Resources/Images/Food/phad-thai-tray.webp",
                 Includes = new Dictionary<string, string> {
                     {"Half", string.Join(" \u2022 ", ["Half Tray of Phad Thai", "Crushed Peanuts", "Lime Wedges", "Bean Sprouts"])},
@@ -187,10 +191,10 @@ namespace misas_thai_street_cuisine_2._0.Data
             },
             new SideDish
             {
-                Name = "Phad Thai for 2",
+                Name = "Phad Thai",
                 Category = "Side",
-                Price = 17.00m,
-                Description = "Classic Thai noodles. *Contains shellfish.*",
+                Price = 20.00m,
+                Description = "24oz Classic Thai noodles. Feeds 1-2. *Contains shellfish, eggs, soy*",
                 ImageUrl = "/Resources/Images/Food/phad-thai.webp"
             },
             new SideDish

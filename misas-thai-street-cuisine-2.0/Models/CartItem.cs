@@ -64,8 +64,8 @@
         public decimal GetTotalPrice()
         {
             decimal total = GetUnitPrice() * Quantity;
-            total += UpgradePhadThai24Qty * 9m;
-            total += UpgradePhadThai48Qty * 18m;
+            total += UpgradePhadThai24Qty * Data.MenuData.PhadThai24ozUpgradePrice;
+            total += UpgradePhadThai48Qty * Data.MenuData.PhadThai48ozUpgradePrice;
             
             if (Item is Tray && SelectedSize != null)
             {

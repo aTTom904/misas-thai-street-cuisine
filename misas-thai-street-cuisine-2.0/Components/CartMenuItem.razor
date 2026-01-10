@@ -50,7 +50,7 @@
                                 @if (serve == 2)
                                 {
                                     <div class="cart-upgrade-row">
-                                        <span class="cart-upgrade-label"><b>Upgrade:</b> 24 oz Phad Thai - <b>add $9</b></span>
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> 24 oz Phad Thai - <b>add $@MenuData.PhadThai24ozUpgradePrice</b></span>
                                         <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, -1)">−</button>
                                         <span class="cart-qty">@match.UpgradePhadThai24Qty</span>
                                         <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 2, 1)">+</button>
@@ -59,7 +59,7 @@
                                 @if (serve == 4)
                                 {
                                     <div class="cart-upgrade-row">
-                                        <span class="cart-upgrade-label"><b>Upgrade:</b> 48 oz Phad Thai - <b>add $18</b></span>
+                                        <span class="cart-upgrade-label"><b>Upgrade:</b> 48 oz Phad Thai - <b>add $@MenuData.PhadThai48ozUpgradePrice</b></span>
                                         <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, -1)">−</button>
                                         <span class="cart-qty">@match.UpgradePhadThai48Qty</span>
                                         <button class="cart-upgrade-btn" @onclick="async () => await ChangeUpgradeQty(match, 4, 1)">+</button>
