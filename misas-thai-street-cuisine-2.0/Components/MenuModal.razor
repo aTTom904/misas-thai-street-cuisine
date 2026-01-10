@@ -42,7 +42,7 @@
 
                                     <div class="cart-upgrade-row @(GetPlatterQty(2) > 0 ? "slide-in" : "slide-out")">
                                         <div class="cart-upgrade-option">
-                                            <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $9</b></span>
+                                            <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 24 oz Phad Thai – <b>add $@MenuData.PhadThai24ozUpgradePrice</b></span>
                                             <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(-1)">−</button>
                                             <span class="cart-qty">@PhadThai24Qty</span>
                                             <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai24(1)">+</button>
@@ -53,7 +53,7 @@
                                 {
                                     <div class="cart-upgrade-row @(GetPlatterQty(4) > 0 ? "slide-in" : "slide-out")">
                                         <div class="cart-upgrade-option">
-                                            <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $18</b></span>
+                                            <span class="cart-upgrade-label"><b>Upgrade:</b> Swap rice for 48 oz Phad Thai – <b>add $@MenuData.PhadThai48ozUpgradePrice</b></span>
                                             <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(-1)">−</button>
                                             <span class="cart-qty">@PhadThai48Qty</span>
                                             <button class="cart-upgrade-btn" @onclick="async () => await ChangePhadThai48(1)">+</button>
