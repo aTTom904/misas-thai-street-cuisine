@@ -1,0 +1,324 @@
+@page "/catering"
+@using misas_thai_street_cuisine_2._0.Models
+@using misas_thai_street_cuisine_2._0.Data
+@using misas_thai_street_cuisine_2._0.Components
+@implements IAsyncDisposable
+
+@inject MenuData MenuData
+@inject ShoppingCartService Cart
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject misas_thai_street_cuisine_2._0.Services.CateringRequestApiService CateringRequestApiService
+
+<div class="catering-container">
+    <div class="catering-header">
+        <h1>Catering</h1>
+        <p>Hosting an event? We'll deliver fresh Thai flavors <span class="highlight">on your schedule</span>.</p>
+        <p class="minimum">Minimum order: $300.00</p>
+    </div>
+
+    <div class="catering-content">
+        <!-- Tray Selection Section -->
+        <div class="tray-selection-section">
+            <h3>Select Your Trays</h3>
+            <div class="trays-grid">
+                @foreach (var tray in MenuData.Trays)
+                {
+                    <div class="menu-card" @onclick="() => ShowModal(tray)">
+                        <img src="@tray.ImageUrl" alt="@tray.Name" class="menu-card-img" />
+                        <div class="menu-card-title">@tray.Name</div>
+                        <div class="menu-card-price">Starting at $@(tray.Prices != null ? tray.Prices.Values.Min() : 0)</div>
+                    </div>
+                }
+            </div>
+
+            <!-- Cart Summary -->
+            @if (Cart?.Items != null && Cart.Items.Count > 0)
+            {
+                <div class="cart-summary">
+                    <h4>Your Selection</h4>
+                    <div class="cart-items">
+                        @foreach (var item in Cart.Items)
+                        {
+                            <div class="cart-item">
+                                <button class="remove-item-btn" @onclick="() => RemoveItem(item)" title="Remove item">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                                <div class="item-info">
+                                    <span class="item-name">@item.Item.Name</span>
+                                    @if (!string.IsNullOrEmpty(item.SelectedSize))
+                                    {
+                                        <span class="item-size">@item.SelectedSize Tray</span>
+                                    }
+                                    @if (item.AddOnQty > 0)
+                                    {
+                                        var addOnSize = item.SelectedSize == "Half" ? "16oz" : "32oz";
+                                        var addOnName = item.Item.Name == "Sai Ua Sausage" ? "Prik Noom Sauce" : "Jao Sauce";
+                                        <span class="item-addon">@item.AddOnQty x @addOnName (@addOnSize)</span>
+                                    }
+                                </div>
+                                <div class="item-quantity">Qty: @item.Quantity</div>
+                                <div class="item-total">$@(item.GetTotalPrice().ToString("F2"))</div>
+                            </div>
+                        }
+                    </div>
+                    <div class="cart-total">
+                        <strong>Total: $@(Cart.GetTotalPrice().ToString("F2"))</strong>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="empty-cart">
+                    <p>Your cart is empty. Select trays above to get started!</p>
+                </div>
+            }
+        </div>
+
+        <!-- Customer Form Section -->
+        <div class="customer-form-section">
+            <h3>Event Details</h3>
+            
+            <div class="form-group">
+                <label>Requested Delivery Date *</label>
+                <input type="text" @ref="datePickerInput" @bind="requestedDateString" class="form-control flatpickr" placeholder="Select a date" required />
+            </div>
+
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" @bind="customerName" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" @bind="customerEmail" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label>Phone *</label>
+                <input type="tel" @bind="customerPhone" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label>Delivery Address *</label>
+                <input type="text" @bind="streetAddress" class="form-control" placeholder="Full Address" required />
+            </div>
+
+            <div class="form-group">
+                <label>Event Details</label>
+                <textarea @bind="eventDetails" class="form-control" rows="3" 
+                          placeholder="Event type, number of guests, etc."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Special Instructions</label>
+                <textarea @bind="specialInstructions" class="form-control" rows="3" 
+                          placeholder="Dietary restrictions, delivery instructions, etc."></textarea>
+            </div>
+
+            <div class="button-container">
+                <button class="submit-btn" @onclick="SubmitRequest" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    else
+                    {
+                        <span>Submit Catering Request</span>
+                    }
+                </button>
+            </div>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-message">@errorMessage</div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- MenuModal -->
+@if (IsModalOpen && SelectedMenuItem != null)
+{
+    <MenuModal MenuItem="SelectedMenuItem" OnClose="CloseModal" HideCheckout="true" />
+}
+
+@if (showSuccessModal)
+{
+    <div class="modal-overlay">
+        <div class="modal-content">
+            <h2>Thank you!</h2>
+            <p>Your catering request has been submitted. We'll contact you soon to confirm details.</p>
+            <div class="modal-socials">
+                <p class="modal-socials-title">Follow us for updates & upcoming events:</p>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" rel="noopener" title="Instagram" class="social-icon">
+                        <i class="fab fa-instagram"></i> Instagram
+                    </a>
+                    <a href="https://www.facebook.com/misasthaistreetcuisine/" target="_blank" rel="noopener" title="Facebook" class="social-icon">
+                        <i class="fab fa-facebook"></i> Facebook
+                    </a>
+                </div>
+            </div>
+            <div class="modal-review-cta">
+                <p class="modal-review-cta-title">Love what we do?</p>
+                <a href="https://g.page/r/Cc7W4dMcs5_LEBM/review" target="_blank" rel="noopener" class="google-review-btn">
+                    <i class="fab fa-google"></i> Leave us a Google Review
+                </a>
+            </div>
+            <button class="close-btn" @onclick="CloseSuccessModal">Return to Home</button>
+        </div>
+    </div>
+}
+
+@code {
+    // Modal state
+    private bool IsModalOpen = false;
+    private MenuItem? SelectedMenuItem = null;
+
+    // Success modal state
+    private bool showSuccessModal = false;
+
+    // Loading state for submit button
+    private bool isSubmitting = false;
+
+    // Error message state
+    private string errorMessage = string.Empty;
+
+    // Form fields
+    private ElementReference datePickerInput;
+    private string requestedDateString = string.Empty;
+    // private DateTime? requestedDate; // No longer used
+    private string customerName = string.Empty;
+    private string customerEmail = string.Empty;
+    private string customerPhone = string.Empty;
+    private string streetAddress = string.Empty;
+    private string specialInstructions = string.Empty;
+    private string eventDetails = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Cart.InitializeAsync();
+        Cart.CartChanged += StateHasChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("initializeFlatpickr", datePickerInput);
+        }
+    }
+
+    private void ShowModal(MenuItem item)
+    {
+        SelectedMenuItem = item;
+        IsModalOpen = true;
+    }
+
+    private void CloseModal()
+    {
+        IsModalOpen = false;
+        SelectedMenuItem = null;
+    }
+
+    private async Task RemoveItem(CartItem item)
+    {
+        await Cart.RemoveAllAsync(item);
+    }
+
+    private async Task SubmitRequest()
+    {
+        isSubmitting = true;
+        errorMessage = string.Empty;
+        showSuccessModal = false;
+        StateHasChanged();
+
+        // Basic validation
+        if (string.IsNullOrWhiteSpace(customerName) ||
+            string.IsNullOrWhiteSpace(customerEmail) ||
+            string.IsNullOrWhiteSpace(customerPhone) ||
+            string.IsNullOrWhiteSpace(streetAddress) ||
+            string.IsNullOrWhiteSpace(requestedDateString) ||
+            !DateTime.TryParse(requestedDateString, out var parsedDate) ||
+            Cart == null || Cart.Items == null || Cart.Items.Count == 0 ||
+            Cart.GetTotalPrice() < 300)
+        {
+            errorMessage = "Please fill out all required fields, select at least $300 in trays, and provide a valid date.";
+            isSubmitting = false;
+            StateHasChanged();
+            return;
+        }
+
+        var dto = new {
+            CustomerName = customerName,
+            CustomerEmail = customerEmail,
+            CustomerPhone = customerPhone,
+            StreetAddress = streetAddress,
+            RequestedDate = parsedDate,
+            EventDetails = eventDetails,
+            SpecialInstructions = specialInstructions,
+            CartItems = Cart.Items.Select(i => new {
+                ItemName = i.Item.Name,
+                Category = i.Item.Category,
+                Quantity = i.Quantity,
+                SelectedServes = i.SelectedServes,
+                SelectedSize = i.SelectedSize,
+                UpgradePhadThai24Qty = i.UpgradePhadThai24Qty,
+                UpgradePhadThai48Qty = i.UpgradePhadThai48Qty,
+                AddOnQty = i.AddOnQty,
+                Price = i.GetUnitPrice()
+            }).ToList(),
+            TotalPrice = Cart.GetTotalPrice()
+        };
+
+        try
+        {
+            var apiResponse = await CateringRequestApiService.SubmitCateringRequestAsync(dto);
+            if (apiResponse.Success)
+            {
+                // Clear form and cart
+                customerName = string.Empty;
+                customerEmail = string.Empty;
+                customerPhone = string.Empty;
+                streetAddress = string.Empty;
+                requestedDateString = string.Empty;
+                eventDetails = string.Empty;
+                specialInstructions = string.Empty;
+                await Cart.ClearCartAsync();
+                showSuccessModal = true;
+            }
+            else
+            {
+                errorMessage = apiResponse.Error ?? "There was a problem submitting your request. Please try again or contact us.";
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = "An error occurred. Please try again or contact us.";
+        }
+        isSubmitting = false;
+        StateHasChanged();
+    }
+
+    private void CloseSuccessModal()
+    {
+        showSuccessModal = false;
+        Navigation.NavigateTo("/");
+        StateHasChanged();
+    }
+
+    async ValueTask IAsyncDisposable.DisposeAsync()
+    {
+        Cart.CartChanged -= StateHasChanged;
+
+        // Destroy Flatpickr instance
+        try
+        {
+            await JS.InvokeVoidAsync("destroyFlatpickr", datePickerInput);
+        }
+        catch (Exception)
+        {
+            // Ignore if JS runtime is already disposed
+        }
+    }
+}
