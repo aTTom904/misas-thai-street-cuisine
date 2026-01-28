@@ -94,3 +94,102 @@
 code {
     color: #c02d76;
 }
+
+/* Flatpickr Custom Styling */
+.flatpickr-calendar {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 2px solid #ddd;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+    background: #ee6900 !important;
+    border-color: #ee6900 !important;
+}
+
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover {
+    background: #ff9800 !important;
+    border-color: #ff9800 !important;
+}
+
+.flatpickr-day:hover {
+    background: #fff3e0;
+    border-color: #fff3e0;
+}
+
+.flatpickr-months .flatpickr-month {
+    background: #ee6900;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+    background: #ee6900;
+    color: white;
+}
+
+.flatpickr-current-month .numInputWrapper span.arrowUp:after {
+    border-bottom-color: white;
+}
+
+.flatpickr-current-month .numInputWrapper span.arrowDown:after {
+    border-top-color: white;
+}
+
+.flatpickr-current-month input.cur-year {
+    color: white;
+}
+
+.flatpickr-weekdays {
+    background: #fff3e0;
+}
+
+span.flatpickr-weekday {
+    color: #ee6900;
+    font-weight: 600;
+}
+
+.flatpickr-input.form-control[readonly] {
+    background-color: white !important;
+    cursor: pointer;
+}
+
+/* Ensure flatpickr input matches other form controls exactly */
+.flatpickr-input.form-control,
+input.flatpickr.form-control {
+    width: 100% !important;
+    padding: 0.75rem !important;
+    border: 2px solid #ddd !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+    font-family: 'Montserrat', sans-serif !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.5 !important;
+    box-sizing: border-box !important;
+}
+
+/* Override all possible focus states for flatpickr input */
+.flatpickr-input:focus,
+.flatpickr-input.form-control:focus,
+.flatpickr-input.form-control.active,
+input.flatpickr-input:focus,
+input.flatpickr.form-control:focus,
+.form-control.flatpickr-input:focus {
+    border-color: #ee6900 !important;
+    box-shadow: 0 0 0 0.2rem rgba(238, 105, 0, 0.25) !important;
+    outline: none !important;
+}
+
+.flatpickr-input.form-control {
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Override any Bootstrap focus styles */
+.flatpickr-input:focus-visible,
+input.flatpickr:focus-visible {
+    border-color: #ee6900 !important;
+    box-shadow: 0 0 0 0.2rem rgba(238, 105, 0, 0.25) !important;
+    outline: none !important;
+}

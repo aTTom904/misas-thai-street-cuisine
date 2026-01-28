@@ -10,6 +10,7 @@
             Authentic Thai Flavor, Fresh Every Time.
         </p>
         <button class="order-now-btn" @onclick="ScrollToMenuInfo">ORDER NOW</button>
+        <button class="order-now-btn" @onclick="NavigateToCatering">REQUEST CATERING</button>
     </div>
     <div class="hero-right">
         <div class="carousel-container">
@@ -70,6 +71,8 @@
 
 @code {
     [Inject] private IJSRuntime JS { get; set; } = default!;
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
 
     private List<string> CarouselImages = new()
     {
@@ -101,6 +104,11 @@
     private async Task ScrollToMenuInfo()
     {
         await JS.InvokeVoidAsync("scrollToMenuInfo");
+    }
+
+    private void NavigateToCatering()
+    {
+        Navigation.NavigateTo("/catering");
     }
 }
 

@@ -10,5 +10,6 @@ namespace misas_thai_street_cuisine_2._0.Models
         public int UpgradePhadThai24Qty { get; set; }
         public int UpgradePhadThai48Qty { get; set; }
         public int AddOnQty { get; set; }
+        public decimal Price { get; set; } // Unit price for this item
     }
 }

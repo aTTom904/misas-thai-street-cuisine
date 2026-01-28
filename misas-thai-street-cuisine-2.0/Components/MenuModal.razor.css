@@ -294,6 +294,33 @@
     box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
 }
 
+.modal-continue-btn {
+    background: #ee6900;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.3);
+    width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .modal-continue-btn:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+    }
+}
+
+.modal-continue-btn:active {
+    background: #ff9800;
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+}
+
 @keyframes modal-pop-in {
     0% {
         opacity: 0;

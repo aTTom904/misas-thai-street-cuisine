@@ -1,0 +1,529 @@
+/* Error message styling for form validation */
+.form-text.text-danger {
+    color: #dc3545;
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+.alert.alert-danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    padding: 0.75rem 1.25rem;
+    margin-top: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+/* Catering Page Styles */
+.catering-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    padding: 4rem auto 2rem auto;
+}
+
+.catering-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 3rem;
+    margin-top: 3rem;
+}
+
+.catering-header h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #333;
+    text-shadow: 2px 2px 8px #00000022;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.catering-header p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.highlight {
+    font-weight: 600;
+    text-shadow: 2px 2px 8px #00000022;
+}
+.highlight-orange {
+    color: #ee6900;
+    font-weight: 600;
+    text-shadow: 2px 2px 8px rgba(238, 105, 0, 0.3);
+}
+
+.catering-header .minimum {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ee6900;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.catering-header .notice {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #ee6900;
+    text-align: center;
+}
+
+.catering-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+/* Tray Selection Section */
+.tray-selection-section h3,
+.customer-form-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #ee6900;
+    padding-bottom: 0.5rem;
+}
+
+.trays-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.menu-card {
+    background: #ee6900;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-card:hover {
+    background: #ff9800;
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(238, 105, 0, 0.3);
+}
+
+.menu-card-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white;
+    margin-bottom: 1rem;
+}
+
+.menu-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.menu-card-price {
+    font-size: 0.95rem;
+    color: white;
+}
+
+/* Cart Summary */
+.cart-summary {
+    background: white;
+    border: 2px solid #ee6900;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.cart-summary h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.cart-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.remove-item-btn {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.remove-item-btn:hover {
+    color: #ee6900;
+}
+
+.item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.item-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.item-size {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.item-addon {
+    font-size: 0.85rem;
+    color: #ee6900;
+    font-weight: 500;
+}
+
+.item-quantity {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.item-total {
+    font-weight: 600;
+    color: #ee6900;
+}
+
+.cart-total {
+    text-align: right;
+    font-size: 1.3rem;
+    color: #ee6900;
+    padding-top: 1rem;
+    border-top: 2px solid #ddd;
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+/* Success Modal Overlay and Content (matches menu modal style) */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 24px;
+    width: 90vw;
+    max-width: 420px;
+    box-shadow: 0 4px 16px #ee690055;
+    padding: 2.5rem 2rem 2rem 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #ee6900;
+    animation: modal-pop-in 0.33s cubic-bezier(.4,1.4,.6,1) forwards;
+    opacity: 0;
+    transform: scale(0.92) translateY(40px);
+}
+
+.modal-content h2 {
+    font-size: 2rem;
+    font-family: 'Rock Salt', cursive;
+    color: #ee6900;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.modal-content p {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.close-btn, .cart-btn {
+    background: #ee6900;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.3);
+    width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .close-btn:hover, .cart-btn:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+    }
+}
+
+.close-btn:active, .cart-btn:active {
+    background: #ff9800;
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+}
+
+.cart-btn {
+    margin-top: 1rem;
+}
+
+
+
+/* Modal Socials and Review CTA */
+.modal-socials {
+    width: 100%;
+    margin: 1.2rem 0 1.2rem 0;
+    text-align: center;
+}
+.modal-socials-title {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #ee6900;
+}
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.2rem;
+}
+.social-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #ee6900;
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.social-icon:hover {
+    color: #ff9800;
+}
+.modal-review-cta {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1.2rem;
+}
+.modal-review-cta-title {
+    margin: 1.2rem 0 0 0;
+    font-weight: 600;
+    color: #333;
+}
+.google-review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff;
+    color: #ea4335;
+    border: 2px solid #ea4335;
+    font-weight: 600;
+    font-size: 1.05rem;
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    margin-bottom: 0.5rem;
+}
+.google-review-btn:hover {
+    background: #ea4335;
+    color: #fff;
+    border: 2px solid #ea4335;
+}
+
+@keyframes modal-pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Customer Form */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    border-color: #ee6900;
+    box-shadow: 0 0 0 0.2rem rgba(238, 105, 0, 0.25);
+    outline: none;
+}
+
+/* Flatpickr input field styling */
+.flatpickr.form-control {
+    cursor: pointer;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* Buttons */
+.button-container {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: #ee6900;
+    border: 2px solid #ee6900;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover:not(:disabled) {
+        background: #ff9800;
+        border-color: #ff9800;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+    }
+}
+
+.btn-primary:active:not(:disabled) {
+    background: #ff9800;
+    border-color: #ff9800;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.3);
+}
+
+.btn-primary:disabled {
+    background: #ccc;
+    border-color: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.delivery-address-section {
+    margin-bottom: 1rem;
+}
+
+.delivery-address-section label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #333;
+}
+
+.address-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.city-state-zip {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.city-input {
+    flex: 2;
+}
+
+.state-input {
+    flex: 1;
+}
+
+.zip-input {
+    flex: 1;
+}
+
+.instruction-text {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #444;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .catering-content {
+        grid-template-columns: 1fr;
+    }
+
+    .trays-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 576px) {
+    .catering-container {
+        padding: 1rem;
+    }
+
+}

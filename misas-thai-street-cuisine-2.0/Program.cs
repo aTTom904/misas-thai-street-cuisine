@@ -38,6 +38,7 @@ builder.Services.AddScoped<GoogleMapsConfigService>();
 builder.Services.AddScoped<AddressVerificationApiService>();
 builder.Services.AddScoped<CustomerApiService>();
 builder.Services.AddScoped<MenuItemApiService>();
+builder.Services.AddScoped<CateringRequestApiService>();
 builder.Services.AddScoped<EmailService>();
 var app = builder.Build();
 

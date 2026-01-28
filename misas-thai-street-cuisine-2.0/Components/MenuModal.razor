@@ -123,8 +123,15 @@
                 }
                 @ChildContent
                 <div class="modal-actions-section">
-                    <button class="modal-keep-shopping-btn" @onclick="OnClose" @onclick:stopPropagation>Keep Shopping</button>
-                    <button class="modal-checkout-btn" @onclick="GoToCart" @onclick:stopPropagation>Check Out</button>
+                    @if (HideCheckout)
+                    {
+                        <button class="modal-continue-btn" @onclick="OnClose" @onclick:stopPropagation>Continue</button>
+                    }
+                    else
+                    {
+                        <button class="modal-keep-shopping-btn" @onclick="OnClose" @onclick:stopPropagation>Keep Shopping</button>
+                        <button class="modal-checkout-btn" @onclick="GoToCart" @onclick:stopPropagation>Check Out</button>
+                    }
                 </div>
             </div>
         }
@@ -135,6 +142,7 @@
     [Parameter] public MenuItem? MenuItem { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool HideCheckout { get; set; } = false;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
     private Dictionary<int, int> PlatterQty = new Dictionary<int, int> { { 2, 0 }, { 4, 0 } };
     private int PhadThai24Qty = 0;
