@@ -60,8 +60,24 @@
     text-shadow: 2px 2px 8px rgba(238, 105, 0, 0.3);
 }
 
+.catering-header .catering-note {
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.catering-note p {
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
 .catering-header .minimum {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #ee6900;
     text-align: center;
@@ -507,7 +523,7 @@
 }
 
 .delivery-address-section {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .delivery-address-section label {
@@ -538,6 +554,13 @@
 
 .zip-input {
     flex: 1;
+}
+
+.delivery-note {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: #999;
 }
 
 .instruction-text {
