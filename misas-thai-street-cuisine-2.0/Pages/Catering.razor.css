@@ -60,8 +60,24 @@
     text-shadow: 2px 2px 8px rgba(238, 105, 0, 0.3);
 }
 
+.catering-header .catering-note {
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.catering-note p {
+    font-size: 0.85rem;
+    color: #999;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
 .catering-header .minimum {
-    font-size: 1rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #ee6900;
     text-align: center;
@@ -265,9 +281,10 @@
 }
 
 .modal-content h2 {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-family: 'Rock Salt', cursive;
     color: #ee6900;
+    text-shadow: 1px 1px 4px rgba(238, 105, 0, 0.3);
     margin-bottom: 1rem;
     text-align: center;
 }
@@ -310,7 +327,43 @@
     margin-top: 1rem;
 }
 
+.cart-btn-secondary {
+    background: transparent;
+    color: #ee6900;
+    border: 2px solid #ee6900;
+    box-shadow: none;
+}
 
+@media (hover: hover) and (pointer: fine) {
+    .cart-btn-secondary:hover {
+        background: #ee690015;
+        box-shadow: none;
+    }
+}
+
+.cart-btn-secondary:active {
+    background: #ee690015;
+    box-shadow: none;
+}
+
+.cart-conflict-icon {
+    font-size: 2.5rem;
+    color: #ee6900;
+    margin-bottom: 0.75rem;
+    margin-right: 0.75rem;
+    text-shadow: 1px 1px 4px rgba(238, 105, 0, 0.3);
+}
+
+.fa-trash-alt, .fa-arrow-left {
+    font-size: 1.1rem;
+    margin-right: 0.75rem;
+}
+
+.cart-conflict-hint {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 1rem;
+}
 
 /* Modal Socials and Review CTA */
 .modal-socials {
@@ -470,7 +523,7 @@
 }
 
 .delivery-address-section {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .delivery-address-section label {
@@ -501,6 +554,13 @@
 
 .zip-input {
     flex: 1;
+}
+
+.delivery-note {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    color: #999;
 }
 
 .instruction-text {
