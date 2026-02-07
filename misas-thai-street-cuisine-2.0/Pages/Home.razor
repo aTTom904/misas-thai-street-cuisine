@@ -1,14 +1,12 @@
 ﻿@page "/"
 
 @using misas_thai_street_cuisine_2._0.Components
+@using misas_thai_street_cuisine_2._0.Data
 
 <div class="homepage-hero">
     <div class="hero-left">
-        <h1 class="hero-title" tabindex="-1">The<br />Weeknight<br />Bite</h1>
-        <p class="hero-subtitle">
-            From Our Grill to Your Table.<br />
-            Authentic Thai Flavor, Fresh Every Time.
-        </p>
+        <h1 class="hero-title" tabindex="-1">@((MarkupString)heroTitle)</h1>
+        <p class="hero-subtitle">@((MarkupString)heroSubtitle)</p>
         <button class="order-now-btn" @onclick="ScrollToMenuInfo">ORDER NOW</button>
         <button class="order-now-btn" @onclick="NavigateToCatering">REQUEST CATERING</button>
     </div>
@@ -73,6 +71,8 @@
     [Inject] private IJSRuntime JS { get; set; } = default!;
     [Inject] private NavigationManager Navigation { get; set; } = default!;
 
+    private string heroTitle = string.Empty;
+    private string heroSubtitle = string.Empty;
 
     private List<string> CarouselImages = new()
     {
@@ -84,6 +84,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var (title, subtitle) = HeroContent.GetRandom();
+        heroTitle = title;
+        heroSubtitle = subtitle;
+
         foreach (var image in CarouselImages)
         {
             await JS.InvokeVoidAsync("preloadImage", image);

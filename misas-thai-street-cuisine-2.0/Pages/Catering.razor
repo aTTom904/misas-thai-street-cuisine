@@ -198,10 +198,14 @@
 {
     <div class="modal-overlay">
         <div class="modal-content">
-            <h2>Hang on!</h2>
-            <p>Some items in your cart are not available for catering. Click <span class="highlight-orange">Remove Items</span> below to remove these items from your cart and continue with your request, or come back when you're done with your current order.</p>
-            <button class="cart-btn" @onclick="RemoveIneligibleItems">Remove Items</button>
-            <button class="cart-btn" @onclick="ReturnToHome">Return to Home</button>
+            <div class="modal-header">
+                <div class="cart-conflict-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <h2>Hang on!</h2>
+            </div>
+            <p>Some items in your cart aren't available for catering.</p>
+            <p class="cart-conflict-hint">You can remove them now to continue with your catering request, or head back and finish your current order first.</p>
+            <button class="cart-btn" @onclick="RemoveIneligibleItems"><i class="fas fa-trash-alt"></i> Remove Items</button>
+            <button class="cart-btn cart-btn-secondary" @onclick="ReturnToHome"><i class="fas fa-arrow-left"></i> Return to Home</button>
         </div>
     </div>
 }
