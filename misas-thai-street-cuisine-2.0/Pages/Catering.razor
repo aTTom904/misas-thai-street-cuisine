@@ -66,7 +66,10 @@
                         }
                     </div>
                     <div class="cart-total">
-                        <strong>Total: $@(Cart.GetTotalPrice().ToString("F2"))</strong>
+                        <strong>Item Total: $@(Cart.GetTotalPrice().ToString("F2"))</strong>
+                        <div class="cart-total-note">
+                            <p>Delivery fees are determined by the distance from our kitchen and the amount of food ordered. Your final delivery fee and total will be included in your confirmation and payment link.</p>
+                        </div>
                     </div>
                 </div>
             }

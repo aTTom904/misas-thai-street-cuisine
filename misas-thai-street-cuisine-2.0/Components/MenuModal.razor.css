@@ -67,21 +67,20 @@
     margin-top: 0.5rem;
     margin-left: 1.5rem;
     border: 1px solid #ee690033;
-    
-    /* Initial state - hidden */
     opacity: 0;
     max-height: 0;
     padding: 0 1.2rem;
     overflow: hidden;
     transform: translateY(-10px);
-    
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.2s cubic-bezier(0.4, 0, 0.2, 1), padding 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .cart-upgrade-row.slide-in {
     opacity: 1;
     max-height: 100px;
     padding: 0.7rem 1.2rem;
     transform: translateY(0);
+    pointer-events: auto;
 }
 .cart-upgrade-row.slide-out {
     opacity: 0;

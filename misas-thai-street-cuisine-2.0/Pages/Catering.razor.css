@@ -91,6 +91,14 @@
     text-align: center;
 }
 
+.cart-total-note p {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 0.5rem;
+    margin-bottom: 0rem;
+    text-align: center;
+}
+
 .catering-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
