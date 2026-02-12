@@ -32,12 +32,21 @@
             AddOnQty = 0;
         }
 
+
         // Constructor for trays
         public CartItem(Tray tray, int quantity, string selectedSize, int addOnQty = 0)
         {
             Item = tray;
             Quantity = quantity;
             SelectedSize = selectedSize;
+            AddOnQty = addOnQty;
+        }
+
+        // Constructor for side dishes with add-ons
+        public CartItem(SideDish side, int quantity, int addOnQty = 0)
+        {
+            Item = side;
+            Quantity = quantity;
             AddOnQty = addOnQty;
         }
 
@@ -66,13 +75,24 @@
             decimal total = GetUnitPrice() * Quantity;
             total += UpgradePhadThai24Qty * Data.MenuData.PhadThai24ozUpgradePrice;
             total += UpgradePhadThai48Qty * Data.MenuData.PhadThai48ozUpgradePrice;
-            
+
             if (Item is Tray && SelectedSize != null)
             {
                 decimal addOnPrice = SelectedSize == "Half" ? 15m : 25m;
                 total += AddOnQty * addOnPrice;
             }
-            
+            // Add-on price for side dishes (sauce)
+            if (Item is SideDish side)
+            {
+                // Only apply to chicken skewers, wings, sausages
+                if (side.Name.Contains("Chicken Skewer", System.StringComparison.OrdinalIgnoreCase) ||
+                    side.Name.Contains("Wing", System.StringComparison.OrdinalIgnoreCase) ||
+                    side.Name.Contains("Sausage", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    decimal addOnPrice = side.Name.Contains("Sausage", System.StringComparison.OrdinalIgnoreCase) ? 3m : 1m;
+                    total += AddOnQty * addOnPrice;
+                }
+            }
             return total;
         }
     }

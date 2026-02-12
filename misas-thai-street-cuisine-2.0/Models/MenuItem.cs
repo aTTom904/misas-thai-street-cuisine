@@ -28,5 +28,7 @@
     public class SideDish : MenuItem
     {
         public decimal Price { get; set; }
+        public List<string>? AddOns { get; set; }
+
     }
 }

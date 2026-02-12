@@ -119,6 +119,23 @@
                             <span class="cart-qty">@SideQty</span>
                             <button class="cart-btn" @onclick="async () => await ChangeSideQty(1)">+</button>
                         </div>
+                        @* Add-on sauce for specific side dishes *@
+                        @if (side.Name.Contains("Chicken Skewer", StringComparison.OrdinalIgnoreCase) ||
+                             side.Name.Contains("Wing", StringComparison.OrdinalIgnoreCase) ||
+                             side.Name.Contains("Sausage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var isSausage = side.Name.Contains("Sausage", StringComparison.OrdinalIgnoreCase);
+                            var sauceName = isSausage ? "Prik Noom Sauce" : "Jao Sauce";
+                            var saucePrice = isSausage ? 3 : 1;
+                        }
+                        <div class="cart-upgrade-row @(SideQty > 0 ? "slide-in" : "slide-out")" style="display:@((side.Name.Contains("Chicken Skewer", StringComparison.OrdinalIgnoreCase) || side.Name.Contains("Wing", StringComparison.OrdinalIgnoreCase) || side.Name.Contains("Sausage", StringComparison.OrdinalIgnoreCase)) ? "flex" : "none")">
+                            <div class="cart-upgrade-option">
+                                <span class="cart-upgrade-label"><b>Add:</b> @(side.Name.Contains("Sausage", StringComparison.OrdinalIgnoreCase) ? "Prik Noom Sauce" : "Jao Sauce") – <b>$@(side.Name.Contains("Sausage", StringComparison.OrdinalIgnoreCase) ? 3 : 1)</b></span>
+                                <button class="cart-upgrade-btn" @onclick="async () => await ChangeSideAddOnQty(-1)">−</button>
+                                <span class="cart-qty">@SideAddOnQty</span>
+                                <button class="cart-upgrade-btn" @onclick="async () => await ChangeSideAddOnQty(1)">+</button>
+                            </div>
+                        </div>
                     </div>
                 }
                 @ChildContent
@@ -150,6 +167,7 @@
     private Dictionary<string, int> TrayQty = new Dictionary<string, int>();
     private Dictionary<string, int> TrayAddOnQty = new Dictionary<string, int>();
     private int SideQty = 0;
+    private int SideAddOnQty = 0;
 
     protected override void OnParametersSet()
     {
@@ -199,6 +217,7 @@
         {
             var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
             SideQty = match?.Quantity ?? 0;
+            SideAddOnQty = match?.AddOnQty ?? 0;
         }
     }
 
@@ -216,7 +235,21 @@
     private async Task ChangeSideQty(int delta)
     {
         SideQty = Math.Max(0, SideQty + delta);
+        // Clamp add-ons to parent qty
+        SideAddOnQty = Math.Min(SideAddOnQty, SideQty);
+        // If parent qty is zero, reset add-ons
+        if (SideQty == 0)
+            SideAddOnQty = 0;
         await UpdateSideInCart();
+    }
+
+    private async Task ChangeSideAddOnQty(int delta)
+    {
+        if (SideQty > 0)
+        {
+            SideAddOnQty = Math.Max(0, Math.Min(SideQty, SideAddOnQty + delta));
+            await UpdateSideInCart();
+        }
     }
 
     private async Task ChangePlatterQty(int serves, int delta)
@@ -289,7 +322,7 @@
             var match = Cart.Items.FirstOrDefault(i => i.Item.Name == side.Name);
             if (SideQty > 0)
             {
-                await Cart.AddItemAsync(new CartItem(side, SideQty));
+                await Cart.AddItemAsync(new CartItem((SideDish)side, SideQty, addOnQty: SideAddOnQty));
             }
             else if (match != null)
             {
