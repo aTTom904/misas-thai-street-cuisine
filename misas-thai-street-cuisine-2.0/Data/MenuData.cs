@@ -16,7 +16,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Name = "M's Combo",
                 Category = "Platter",
                 Serves = new int[] { 2, 4 },
-                Prices = new Dictionary<int, decimal> { { 2, 50.00m }, { 4, 100.00m } },
+                Prices = new Dictionary<int, decimal> { { 2, 48.00m }, { 4, 96.00m } },
                 Description = "A perfect pairing of our Northern Thai Sai Ua sausage, packed with bold lemongrass and fragrant herbs, and our grilled chicken, marinated overnight in lemongrass, cilantro roots, garlic, coriander seeds, and soy. Served with both Prik Noom and Jao dips, plus sticky rice and fresh, pre-washed greens. A complete Thai street-style experience. ",
                 ImageUrl = "/Resources/Images/HomepageCarousel/ms-platter.webp",
                 Includes = new Dictionary<int, string> {
@@ -49,7 +49,7 @@ namespace misas_thai_street_cuisine_2._0.Data
                 Name = "Chicken Combo",
                 Category = "Platter",
                 Serves = new int[] { 2, 4 },
-                Prices = new Dictionary<int, decimal> { { 2, 47.00m }, { 4, 94.00m } },
+                Prices = new Dictionary<int, decimal> { { 2, 49.00m }, { 4, 98.00m } },
                 Description = "Juicy chicken skewers and wings, marinated overnight in lemongrass, cilantro roots, garlic, coriander seeds and soy, then grilled to aromatic, tender perfection. Served with our house-made Jao dip, sticky rice, and fresh greens, making every bite a taste of authentic Thai street cuisine.",
                 ImageUrl = "/Resources/Images/HomepageCarousel/chicken-platter.webp",
                 Includes = new Dictionary<int, string> {
