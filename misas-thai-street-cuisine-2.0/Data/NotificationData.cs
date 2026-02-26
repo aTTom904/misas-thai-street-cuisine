@@ -15,7 +15,7 @@ public static class NotificationData
     /// <summary>
     /// The body message displayed below the title.
     /// </summary>
-    public static string Message { get; } = "We're taking a short break! Ordering and catering requests are temporarily disabled. Follow us on social media for updates on when we'll be back.";
+    public static string Message { get; } = "Misa’s Thai Street Cuisine is temporarily closed for medical recovery.\nWe look forward to serving you again in the future. 🧡";
 
     /// <summary>
     /// FontAwesome icon class (e.g. "fas fa-info-circle", "fas fa-exclamation-triangle").

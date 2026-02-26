@@ -1,127 +1,183 @@
-/* Top banner strip */
+/* Overlay — matches catering modal-overlay */
+.notification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Banner card — matches catering modal-content */
 .notification-banner {
-    width: 100%;
-    background: linear-gradient(135deg, #ee6900, #d45d00);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 0.85rem 2.5rem 0.85rem 1.5rem;
+    background: #fff;
+    border-radius: 24px;
+    width: 90vw;
+    max-width: 420px;
+    box-shadow: 0 4px 16px #ee690055;
+    padding: 2.5rem 2rem 2rem 2rem;
     position: relative;
-    z-index: 0;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.25);
-    transition: opacity 0.4s ease, max-height 0.4s ease;
-}
-
-.notification-banner.slide-in {
-    opacity: 1;
-    max-height: 120px;
-}
-
-/* Inner layout */
-.notification-content {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+    border: 2px solid #ee6900;
+    animation: modal-pop-in 0.33s cubic-bezier(.4, 1.4, .6, 1) forwards;
+    opacity: 0;
+    transform: scale(0.92) translateY(40px);
 }
 
-/* Icon */
-.notification-icon {
-    font-size: 1.25rem;
-    color: #fff;
-    flex-shrink: 0;
-}
-
-/* Text block */
-.notification-text {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    line-height: 1.5;
-}
-
-.notification-title {
-    color: #fff;
-    white-space: nowrap;
-    font-size: 0.95rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-}
-
-.notification-message {
-    color: rgba(255, 255, 255, 0.9);
+@keyframes modal-pop-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 /* Close button */
 .notification-close {
     position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0.75rem;
+    right: 1rem;
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1.4rem;
+    font-size: 1.8rem;
+    color: #999;
     cursor: pointer;
     line-height: 1;
-    padding: 0.25rem;
-    transition: color 0.15s;
+    transition: color 0.2s;
 }
 
 .notification-close:hover {
+    color: #333;
+}
+
+/* Icon */
+.notification-icon {
+    font-size: 3rem;
+    color: #ee6900;
+    margin-bottom: 0.75rem;
+    text-shadow: 1px 1px 4px rgba(238, 105, 0, 0.3);
+}
+
+.notification-icon i {
+    font-size: inherit;
+    color: inherit;
+}
+
+/* Title */
+.notification-title {
+    font-size: 2.25rem;
+    font-family: 'Rock Salt', cursive;
+    color: #ee6900;
+    text-shadow: 1px 1px 4px rgba(238, 105, 0, 0.3);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Message */
+.notification-message {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+/* Socials section */
+.notification-socials {
+    width: 100%;
+    margin: 1.2rem 0;
+    text-align: center;
+}
+
+.socials-label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #ee6900;
+    font-size: 0.95rem;
+}
+
+.socials-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.2rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: #ee6900;
     color: #fff;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .social-link:hover {
+        background: #ff9800;
+        transform: scale(1.1);
+    }
+}
+
+.social-link:active {
+    background: #ff9800;
+    transform: scale(1.1);
+}
+
+/* Dismiss button — matches catering close-btn / cart-btn */
+.notification-dismiss-btn {
+    background: #ee6900;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(238, 105, 0, 0.3);
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .notification-dismiss-btn:hover {
+        background: #ff9800;
+        box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
+    }
+}
+
+.notification-dismiss-btn:active {
+    background: #ff9800;
+    box-shadow: 0 4px 12px rgba(238, 105, 0, 0.4);
 }
 
 /* Responsive */
 @media (max-width: 540px) {
     .notification-banner {
-        padding: 0.75rem 2.5rem 0.75rem 0.75rem;
-        max-height: none;
-    }
-
-    .notification-banner.slide-in {
-        max-height: 200px;
-    }
-
-    .notification-content {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 0.6rem;
-    }
-
-    .notification-icon {
-        margin-top: 0.15rem;
-        font-size: 1.1rem;
-    }
-
-    .notification-text {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.2rem;
-        font-size: 0.8rem;
-        line-height: 1.45;
+        padding: 2rem 1.25rem 1.5rem;
     }
 
     .notification-title {
-        font-size: 0.85rem;
+        font-size: 2rem;
     }
 
     .notification-message {
-        font-size: 0.78rem;
-    }
-
-    .notification-close {
-        right: 0.5rem;
-        font-size: 1.6rem;
-        padding: 0.4rem;
+        font-size: 0.9rem;
     }
 }

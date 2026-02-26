@@ -1,19 +1,34 @@
 @using misas_thai_street_cuisine_2._0.Data
 
-@if (NotificationData.IsActive && !isDismissed)
+@if (NotificationData.IsActive && !isDismissed && isVisible)
 {
-    <div class="notification-banner @(isVisible ? "slide-in" : "")">
-        <div class="notification-content">
-            <i class="@NotificationData.IconClass notification-icon"></i>
-            <div class="notification-text">
-                <strong class="notification-title">@NotificationData.Title</strong>
-                <span class="notification-message">@NotificationData.Message</span>
+    <div class="notification-overlay" @onclick="Dismiss">
+        <div class="notification-banner" @onclick:stopPropagation>
+            @if (NotificationData.IsDismissable)
+            {
+                <button class="notification-close" @onclick="Dismiss" aria-label="Close notification">&times;</button>
+            }
+            <div class="notification-icon">
+                <i class="@NotificationData.IconClass"></i>
             </div>
+            <h2 class="notification-title">@NotificationData.Title</h2>
+            <p class="notification-message">@NotificationData.Message</p>
+            <div class="notification-socials">
+                <p class="socials-label">Follow us for updates</p>
+                <div class="socials-links">
+                    <a href="https://www.facebook.com/misasthaistreetcuisine" target="_blank" rel="noopener" class="social-link" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com/misasthaistreetcuisine/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="mailto:msthaistreetcuisine@gmail.com" class="social-link" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+            <button class="notification-dismiss-btn" @onclick="Dismiss">Got It</button>
         </div>
-        @if (NotificationData.IsDismissable)
-        {
-            <button class="notification-close" @onclick="Dismiss" aria-label="Close notification">&times;</button>
-        }
     </div>
 }
 
