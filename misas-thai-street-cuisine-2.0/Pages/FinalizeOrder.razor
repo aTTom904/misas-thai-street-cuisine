@@ -351,7 +351,7 @@
                         <button class="btn btn-secondary me-2" @onclick="BackToCustomerInfo" disabled="@isProcessing">
                             Back
                         </button>
-                        <button class="complete-order-btn btn btn-primary" @onclick="ProcessPayment" disabled="@isProcessing">
+                        <button class="complete-order-btn btn btn-primary" @onclick="ProcessPayment" disabled="true">
                             @if (isProcessing)
                             {
                                 <span class="spinner-border spinner-border-sm me-2"></span>

@@ -85,11 +85,11 @@
                 Keep Shopping
             </button>
             
-            <div class="finish-up-container" title="@(cartTotal < minimumOrder ? $"${minimumOrder:F2} minimum order required for delivery" : "")">
+            <div class="finish-up-container" title="We are currently on hiatus. Ordering is temporarily disabled.">
                 <button type="submit" 
                         @onclick="OnFinishUpClicked" 
-                        class="finish-up-btn @(cartTotal < minimumOrder ? "disabled" : "")"
-                        disabled="@(cartTotal < minimumOrder)">
+                        class="finish-up-btn disabled"
+                        disabled="true">
                     Finish Up
                 </button>
             </div>
