@@ -1,6 +1,6 @@
 @using misas_thai_street_cuisine_2._0.Data
 
-@if (NotificationData.IsActive && !isDismissed && isVisible)
+@if (NotificationData.IsActive && !isDismissed)
 {
     <div class="notification-overlay" @onclick="Dismiss">
         <div class="notification-banner" @onclick:stopPropagation>
@@ -34,21 +34,9 @@
 
 @code {
     private bool isDismissed = false;
-    private bool isVisible = false;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender && NotificationData.IsActive)
-        {
-            await Task.Delay(100);
-            isVisible = true;
-            StateHasChanged();
-        }
-    }
 
     private void Dismiss()
     {
-        isVisible = false;
         isDismissed = true;
     }
 }
