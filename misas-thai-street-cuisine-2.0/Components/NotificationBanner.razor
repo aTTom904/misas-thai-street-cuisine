@@ -1,0 +1,39 @@
+@using misas_thai_street_cuisine_2._0.Data
+
+@if (NotificationData.IsActive && !isDismissed)
+{
+    <div class="notification-banner @(isVisible ? "slide-in" : "")">
+        <div class="notification-content">
+            <i class="@NotificationData.IconClass notification-icon"></i>
+            <div class="notification-text">
+                <strong class="notification-title">@NotificationData.Title</strong>
+                <span class="notification-message">@NotificationData.Message</span>
+            </div>
+        </div>
+        @if (NotificationData.IsDismissable)
+        {
+            <button class="notification-close" @onclick="Dismiss" aria-label="Close notification">&times;</button>
+        }
+    </div>
+}
+
+@code {
+    private bool isDismissed = false;
+    private bool isVisible = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && NotificationData.IsActive)
+        {
+            await Task.Delay(100);
+            isVisible = true;
+            StateHasChanged();
+        }
+    }
+
+    private void Dismiss()
+    {
+        isVisible = false;
+        isDismissed = true;
+    }
+}
